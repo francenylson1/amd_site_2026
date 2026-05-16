@@ -70,6 +70,6 @@ jobs:
         run: npm ci
 
       - name: Rodar Lighthouse CI
-        run: npx lhci autorun
+        run: npx lhci autorun --config=tests/lighthouse/lighthouserc.json
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
