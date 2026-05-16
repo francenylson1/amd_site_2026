@@ -1,0 +1,13 @@
+# Normalizar quebras de linha para LF no repositório (deploy em Linux)
+* text=auto eol=lf
+
+# Binários não devem ser convertidos
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.mp4 binary

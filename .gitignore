@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente (NUNCA versionar)
+.env
+.env.local
+.env.staging
+.env.production
+
+# Snapshots de rollback (arquivos grandes, mantidos apenas localmente)
+snapshots/
+
+# Relatórios de teste
+playwright-report/
+test-results/
+.lighthouseci/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+*.swp
+
+# Claude Code — configurações locais (não compartilhadas)
+.claude/settings.local.json

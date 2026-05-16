@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [develop]
+    tags: ["v*"]
+
+jobs:
+  deploy-staging:
+    name: Deploy → Staging
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via FTP para staging
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER_STAGING }}
+          password: ${{ secrets.FTP_PASS_STAGING }}
+          server-dir: ${{ secrets.FTP_DIR_STAGING }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/*.md
+            .env*
+            server/**
+            snapshots/**
+
+  deploy-production:
+    name: Deploy → Produção
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via FTP para produção
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER_PROD }}
+          password: ${{ secrets.FTP_PASS_PROD }}
+          server-dir: ${{ secrets.FTP_DIR_PROD }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/*.md
+            .env*
+            server/**
+            snapshots/**

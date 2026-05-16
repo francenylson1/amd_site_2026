@@ -1,0 +1,27 @@
+{
+  "name": "amd-site-2026",
+  "version": "0.0.1",
+  "description": "Aluno Maker Digital — Plataforma de robótica educacional para escolas públicas",
+  "private": true,
+  "scripts": {
+    "dev": "serve . -l 5500",
+    "test": "playwright test",
+    "test:ci": "playwright test --project=chromium",
+    "lint:js": "eslint \"assets/js/**/*.js\" --no-warn-ignored",
+    "lint:css": "stylelint \"assets/css/**/*.css\" --allow-empty-input",
+    "lint": "npm run lint:js && npm run lint:css",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.60.0",
+    "eslint": "^10.4.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "serve": "^14.2.6",
+    "stylelint": "^17.11.1",
+    "stylelint-config-standard": "^40.0.0"
+  }
+}
