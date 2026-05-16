@@ -23,7 +23,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 
 | Fase | Status | Tag | Notas |
 |---|---|---|---|
-| 0 — Fundação documental e ambiente | ✅ Concluída | v0.1.0 | Repo Git + CI + placeholder no ar |
+| 0 — Fundação documental e ambiente | ✅ Concluída | v0.1.1 | Repo Git + CI verde + placeholder no ar (produção + staging) |
 | 1 — Home + layout global | ⏳ | — | — |
 | 2 — Demais páginas públicas | ⏳ | — | — |
 | 3 — Módulo GPIO (animações) | ⏳ | — | — |
@@ -50,6 +50,7 @@ npx lhci autorun              # Lighthouse CI (sobe servidor automaticamente)
 - **Dev server:** `serve` (npm) na porta 5500 — substitui Live Server da extensão VS Code.
 - **Specs E2E:** usar `require()` (CommonJS) em `*.spec.js` — `playwright.config.js` é CommonJS.
 - **Slogan oficial:** "Tecnologia que transforma vidas." (confirmado pelo PO em 2026-05-16).
+- **Lighthouse CI:** sempre passar `--config=tests/lighthouse/lighthouserc.json` — o lhci não encontra o config fora da raiz automaticamente.
 
 ## Paths críticos
 
