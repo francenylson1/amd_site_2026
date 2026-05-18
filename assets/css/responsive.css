@@ -123,3 +123,42 @@
 @media (width >= 1200px) {
   .hero__title { font-size: clamp(3rem, 5vw, 4.5rem); }
 }
+
+/* ============================================================
+   FASE 2 — RESPONSIVO DAS PÁGINAS INTERNAS
+   ============================================================ */
+
+/* ---------- Tablet (≤ 1024px) ---------- */
+@media (width <= 1024px) {
+  .professor-grid    { grid-template-columns: 1fr; gap: 2.5rem; }
+  .professor-photo img { max-width: 100%; aspect-ratio: 16/9; }
+  .inclusion-grid    { grid-template-columns: 1fr; gap: 2.5rem; }
+  .consultoria-grid  { grid-template-columns: 1fr; gap: 2.5rem; }
+  .contact-grid      { grid-template-columns: 1fr; gap: 3rem; }
+  .cta-banner        { padding: 2rem; }
+}
+
+/* ---------- Mobile (≤ 768px) ---------- */
+@media (width <= 768px) {
+  .mvv-grid            { grid-template-columns: 1fr; }
+  .about-gallery       { grid-template-columns: repeat(2, 1fr); }
+  .schools-grid        { grid-template-columns: 1fr; }
+  .projects-gallery    { grid-template-columns: 1fr; }
+  .events-gallery      { grid-template-columns: repeat(2, 1fr); }
+  .courses-grid        { grid-template-columns: 1fr; }
+  .shop-grid           { grid-template-columns: 1fr; }
+  .how-it-works-grid   { grid-template-columns: 1fr; }
+  .cta-banner__actions { flex-direction: column; align-items: center; }
+  .quiz-cta-banner     { flex-direction: column; text-align: center; }
+  .assinatura-card     { flex-direction: column; text-align: center; }
+  .timeline            { padding-left: 1rem; }
+  .timeline-item       { flex-direction: column; gap: 0.25rem; }
+  .filter-bar          { gap: 0.5rem; }
+}
+
+/* ---------- Mobile pequeno (≤ 480px) ---------- */
+@media (width <= 480px) {
+  .about-gallery     { grid-template-columns: 1fr; }
+  .events-gallery    { grid-template-columns: 1fr; }
+  .page-hero         { padding: calc(var(--navbar-height) + 2rem) 0 2.5rem; }
+}

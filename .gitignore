@@ -10,6 +10,11 @@ node_modules/
 # Snapshots de rollback (arquivos grandes, mantidos apenas localmente)
 snapshots/
 
+# Vídeos — muito grandes para Git normal (usar Git LFS na Fase 4 ou hospedar externamente)
+assets/videos/
+*.mp4
+*.MP4
+
 # Relatórios de teste
 playwright-report/
 test-results/

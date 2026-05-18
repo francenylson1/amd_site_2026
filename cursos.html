@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cursos de robótica e programação do Aluno Maker Digital: Robótica com Python, ESP-8266, Raspberry Pi Maker, planos de aula e mentoria.">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://alunomakerdigital.com.br/cursos.html">
+  <meta property="og:title"       content="Cursos — Aluno Maker Digital">
+  <meta property="og:description" content="Aprenda robótica e programação com quem vive isso todo dia. Cursos presenciais e online para alunos e professores.">
+  <meta property="og:image"       content="https://alunomakerdigital.com.br/assets/images/logo/logo1.webp">
+  <meta property="og:locale"      content="pt_BR">
+
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Cursos — Aluno Maker Digital">
+  <meta name="twitter:description" content="Cursos de robótica e programação para alunos e professores.">
+
+  <link rel="manifest"    href="manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <title>Cursos — Aluno Maker Digital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/bundle.min.css">
+
+  <link rel="preload" as="style"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  </noscript>
+
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="assets/images/logo/logo1.webp" alt="Logo Aluno Maker Digital" width="40" height="40" loading="eager">
+        Aluno <span>Maker</span>
+      </a>
+      <button class="navbar__toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="nav-menu">
+        <li><a href="sobre.html"    class="navbar__link">Sobre</a></li>
+        <li><a href="projetos.html" class="navbar__link">Projetos</a></li>
+        <li><a href="escolas.html"  class="navbar__link">Escolas</a></li>
+        <li><a href="eventos.html"  class="navbar__link">Eventos</a></li>
+        <li><a href="cursos.html"   class="navbar__link navbar__link--active">Cursos</a></li>
+        <li><a href="loja.html"     class="navbar__link">Loja</a></li>
+        <li><a href="contato.html"  class="navbar__link">Contato</a></li>
+        <li><a href="index.html#agendamento" class="btn btn--primary navbar__cta">Agendar visita</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Catálogo de cursos">
+    <div class="container">
+      <div class="page-hero__content reveal">
+        <p class="section__subtitle">Aprenda com quem vive isso</p>
+        <h1 class="page-hero__title">Nossos <em>Cursos</em></h1>
+        <p class="page-hero__desc">
+          Cursos práticos de robótica e programação para alunos, professores e escolas.
+          Cada curso foi desenhado a partir de anos de experiência em sala de aula com alunos reais.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ CTA -->
+  <section class="section" aria-label="Quiz de recomendação">
+    <div class="container">
+      <div class="quiz-cta-banner reveal">
+        <div class="quiz-cta-banner__icon" aria-hidden="true">
+          <i class="fa-solid fa-question-circle"></i>
+        </div>
+        <div class="quiz-cta-banner__text">
+          <h2>Não sabe por onde começar?</h2>
+          <p>Responda 3 perguntas e receba uma recomendação personalizada de qual curso é ideal para você.</p>
+        </div>
+        <a href="quiz.html" class="btn btn--primary">
+          <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+          Fazer o quiz
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURSOS PARA ALUNOS -->
+  <section class="section section--alt" id="cursos-alunos" aria-label="Cursos para alunos">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__subtitle">Para quem quer aprender</p>
+        <h2 class="section__title">Cursos para <em>Alunos</em></h2>
+      </div>
+
+      <div class="courses-grid">
+
+        <!-- Robótica com Python -->
+        <article class="course-card reveal" data-delay="100" id="curso-python">
+          <div class="course-card__badge course-card__badge--em-breve">Em breve</div>
+          <div class="course-card__icon" aria-hidden="true">
+            <i class="fa-brands fa-python"></i>
+          </div>
+          <h3 class="course-card__title">Robótica com Python</h3>
+          <div class="course-card__meta">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 20h</span>
+            <span><i class="fa-solid fa-signal" aria-hidden="true"></i> Iniciante</span>
+            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Alunos</span>
+          </div>
+          <p class="course-card__desc">
+            Do zero ao robô! Aprenda Python enquanto constrói projetos reais com Arduino e Raspberry Pi.
+            Ideal para quem nunca programou e quer criar coisas que funcionam de verdade.
+          </p>
+          <ul class="course-card__topics">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Lógica de programação com Python</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Controle de sensores e atuadores</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Projetos práticos do início ao fim</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Certificado de conclusão</li>
+          </ul>
+          <div class="course-card__price">R$ 197</div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse no curso Robótica com Python. Quando estará disponível?"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--outline course-card__cta"
+             aria-label="Saber mais sobre Robótica com Python pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Avise-me quando abrir
+          </a>
+        </article>
+
+        <!-- ESP-8266 na Prática -->
+        <article class="course-card reveal" data-delay="200" id="curso-esp8266">
+          <div class="course-card__badge course-card__badge--em-breve">Em breve</div>
+          <div class="course-card__icon" aria-hidden="true">
+            <i class="fa-solid fa-wifi"></i>
+          </div>
+          <h3 class="course-card__title">ESP-8266 na Prática</h3>
+          <div class="course-card__meta">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 15h</span>
+            <span><i class="fa-solid fa-signal" aria-hidden="true"></i> Básico</span>
+            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Alunos e professores</span>
+          </div>
+          <p class="course-card__desc">
+            Conecte seus projetos à internet com o NodeMCU ESP-8266. Aprenda IoT de forma prática:
+            estação meteorológica, automação e monitoramento remoto por Wi-Fi.
+          </p>
+          <ul class="course-card__topics">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Fundamentos de IoT</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Programação MicroPython</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Projetos conectados à internet</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Certificado de conclusão</li>
+          </ul>
+          <div class="course-card__price">R$ 147</div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse no curso ESP-8266 na Prática. Quando estará disponível?"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--outline course-card__cta"
+             aria-label="Saber mais sobre ESP-8266 na Prática pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Avise-me quando abrir
+          </a>
+        </article>
+
+        <!-- Raspberry Pi Maker -->
+        <article class="course-card reveal" data-delay="300" id="curso-raspberry">
+          <div class="course-card__badge course-card__badge--em-breve">Em breve</div>
+          <div class="course-card__icon" aria-hidden="true">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <h3 class="course-card__title">Raspberry Pi Maker</h3>
+          <div class="course-card__meta">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 18h</span>
+            <span><i class="fa-solid fa-signal" aria-hidden="true"></i> Intermediário</span>
+            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Alunos</span>
+          </div>
+          <p class="course-card__desc">
+            Domine o mini-computador mais poderoso do mundo maker. Crie projetos avançados
+            de visão computacional, robótica e automação com Raspberry Pi 5.
+          </p>
+          <ul class="course-card__topics">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Linux básico para makers</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> GPIO e controle de hardware</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Visão computacional com Python</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Projeto final completo</li>
+          </ul>
+          <div class="course-card__price">R$ 177</div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse no curso Raspberry Pi Maker. Quando estará disponível?"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--outline course-card__cta"
+             aria-label="Saber mais sobre Raspberry Pi Maker pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Avise-me quando abrir
+          </a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CURSOS PARA PROFESSORES -->
+  <section class="section" id="cursos-professores" aria-label="Cursos e materiais para professores">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__subtitle">Para quem quer ensinar</p>
+        <h2 class="section__title">Materiais para <em>Professores</em></h2>
+      </div>
+
+      <div class="courses-grid">
+
+        <!-- Plano de Aula Avulso -->
+        <article class="course-card reveal" data-delay="100" id="curso-plano-avulso">
+          <div class="course-card__badge course-card__badge--em-breve">Em breve</div>
+          <div class="course-card__icon" aria-hidden="true">
+            <i class="fa-solid fa-file-alt"></i>
+          </div>
+          <h3 class="course-card__title">Plano de Aula Avulso</h3>
+          <div class="course-card__meta">
+            <span><i class="fa-solid fa-book" aria-hidden="true"></i> 1 aula completa</span>
+            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Professores</span>
+          </div>
+          <p class="course-card__desc">
+            Plano de aula completo para uma turma, com objetivos pedagógicos, passo a passo,
+            materiais necessários e avaliação. Pronto para aplicar em qualquer escola.
+          </p>
+          <ul class="course-card__topics">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Objetivos pedagógicos claros</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Passo a passo detalhado</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Lista de materiais</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Avaliação incluída</li>
+          </ul>
+          <div class="course-card__price">R$ 37</div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse no Plano de Aula Avulso. Quando estará disponível?"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--outline course-card__cta"
+             aria-label="Saber mais sobre Plano de Aula Avulso pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Avise-me quando abrir
+          </a>
+        </article>
+
+        <!-- Pack 5 Planos -->
+        <article class="course-card course-card--destaque reveal" data-delay="200" id="curso-pack-planos">
+          <div class="course-card__badge course-card__badge--em-breve">Em breve</div>
+          <div class="course-card__badge-destaque">Mais popular</div>
+          <div class="course-card__icon" aria-hidden="true">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <h3 class="course-card__title">Pack 5 Planos de Aula</h3>
+          <div class="course-card__meta">
+            <span><i class="fa-solid fa-book" aria-hidden="true"></i> 5 aulas completas</span>
+            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Professores</span>
+          </div>
+          <p class="course-card__desc">
+            5 planos de aula completos com sequência didática progressiva. Economize 60% em relação
+            ao avulso e tenha um mês inteiro de aulas de robótica prontas para aplicar.
+          </p>
+          <ul class="course-card__topics">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> 5 aulas em sequência progressiva</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Adapável a diferentes idades</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Suporte por WhatsApp</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Avaliações e rubricas</li>
+          </ul>
+          <div class="course-card__price">R$ 147 <span class="course-card__price-old">R$ 185</span></div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse no Pack 5 Planos de Aula. Quando estará disponível?"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--primary course-card__cta"
+             aria-label="Saber mais sobre Pack 5 Planos de Aula pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Avise-me quando abrir
+          </a>
+        </article>
+
+        <!-- Mentoria -->
+        <article class="course-card reveal" data-delay="300" id="curso-mentoria">
+          <div class="course-card__badge course-card__badge--em-breve">Em breve</div>
+          <div class="course-card__icon" aria-hidden="true">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <h3 class="course-card__title">Mentoria 1 hora</h3>
+          <div class="course-card__meta">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 1 hora individual</span>
+            <span><i class="fa-solid fa-users" aria-hidden="true"></i> Professores e escola</span>
+          </div>
+          <p class="course-card__desc">
+            Uma hora de conversa individual com o Professor Francenylson para traçar o melhor
+            caminho para o seu objetivo — seja implantar robótica na escola ou evoluir seus projetos.
+          </p>
+          <ul class="course-card__topics">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Diagnóstico do seu contexto</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Plano de ação personalizado</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Indicação de materiais e recursos</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Gravação disponível (com permissão)</li>
+          </ul>
+          <div class="course-card__price">R$ 150</div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse na Mentoria de 1 hora com o Professor Francenylson."
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--outline course-card__cta"
+             aria-label="Solicitar mentoria pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Solicitar mentoria
+          </a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSULTORIA PARA ESCOLAS -->
+  <section class="section section--alt" id="cursos-escolas" aria-label="Consultoria para escolas">
+    <div class="container">
+      <div class="consultoria-grid reveal">
+        <div class="consultoria-text">
+          <p class="section__subtitle">Para gestores e coordenadores</p>
+          <h2 class="section__title">Consultoria para <em>Escolas</em></h2>
+          <p class="consultoria-text__body">
+            Implante o projeto de robótica educacional na sua escola do início ao fim.
+            O AMD oferece consultoria completa com diagnóstico, estruturação, capacitação
+            de professores, lista de materiais e acompanhamento inicial.
+          </p>
+          <ul class="consultoria-text__features">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Diagnóstico da infraestrutura disponível</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Currículo adaptado à realidade da escola</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Capacitação de professores in loco</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Lista de materiais com custo-benefício validado</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Acompanhamento no primeiro mês</li>
+          </ul>
+          <div class="course-card__price" style="margin-top:1.5rem;">A partir de R$ 800</div>
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse na Consultoria para Escolas. Gostaria de saber mais."
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--primary" style="margin-top:1rem;"
+             id="curso-consultoria"
+             aria-label="Solicitar consultoria para escola pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Solicitar consultoria
+          </a>
+        </div>
+        <div class="consultoria-image reveal" data-delay="300">
+          <img
+            src="assets/images/projetos/espaco_maker/espaco_maker_6.webp"
+            alt="Professor Francenylson orientando alunos em atividade de robótica"
+            loading="lazy" width="500" height="380"
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSINATURA MENSAL -->
+  <section class="section" id="curso-assinatura" aria-label="Assinatura mensal">
+    <div class="container">
+      <div class="assinatura-card reveal">
+        <div class="assinatura-card__icon" aria-hidden="true">
+          <i class="fa-solid fa-infinity"></i>
+        </div>
+        <div class="assinatura-card__content">
+          <p class="section__subtitle">Acesso completo</p>
+          <h2 class="assinatura-card__title">Assinatura Mensal AMD</h2>
+          <p class="assinatura-card__desc">
+            Acesso a todos os materiais, planos de aula, aulas gravadas e relatórios
+            mensais de progresso. Ideal para pais que querem acompanhar o desenvolvimento
+            do filho ou professores que querem sempre ter conteúdo novo.
+          </p>
+          <div class="course-card__price">R$ 47 <span class="assinatura-card__period">/mês</span></div>
+        </div>
+        <div class="assinatura-card__cta">
+          <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse na Assinatura Mensal AMD. Quando estará disponível?"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--primary"
+             aria-label="Saber mais sobre Assinatura Mensal AMD pelo WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Avise-me quando abrir
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="footer__brand-name">Aluno Maker Digital</div>
+          <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
+          <div class="footer__social" aria-label="Redes sociais">
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div>
+          <p class="footer__col-title">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="projetos.html">Projetos</a></li>
+            <li><a href="escolas.html">Escolas</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="loja.html">Loja</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__col-title">Contato</p>
+          <ul class="footer__links">
+            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
+            <li>Recanto das Emas, Brasília — DF</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2018–2026 <a href="index.html">Aluno Maker Digital</a> — Prof. Francenylson. Todos os direitos reservados.</p>
+        <p class="footer__copy"><a href="privacidade.html">Política de privacidade</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/animations.js" defer></script>
+  <script src="assets/js/navbar.js"     defer></script>
+  <script src="assets/js/main.js"       defer></script>
+
+</body>
+</html>

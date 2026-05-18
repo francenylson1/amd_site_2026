@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Entre em contato com o Aluno Maker Digital. Envie uma mensagem, agende uma visita ou tire suas dúvidas sobre robótica educacional no Recanto das Emas.">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://alunomakerdigital.com.br/contato.html">
+  <meta property="og:title"       content="Contato — Aluno Maker Digital">
+  <meta property="og:description" content="Entre em contato com o Professor Francenylson sobre robótica educacional, parcerias e visitas ao espaço maker.">
+  <meta property="og:image"       content="https://alunomakerdigital.com.br/assets/images/logo/logo1.webp">
+  <meta property="og:locale"      content="pt_BR">
+
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Contato — Aluno Maker Digital">
+  <meta name="twitter:description" content="Fale com o Aluno Maker Digital sobre robótica educacional.">
+
+  <link rel="manifest"    href="manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <title>Contato — Aluno Maker Digital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/bundle.min.css">
+
+  <link rel="preload" as="style"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  </noscript>
+
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="assets/images/logo/logo1.webp" alt="Logo Aluno Maker Digital" width="40" height="40" loading="eager">
+        Aluno <span>Maker</span>
+      </a>
+      <button class="navbar__toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="nav-menu">
+        <li><a href="sobre.html"    class="navbar__link">Sobre</a></li>
+        <li><a href="projetos.html" class="navbar__link">Projetos</a></li>
+        <li><a href="escolas.html"  class="navbar__link">Escolas</a></li>
+        <li><a href="eventos.html"  class="navbar__link">Eventos</a></li>
+        <li><a href="cursos.html"   class="navbar__link">Cursos</a></li>
+        <li><a href="loja.html"     class="navbar__link">Loja</a></li>
+        <li><a href="contato.html"  class="navbar__link navbar__link--active">Contato</a></li>
+        <li><a href="index.html#agendamento" class="btn btn--primary navbar__cta">Agendar visita</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Página de contato">
+    <div class="container">
+      <div class="page-hero__content reveal">
+        <p class="section__subtitle">Vamos conversar</p>
+        <h1 class="page-hero__title">Entre em <em>Contato</em></h1>
+        <p class="page-hero__desc">
+          Tem uma dúvida, quer agendar uma visita, propor uma parceria ou simplesmente
+          conhecer mais sobre o projeto? A gente responde rápido.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO GRID -->
+  <section class="section" id="contato" aria-label="Formulário de contato e informações">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- FORMULÁRIO -->
+        <div class="contact-form-wrapper reveal" data-delay="100">
+          <h2 class="contact-form-wrapper__title">Envie uma mensagem</h2>
+          <p class="contact-form-wrapper__desc">Preencha o formulário e respondemos em até 24 horas.</p>
+
+          <form id="form-contato" novalidate>
+
+            <div class="form-group">
+              <label for="nome-contato">Nome completo</label>
+              <input
+                type="text"
+                id="nome-contato"
+                name="nome"
+                placeholder="Seu nome"
+                required
+                autocomplete="name"
+              >
+              <span class="form-group__error-msg" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email-contato">E-mail</label>
+              <input
+                type="email"
+                id="email-contato"
+                name="email"
+                placeholder="seu@email.com"
+                required
+                autocomplete="email"
+              >
+              <span class="form-group__error-msg" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="assunto">Assunto</label>
+              <select id="assunto" name="assunto" required>
+                <option value="" disabled selected>Selecione o assunto</option>
+                <option value="agendamento">Agendar visita ao espaço maker</option>
+                <option value="parceria">Proposta de parceria</option>
+                <option value="cursos">Informações sobre cursos</option>
+                <option value="escola">Levar o projeto para minha escola</option>
+                <option value="imprensa">Imprensa / Mídia</option>
+                <option value="outro">Outro assunto</option>
+              </select>
+              <span class="form-group__error-msg" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="mensagem">Mensagem</label>
+              <textarea
+                id="mensagem"
+                name="mensagem"
+                placeholder="Descreva sua mensagem ou dúvida..."
+                rows="5"
+                required
+                minlength="10"
+              ></textarea>
+              <span class="form-group__error-msg" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn btn--primary form-submit">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              Enviar mensagem
+            </button>
+
+            <div class="local-save-badge" aria-hidden="true">
+              <span class="local-save-badge__dot"></span>
+              Dados salvos localmente até o envio real ser ativado
+            </div>
+
+          </form>
+        </div>
+
+        <!-- INFORMAÇÕES DE CONTATO -->
+        <div class="contact-info reveal" data-delay="300">
+
+          <h2 class="contact-info__title">Outras formas de contato</h2>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon" aria-hidden="true">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div>
+              <p class="contact-info__label">WhatsApp</p>
+              <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer"
+                 class="contact-info__value">(61) 9 8133-3875</a>
+              <p class="contact-info__note">Atendimento de segunda a sábado, das 8h às 18h</p>
+            </div>
+          </div>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon" aria-hidden="true">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <p class="contact-info__label">E-mail</p>
+              <a href="mailto:contato@alunomakerdigital.com.br"
+                 class="contact-info__value">contato@alunomakerdigital.com.br</a>
+              <p class="contact-info__note">Respondemos em até 24 horas úteis</p>
+            </div>
+          </div>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon" aria-hidden="true">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <p class="contact-info__label">Localização</p>
+              <p class="contact-info__value">Recanto das Emas</p>
+              <p class="contact-info__note">Brasília — Distrito Federal — Brasil</p>
+            </div>
+          </div>
+
+          <div class="contact-info__item">
+            <div class="contact-info__icon" aria-hidden="true">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+            <div>
+              <p class="contact-info__label">Instagram</p>
+              <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer"
+                 class="contact-info__value">@alunomakerdigital</a>
+              <p class="contact-info__note">Siga para ver os projetos em tempo real</p>
+            </div>
+          </div>
+
+          <!-- Assuntos frequentes -->
+          <div class="contact-faq">
+            <h3 class="contact-faq__title">Dúvidas frequentes</h3>
+            <ul class="contact-faq__list">
+              <li>
+                <strong>O projeto atende minha escola?</strong>
+                Atendemos escolas públicas do Recanto das Emas e também levamos projetos a outras escolas quando há infraestrutura.
+              </li>
+              <li>
+                <strong>Tem custo para a escola?</strong>
+                O atendimento regular é gratuito para as escolas parceiras. Consulte-nos para outros formatos.
+              </li>
+              <li>
+                <strong>Posso visitar o espaço maker?</strong>
+                Sim! Agende uma visita gratuita pelo formulário ou WhatsApp.
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="section section--alt" id="localizacao" aria-label="Localização no mapa">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__subtitle">Venha nos visitar</p>
+        <h2 class="section__title">Nossa <em>Localização</em></h2>
+        <p class="section__desc">Estamos no Recanto das Emas, Brasília — DF. Agende com antecedência para garantir sua vaga.</p>
+      </div>
+      <div class="map-wrapper reveal" data-delay="200">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30999!2d-48.063!3d-15.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
+          width="100%"
+          height="400"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Mapa do Recanto das Emas — Brasília, DF"
+          aria-label="Mapa mostrando a localização do Recanto das Emas em Brasília"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="footer__brand-name">Aluno Maker Digital</div>
+          <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
+          <div class="footer__social" aria-label="Redes sociais">
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div>
+          <p class="footer__col-title">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="projetos.html">Projetos</a></li>
+            <li><a href="escolas.html">Escolas</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="loja.html">Loja</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__col-title">Contato</p>
+          <ul class="footer__links">
+            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
+            <li>Recanto das Emas, Brasília — DF</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2018–2026 <a href="index.html">Aluno Maker Digital</a> — Prof. Francenylson. Todos os direitos reservados.</p>
+        <p class="footer__copy"><a href="privacidade.html">Política de privacidade</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/animations.js" defer></script>
+  <script src="assets/js/navbar.js"     defer></script>
+  <script src="assets/js/forms.js"      defer></script>
+  <script src="assets/js/main.js"       defer></script>
+
+</body>
+</html>

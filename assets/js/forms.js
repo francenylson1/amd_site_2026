@@ -78,9 +78,50 @@
     });
   }
 
+  function handleContactForm(form) {
+    const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
+    const submit = form.querySelector('[type="submit"]');
+
+    fields.forEach((f) => {
+      f.addEventListener('blur', () => validateField(f));
+      f.addEventListener('input', () => {
+        if (f.closest('.form-group--error')) validateField(f);
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      let allValid = true;
+      fields.forEach((f) => { if (!validateField(f)) allValid = false; });
+      if (!allValid) return;
+
+      if (submit) {
+        submit.setAttribute('aria-busy', 'true');
+        submit.textContent = 'Enviando…';
+      }
+
+      const data = Object.fromEntries(new FormData(form));
+      data._type    = 'contato';
+      data._savedAt = new Date().toISOString();
+      try {
+        const prev = JSON.parse(localStorage.getItem('amd_contatos') || '[]');
+        prev.push(data);
+        localStorage.setItem('amd_contatos', JSON.stringify(prev));
+      } catch { /* storage indisponível */ }
+
+      setTimeout(() => {
+        window.location.href = 'obrigado.html';
+      }, 600);
+    });
+  }
+
   function init() {
     const scheduleForm = document.getElementById('form-agendamento');
     if (scheduleForm) handleScheduleForm(scheduleForm);
+
+    const contactForm = document.getElementById('form-contato');
+    if (contactForm) handleContactForm(contactForm);
   }
 
   if (document.readyState === 'loading') {

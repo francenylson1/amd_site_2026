@@ -4,6 +4,60 @@
     <loc>https://alunomakerdigital.com.br/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-05-16</lastmod>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/sobre.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/projetos.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/escolas.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/eventos.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/cursos.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/loja.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/contato.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/quiz.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-05-18</lastmod>
+  </url>
+  <url>
+    <loc>https://alunomakerdigital.com.br/obrigado.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>2026-05-18</lastmod>
   </url>
 </urlset>

@@ -25,7 +25,8 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 |---|---|---|---|
 | 0 — Fundação documental e ambiente | ✅ Concluída | v0.1.1 | Repo Git + CI verde + placeholder no ar (produção + staging) |
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
-| 2 — Demais páginas públicas | ⏳ | — | — |
+| 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
+| 3 — Módulo GPIO (animações) | ⏳ | — | — |
 | 3 — Módulo GPIO (animações) | ⏳ | — | — |
 | 4 — Backend + Admin mínimo | ⏳ | — | — |
 | 5 — Gerador com Claude API | ⏳ | — | — |
@@ -60,12 +61,20 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Playwright testDir:** `./tests` com `testMatch` para `**/e2e/**/*.spec.js` e `**/a11y/**/*.spec.js`.
 - **ffmpeg:** instalar via `winget install Gyan.FFmpeg` — requerido pelo watcher de vídeos (Opção A).
 - **WhatsApp:** número `5561981333875` definido como constante em `assets/js/main.js`.
+- **Páginas internas:** todas usam navbar com links para páginas (não âncoras da home). Link ativo marcado com `.navbar__link--active`.
+- **GLightbox:** carregado via CDN apenas nas páginas que usam (projetos.html, eventos.html). Script `defer` após `gallery.js`.
+- **gallery.js:** usa `container.closest('section')` para escopo dos `[data-category]` — filtros e items são irmãos, não pai-filho.
+- **forms.js:** suporta `#form-agendamento` (home) e `#form-contato` (contato.html). Ambos gravam em localStorage com chaves distintas.
+- **serve strip .html:** o servidor local remove extensão `.html` das URLs — specs E2E usam regex sem `.html` (ex: `/obrigado/` não `/obrigado\.html/`).
 
 ## Paths críticos
 
 - `assets/css/bundle.min.css` — CSS único minificado usado em produção (gerado por `npm run build:css`).
 - `assets/js/main.js` — inicialização global: partículas, WhatsApp flutuante, slider depoimentos.
 - `tests/e2e/home.spec.js` — 25 testes E2E cobrindo todas as jornadas críticas da home.
+- `tests/e2e/navigation.spec.js` — navegação entre todas as 8 páginas públicas.
+- `tests/e2e/gallery.spec.js` — filtros client-side e lightbox (projetos + eventos).
+- `tests/e2e/contato.spec.js` — formulário de contato + quiz dedicado.
 - `tests/a11y/axe.spec.js` — zero violações axe críticas/sérias (gate de deploy).
 - `tests/lighthouse/lighthouserc.json` — thresholds Lighthouse CI.
 - `tests/manual-checklists/home-smoke.md` — checklist pré-deploy (4 browsers).

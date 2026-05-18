@@ -97,7 +97,9 @@ test.describe('Home — Quiz interativo', () => {
 
   test('botão "refazer" reinicia o quiz', async ({ page }) => {
     for (let i = 0; i < 3; i++) {
-      await page.locator('.quiz__question.active .quiz__option').first().click();
+      const opt = page.locator('.quiz__question.active .quiz__option').first();
+      await expect(opt).toBeVisible({ timeout: 2000 });
+      await opt.click();
       await page.waitForTimeout(400);
     }
     await page.locator('#quiz-restart').click();

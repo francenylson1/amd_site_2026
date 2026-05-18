@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Eventos do Aluno Maker Digital: Campus Party Brasília, IFB Gama, Câmara Legislativa DF, Colégio Militar, Festival de Robótica e mais.">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://alunomakerdigital.com.br/eventos.html">
+  <meta property="og:title"       content="Eventos — Aluno Maker Digital">
+  <meta property="og:description" content="Veja onde o Aluno Maker Digital já esteve: Campus Party, IFB, CLDF, Colégio Militar e muito mais.">
+  <meta property="og:image"       content="https://alunomakerdigital.com.br/assets/images/logo/logo1.webp">
+  <meta property="og:locale"      content="pt_BR">
+
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Eventos — Aluno Maker Digital">
+  <meta name="twitter:description" content="Presença em grandes eventos de tecnologia e educação em Brasília.">
+
+  <link rel="manifest"    href="manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <title>Eventos — Aluno Maker Digital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/bundle.min.css">
+
+  <!-- GLightbox -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+  <link rel="preload" as="style"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  </noscript>
+
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="assets/images/logo/logo1.webp" alt="Logo Aluno Maker Digital" width="40" height="40" loading="eager">
+        Aluno <span>Maker</span>
+      </a>
+      <button class="navbar__toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="nav-menu">
+        <li><a href="sobre.html"    class="navbar__link">Sobre</a></li>
+        <li><a href="projetos.html" class="navbar__link">Projetos</a></li>
+        <li><a href="escolas.html"  class="navbar__link">Escolas</a></li>
+        <li><a href="eventos.html"  class="navbar__link navbar__link--active">Eventos</a></li>
+        <li><a href="cursos.html"   class="navbar__link">Cursos</a></li>
+        <li><a href="loja.html"     class="navbar__link">Loja</a></li>
+        <li><a href="contato.html"  class="navbar__link">Contato</a></li>
+        <li><a href="index.html#agendamento" class="btn btn--primary navbar__cta">Agendar visita</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Galeria de eventos">
+    <div class="container">
+      <div class="page-hero__content reveal">
+        <p class="section__subtitle">Nossa presença no mundo</p>
+        <h1 class="page-hero__title">Eventos e <em>Conquistas</em></h1>
+        <p class="page-hero__desc">
+          Do espaço maker ao palco de grandes eventos nacionais — o Aluno Maker Digital já esteve
+          em Campus Party, Instituto Federal, Câmara Legislativa e muito mais.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTROS + GALERIA -->
+  <section class="section" id="galeria-eventos" aria-label="Galeria de eventos por categoria">
+    <div class="container">
+
+      <div class="filter-bar reveal" role="group" aria-label="Filtrar eventos por categoria" data-gallery="eventos">
+        <button class="filter-btn filter-btn--active" data-filter="all" aria-pressed="true">Todos</button>
+        <button class="filter-btn" data-filter="campus-party" aria-pressed="false">Campus Party</button>
+        <button class="filter-btn" data-filter="institucional" aria-pressed="false">Institucional</button>
+        <button class="filter-btn" data-filter="robotica" aria-pressed="false">Robótica</button>
+        <button class="filter-btn" data-filter="escola" aria-pressed="false">Na escola</button>
+      </div>
+
+      <!-- Campus Party Brasília -->
+      <div class="event-section reveal" data-delay="100">
+        <div class="event-section__header">
+          <div class="event-section__icon" aria-hidden="true"><i class="fa-solid fa-bolt"></i></div>
+          <div>
+            <h2 class="event-section__title">Campus Party Brasília</h2>
+            <p class="event-section__meta">Brasília, DF — um dos maiores eventos de tecnologia do mundo</p>
+          </div>
+        </div>
+        <div class="events-gallery" data-gallery="eventos">
+          <a href="assets/images/eventos/campus_party/campus_party_BSB_i1.webp"
+             class="glightbox event-photo-item" data-category="campus-party"
+             data-gallery-cp="campus-party" data-title="Campus Party Brasília — Aluno Maker Digital"
+             aria-label="Foto 1 — Campus Party Brasília">
+            <img src="assets/images/eventos/campus_party/campus_party_BSB_i1.webp"
+                 alt="Alunos do AMD apresentando projetos na Campus Party Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/campus_party/campus_party_BSB_i2.webp"
+             class="glightbox event-photo-item" data-category="campus-party"
+             data-gallery-cp="campus-party" data-title="Campus Party Brasília — robôs em ação"
+             aria-label="Foto 2 — Campus Party Brasília">
+            <img src="assets/images/eventos/campus_party/campus_party_BSB_i2.webp"
+                 alt="Robôs do AMD em exposição na Campus Party"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/campus_party/campus_party_BSB_i3.webp"
+             class="glightbox event-photo-item" data-category="campus-party"
+             data-gallery-cp="campus-party" data-title="Campus Party Brasília"
+             aria-label="Foto 3 — Campus Party Brasília">
+            <img src="assets/images/eventos/campus_party/campus_party_BSB_i3.webp"
+                 alt="Demonstração de robótica na Campus Party Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/campus_party/campus_party_BSB_i4.webp"
+             class="glightbox event-photo-item" data-category="campus-party"
+             data-gallery-cp="campus-party" data-title="Campus Party Brasília"
+             aria-label="Foto 4 — Campus Party Brasília">
+            <img src="assets/images/eventos/campus_party/campus_party_BSB_i4.webp"
+                 alt="Visitantes interagindo com os projetos na Campus Party"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/campus_party/campus_party_BSB_i5.webp"
+             class="glightbox event-photo-item" data-category="campus-party"
+             data-gallery-cp="campus-party" data-title="Campus Party Brasília"
+             aria-label="Foto 5 — Campus Party Brasília">
+            <img src="assets/images/eventos/campus_party/campus_party_BSB_i5.webp"
+                 alt="Equipe do AMD na Campus Party Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/campus_party/campus_party_BSB_i6.webp"
+             class="glightbox event-photo-item" data-category="campus-party"
+             data-gallery-cp="campus-party" data-title="Campus Party Brasília"
+             aria-label="Foto 6 — Campus Party Brasília">
+            <img src="assets/images/eventos/campus_party/campus_party_BSB_i6.webp"
+                 alt="Robôs e alunos na Campus Party Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+        </div>
+      </div>
+
+      <!-- IFB Gama 2024 -->
+      <div class="event-section reveal" data-delay="200">
+        <div class="event-section__header">
+          <div class="event-section__icon" aria-hidden="true"><i class="fa-solid fa-university"></i></div>
+          <div>
+            <h2 class="event-section__title">Instituto Federal — Campus Gama</h2>
+            <p class="event-section__meta">IFB Gama, Brasília — 2024</p>
+          </div>
+        </div>
+        <div class="events-gallery" data-gallery="eventos">
+          <a href="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_1.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-ifb="ifb" data-title="Instituto Federal — Campus Gama 2024"
+             aria-label="Foto 1 — IFB Campus Gama 2024">
+            <img src="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_1.webp"
+                 alt="Apresentação no Instituto Federal Campus Gama em 2024"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_2.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-ifb="ifb" data-title="Instituto Federal — Campus Gama 2024"
+             aria-label="Foto 2 — IFB Campus Gama 2024">
+            <img src="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_2.webp"
+                 alt="Robôs do AMD no Instituto Federal em 2024"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_3.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-ifb="ifb" data-title="Instituto Federal — Campus Gama 2024"
+             aria-label="Foto 3 — IFB Campus Gama 2024">
+            <img src="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_3.webp"
+                 alt="Alunos demonstrando projetos no IFB Gama"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_4.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-ifb="ifb" data-title="Instituto Federal — Campus Gama 2024"
+             aria-label="Foto 4 — IFB Campus Gama 2024">
+            <img src="assets/images/eventos/IFB_gama_2024/instituto_federal_BsB_4.webp"
+                 alt="Participação do Aluno Maker Digital no IFB Gama"
+                 loading="lazy" width="300" height="220">
+          </a>
+        </div>
+      </div>
+
+      <!-- Câmara Legislativa DF -->
+      <div class="event-section reveal" data-delay="300">
+        <div class="event-section__header">
+          <div class="event-section__icon" aria-hidden="true"><i class="fa-solid fa-landmark"></i></div>
+          <div>
+            <h2 class="event-section__title">Câmara Legislativa do DF</h2>
+            <p class="event-section__meta">Brasília, DF — 2019</p>
+          </div>
+        </div>
+        <div class="events-gallery" data-gallery="eventos">
+          <a href="assets/images/eventos/camara_legislativa_df/cldf_2019.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-cldf="cldf" data-title="Câmara Legislativa do DF — 2019"
+             aria-label="Foto 1 — Câmara Legislativa DF 2019">
+            <img src="assets/images/eventos/camara_legislativa_df/cldf_2019.webp"
+                 alt="AMD na Câmara Legislativa do Distrito Federal em 2019"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/camara_legislativa_df/cldf_humanoide_2019.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-cldf="cldf" data-title="Humanoide na CLDF — 2019"
+             aria-label="Humanoide na Câmara Legislativa DF 2019">
+            <img src="assets/images/eventos/camara_legislativa_df/cldf_humanoide_2019.webp"
+                 alt="Robô humanoide apresentado na Câmara Legislativa do DF"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/camara_legislativa_df/cldf_humanoide2_2019.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-cldf="cldf" data-title="Humanoide na CLDF — 2019"
+             aria-label="Foto do humanoide na CLDF">
+            <img src="assets/images/eventos/camara_legislativa_df/cldf_humanoide2_2019.webp"
+                 alt="Humanoide em funcionamento durante apresentação na CLDF"
+                 loading="lazy" width="300" height="220">
+          </a>
+        </div>
+      </div>
+
+      <!-- Colégio Militar de Brasília -->
+      <div class="event-section reveal" data-delay="400">
+        <div class="event-section__header">
+          <div class="event-section__icon" aria-hidden="true"><i class="fa-solid fa-star"></i></div>
+          <div>
+            <h2 class="event-section__title">Colégio Militar de Brasília</h2>
+            <p class="event-section__meta">Brasília, DF — evento especial</p>
+          </div>
+        </div>
+        <div class="events-gallery" data-gallery="eventos">
+          <a href="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_1.webp"
+             class="glightbox event-photo-item" data-category="escola"
+             data-gallery-cmb="cmb" data-title="Colégio Militar de Brasília"
+             aria-label="Foto 1 — Colégio Militar de Brasília">
+            <img src="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_1.webp"
+                 alt="Aluno Maker Digital no Colégio Militar de Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_2.webp"
+             class="glightbox event-photo-item" data-category="escola"
+             data-gallery-cmb="cmb" data-title="Colégio Militar de Brasília"
+             aria-label="Foto 2 — Colégio Militar de Brasília">
+            <img src="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_2.webp"
+                 alt="Apresentação de robótica no Colégio Militar de Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_3.webp"
+             class="glightbox event-photo-item" data-category="escola"
+             data-gallery-cmb="cmb" data-title="Colégio Militar de Brasília"
+             aria-label="Foto 3 — Colégio Militar de Brasília">
+            <img src="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_3.webp"
+                 alt="Robôs do AMD no Colégio Militar"
+                 loading="lazy" width="300" height="220">
+          </a>
+          <a href="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_4.webp"
+             class="glightbox event-photo-item" data-category="escola"
+             data-gallery-cmb="cmb" data-title="Colégio Militar de Brasília"
+             aria-label="Foto 4 — Colégio Militar de Brasília">
+            <img src="assets/images/eventos/colegio_militar_Brasilia/colegio_militar_4.webp"
+                 alt="Visita do AMD ao Colégio Militar de Brasília"
+                 loading="lazy" width="300" height="220">
+          </a>
+        </div>
+      </div>
+
+      <!-- Festival de Robótica DF -->
+      <div class="event-section reveal" data-delay="500">
+        <div class="event-section__header">
+          <div class="event-section__icon" aria-hidden="true"><i class="fa-solid fa-robot"></i></div>
+          <div>
+            <h2 class="event-section__title">Festival de Robótica do DF</h2>
+            <p class="event-section__meta">Brasília, DF</p>
+          </div>
+        </div>
+        <div class="events-gallery" data-gallery="eventos">
+          <a href="assets/images/eventos/festival_robotica_DF/festival_robotica_DF_1.webp"
+             class="glightbox event-photo-item" data-category="robotica"
+             data-gallery-frd="frd" data-title="Festival de Robótica do DF"
+             aria-label="Festival de Robótica do DF">
+            <img src="assets/images/eventos/festival_robotica_DF/festival_robotica_DF_1.webp"
+                 alt="Aluno Maker Digital no Festival de Robótica do Distrito Federal"
+                 loading="lazy" width="300" height="220">
+          </a>
+        </div>
+      </div>
+
+      <!-- Shopping Recanto 2025 -->
+      <div class="event-section reveal" data-delay="600">
+        <div class="event-section__header">
+          <div class="event-section__icon" aria-hidden="true"><i class="fa-solid fa-store"></i></div>
+          <div>
+            <h2 class="event-section__title">Shopping Recanto — 2025</h2>
+            <p class="event-section__meta">Recanto das Emas — 2025</p>
+          </div>
+        </div>
+        <div class="events-gallery" data-gallery="eventos">
+          <a href="assets/images/eventos/shopping_recanto_2025/shopping_recanto_1.webp"
+             class="glightbox event-photo-item" data-category="institucional"
+             data-gallery-shp="shp" data-title="Shopping Recanto das Emas — 2025"
+             aria-label="Evento no Shopping Recanto das Emas 2025">
+            <img src="assets/images/eventos/shopping_recanto_2025/shopping_recanto_1.webp"
+                 alt="AMD em exposição no Shopping do Recanto das Emas em 2025"
+                 loading="lazy" width="300" height="220">
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section--alt" aria-label="Convidar o AMD para seu evento">
+    <div class="container">
+      <div class="cta-banner reveal">
+        <h2 class="cta-banner__title">Quer o AMD no seu evento?</h2>
+        <p class="cta-banner__desc">Levamos nossos robôs para feiras, congressos, eventos escolares e corporativos. Entre em contato e veja como podemos tornar seu evento ainda mais especial.</p>
+        <div class="cta-banner__actions">
+          <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Falar pelo WhatsApp
+          </a>
+          <a href="contato.html" class="btn btn--secondary">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+            Enviar mensagem
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="footer__brand-name">Aluno Maker Digital</div>
+          <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
+          <div class="footer__social" aria-label="Redes sociais">
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div>
+          <p class="footer__col-title">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="projetos.html">Projetos</a></li>
+            <li><a href="escolas.html">Escolas</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="loja.html">Loja</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__col-title">Contato</p>
+          <ul class="footer__links">
+            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
+            <li>Recanto das Emas, Brasília — DF</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2018–2026 <a href="index.html">Aluno Maker Digital</a> — Prof. Francenylson. Todos os direitos reservados.</p>
+        <p class="footer__copy"><a href="privacidade.html">Política de privacidade</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/animations.js" defer></script>
+  <script src="assets/js/navbar.js"     defer></script>
+  <script src="assets/js/gallery.js"    defer></script>
+  <script src="assets/js/main.js"       defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
+
+</body>
+</html>
