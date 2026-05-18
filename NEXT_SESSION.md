@@ -33,7 +33,7 @@ Só comece a executar depois que eu aprovar o plano.
   - Opção C: só monitorar/logar (sem compressão, sem dependência externa)
 
 ### 2. Corrigir `foto_3.jpeg`
-- Arquivo JPEG corrompido — descartar ou substituir por outra foto.
+- Arquivo JPEG corrompido — descartar ou substituir por outra foto. RESPOSTA--> PODE DESCARTAR ESSA FOTO.
 
 ### 3. Commit do watcher de imagens
 ```bash

@@ -4,9 +4,11 @@
   "description": "Aluno Maker Digital — Plataforma de robótica educacional para escolas públicas",
   "private": true,
   "scripts": {
-    "dev": "concurrently --names \"servidor,imagens\" --prefix-colors \"cyan,green\" \"serve . -l 5500\" \"node scripts/watch-images.js\"",
+    "dev": "concurrently --names \"servidor,imagens,vídeos\" --prefix-colors \"cyan,green,yellow\" \"serve . -l 5500\" \"node scripts/watch-images.js\" \"node scripts/watch-videos.js\"",
     "images:optimize": "node scripts/optimize-images.js",
     "images:watch": "node scripts/watch-images.js",
+    "videos:optimize": "node scripts/optimize-videos.js",
+    "videos:watch": "node scripts/watch-videos.js",
     "test": "playwright test",
     "test:ci": "playwright test --project=chromium",
     "lint:js": "eslint \"assets/js/**/*.js\" --no-warn-ignored",
