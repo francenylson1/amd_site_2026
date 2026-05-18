@@ -1,8 +1,8 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run dev",
-      "startServerReadyTimeout": 15000,
+      "startServerCommand": "npx serve . -l 5500 --no-clipboard",
+      "startServerReadyTimeout": 10000,
       "url": ["http://localhost:5500/"],
       "numberOfRuns": 3
     },
