@@ -4,7 +4,9 @@
   "description": "Aluno Maker Digital — Plataforma de robótica educacional para escolas públicas",
   "private": true,
   "scripts": {
-    "dev": "concurrently --names \"servidor,imagens,vídeos\" --prefix-colors \"cyan,green,yellow\" \"serve . -l 5500\" \"node scripts/watch-images.js\" \"node scripts/watch-videos.js\"",
+    "build:css": "cleancss -o assets/css/bundle.min.css assets/css/variables.css assets/css/main.css assets/css/animations.css assets/css/components.css assets/css/responsive.css",
+    "css:watch": "node scripts/watch-css.js",
+    "dev": "concurrently --names \"servidor,css,imagens,vídeos\" --prefix-colors \"cyan,magenta,green,yellow\" \"serve . -l 5500\" \"node scripts/watch-css.js\" \"node scripts/watch-images.js\" \"node scripts/watch-videos.js\"",
     "images:optimize": "node scripts/optimize-images.js",
     "images:watch": "node scripts/watch-images.js",
     "videos:optimize": "node scripts/optimize-videos.js",
@@ -12,7 +14,7 @@
     "test": "playwright test",
     "test:ci": "playwright test --project=chromium",
     "lint:js": "eslint \"assets/js/**/*.js\" --no-warn-ignored",
-    "lint:css": "stylelint \"assets/css/**/*.css\" --allow-empty-input",
+    "lint:css": "stylelint \"assets/css/**/*.css\" \"!assets/css/bundle.min.css\" --allow-empty-input",
     "lint": "npm run lint:js && npm run lint:css",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -22,6 +24,7 @@
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.60.0",
     "chokidar": "^5.0.0",
+    "clean-css-cli": "^5.6.3",
     "concurrently": "^9.2.1",
     "eslint": "^10.4.0",
     "globals": "^17.6.0",
