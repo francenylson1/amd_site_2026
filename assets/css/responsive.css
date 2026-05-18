@@ -1,0 +1,125 @@
+/* ============================================================
+   RESPONSIVO — Mobile-first breakpoints
+   ≤480px | ≤768px | ≤1024px | >1200px
+   ============================================================ */
+
+/* ---------- Tablet (≤ 1024px) ---------- */
+@media (width <= 1024px) {
+  .navbar__menu    { display: none; }
+  .navbar__toggle  { display: flex; }
+  .navbar__cta     { display: none; }
+
+  /* Menu mobile aberto */
+  .navbar__menu.nav-open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: var(--navbar-height) 0 0 0;
+    background: rgb(10 14 26 / 98%);
+    backdrop-filter: blur(16px);
+    padding: 2rem;
+    gap: 0.5rem;
+    align-items: flex-start;
+    overflow-y: auto;
+    animation: fadeInDown 0.25s ease;
+    z-index: var(--z-navbar);
+  }
+
+  .navbar__menu.nav-open .navbar__link {
+    font-size: 1.25rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+  }
+
+  .navbar__menu.nav-open .navbar__cta {
+    display: inline-flex;
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+
+  /* Hero */
+  .hero__title { font-size: clamp(1.75rem, 6vw, 3rem); }
+
+  /* Contadores: 2 colunas */
+  .counters__grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Projetos: 2 colunas */
+  .projects__grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Visit: 1 coluna */
+  .visit__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+  /* Partners: 3 colunas */
+  .partners__grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Footer: 2 colunas */
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- Mobile (≤ 768px) ---------- */
+@media (width <= 768px) {
+  :root {
+    --section-padding: 60px 0;
+    --container-padding: 0 16px;
+  }
+
+  .section__title { font-size: clamp(1.5rem, 5vw, 2rem); }
+
+  /* Projetos: 1 coluna */
+  .projects__grid { grid-template-columns: 1fr; }
+
+  .project-card { height: 340px; }
+
+  /* Partners: 2 colunas */
+  .partners__grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Footer: 1 coluna */
+  .footer__grid { grid-template-columns: 1fr; gap: 2rem; }
+
+  .footer__brand-desc { max-width: 100%; }
+
+  .footer__bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Hero CTA: coluna */
+  .hero__cta { flex-direction: column; align-items: center; }
+
+  .hero__cta .btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
+  /* Quiz */
+  .quiz__result-actions { flex-direction: column; align-items: center; }
+
+  /* Form card */
+  .form-card { padding: 1.75rem 1.25rem; }
+}
+
+/* ---------- Mobile pequeno (≤ 480px) ---------- */
+@media (width <= 480px) {
+  .hero__title { font-size: 2rem; }
+
+  .counters__grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+  .counter-value-wrap { font-size: 2.25rem; }
+
+  .partners__grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .whatsapp-float svg { width: 24px; height: 24px; }
+}
+
+/* ---------- Desktop grande (> 1200px) ---------- */
+@media (width >= 1200px) {
+  .hero__title { font-size: clamp(3rem, 5vw, 4.5rem); }
+}

@@ -3,80 +3,646 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aluno Maker Digital — Robótica educacional para escolas públicas em Brasília. Em breve no ar. Tecnologia que transforma vidas.">
+  <meta name="description" content="Aluno Maker Digital — Robótica educacional para escolas públicas em Brasília. Transformamos vidas com tecnologia desde 2018 no Recanto das Emas, DF.">
+  <meta name="keywords" content="robótica educacional, programação para alunos, maker, Brasília, escolas públicas, Recanto das Emas, STEAM">
   <meta name="author" content="Professor Francenylson — Aluno Maker Digital">
-  <title>Em Breve — Aluno Maker Digital</title>
-  <style>
-    :root {
-      --bg-primary:    #0a0e1a;
-      --blue-electric: #00e5ff;
-      --text-primary:  #e0e8ff;
-      --text-secondary: #7090b0;
-    }
+  <meta name="robots" content="index, follow">
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://alunomakerdigital.com.br/">
+  <meta property="og:title"       content="Aluno Maker Digital — Tecnologia que transforma vidas">
+  <meta property="og:description" content="Robótica educacional para alunos de escolas públicas em situação de vulnerabilidade social no Recanto das Emas, Brasília.">
+  <meta property="og:image"       content="https://alunomakerdigital.com.br/assets/images/logo/logo1.webp">
+  <meta property="og:locale"      content="pt_BR">
 
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-    }
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Aluno Maker Digital — Tecnologia que transforma vidas">
+  <meta name="twitter:description" content="Robótica educacional para alunos de escolas públicas em Brasília.">
 
-    main {
-      max-width: 640px;
-      width: 100%;
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Aluno Maker Digital",
+    "description": "Projeto de robótica educacional para escolas públicas do Recanto das Emas, Brasília, DF.",
+    "url": "https://alunomakerdigital.com.br",
+    "foundingDate": "2018",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Recanto das Emas",
+      "addressRegion": "DF",
+      "addressCountry": "BR"
+    },
+    "founder": {
+      "@type": "Person",
+      "name": "Francenylson"
     }
+  }
+  </script>
 
-    h1 {
-      font-size: clamp(1.75rem, 6vw, 3rem);
-      color: var(--blue-electric);
-      letter-spacing: 0.04em;
-      margin-bottom: 1.25rem;
-    }
+  <!-- PWA -->
+  <link rel="manifest"    href="manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
 
-    p {
-      color: var(--text-secondary);
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      line-height: 1.6;
-      margin-bottom: 0.75rem;
-    }
+  <!-- Google Analytics (placeholder) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 
-    .slogan {
-      color: var(--text-primary);
-      font-size: clamp(1.1rem, 3vw, 1.35rem);
-      font-style: italic;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(0, 229, 255, 0.2);
-    }
+  <!-- Título -->
+  <title>Aluno Maker Digital — Tecnologia que transforma vidas</title>
 
-    footer {
-      margin-top: 3rem;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-    }
-  </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <!-- Font Awesome (ícones) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
 </head>
 <body>
-  <main>
-    <h1>Aluno Maker Digital</h1>
-    <p>Estamos preparando algo incrível.</p>
-    <p>Em breve, nossa plataforma de robótica educacional estará disponível para escolas públicas de Brasília.</p>
-    <p class="slogan">Tecnologia que transforma vidas.</p>
-  </main>
-  <footer>
-    <p>© 2018–2026 Professor Francenylson — Recanto das Emas, DF</p>
+
+  <!-- ======================================================
+       NAVBAR
+       ====================================================== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
+    <div class="navbar__inner">
+
+      <a href="index.html" class="navbar__logo">
+        <img src="assets/images/logo/logo1.webp" alt="Logo Aluno Maker Digital" width="40" height="40" loading="eager">
+        Aluno <span>Maker</span>
+      </a>
+
+      <button
+        class="navbar__toggle"
+        id="nav-toggle"
+        aria-controls="nav-menu"
+        aria-expanded="false"
+        aria-label="Abrir menu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="navbar__menu" id="nav-menu" role="list">
+        <li><a href="#impacto"     class="navbar__link">Impacto</a></li>
+        <li><a href="#projetos"    class="navbar__link">Projetos</a></li>
+        <li><a href="#quiz"        class="navbar__link">Quiz</a></li>
+        <li><a href="#agendamento" class="navbar__link">Agendar</a></li>
+        <li><a href="#escolas"     class="navbar__link">Escolas</a></li>
+        <li><a href="cursos.html"  class="navbar__link">Cursos</a></li>
+        <a href="#agendamento" class="btn btn--primary navbar__cta">Agendar visita</a>
+      </ul>
+
+    </div>
+  </nav>
+
+  <!-- ======================================================
+       HERO
+       ====================================================== -->
+  <section class="hero" id="hero" aria-label="Apresentação">
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+    <div class="hero__content">
+      <span class="hero__label">Robótica · Programação · Inovação</span>
+      <h1 class="hero__title">
+        Aluno
+        <span class="highlight">Maker Digital</span>
+      </h1>
+      <p class="hero__subtitle">
+        Tecnologia que transforma vidas. Desde 2018, levamos robótica educacional
+        para alunos de escolas públicas no Recanto das Emas, Brasília.
+      </p>
+      <div class="hero__cta">
+        <a href="#agendamento" class="btn btn--primary animate-pulse">
+          <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+          Agende uma visita gratuita
+        </a>
+        <a href="#projetos" class="btn btn--secondary">
+          <i class="fa-solid fa-robot" aria-hidden="true"></i>
+          Conheça os projetos
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-indicator__arrow"></div>
+      <span>rolar</span>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       IMPACTO — CONTADORES
+       ====================================================== -->
+  <section class="counters section" id="impacto" aria-label="Nosso impacto em números">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__subtitle">Desde 2018</p>
+        <h2 class="section__title">Nosso <em>Impacto</em></h2>
+        <p class="section__desc">Números que mostram o alcance do Aluno Maker Digital nas escolas públicas de Brasília.</p>
+      </div>
+
+      <div class="counters__grid">
+
+        <div class="counter-item reveal" data-delay="100">
+          <div class="counter-value-wrap">
+            <span data-target="6">0</span><span class="counter-suffix">+</span>
+          </div>
+          <span class="counter-label">Anos de projeto</span>
+        </div>
+
+        <div class="counter-item reveal" data-delay="200">
+          <div class="counter-value-wrap">
+            <span data-target="9">0</span><span class="counter-suffix">+</span>
+          </div>
+          <span class="counter-label">Escolas atendidas</span>
+        </div>
+
+        <div class="counter-item reveal" data-delay="300">
+          <div class="counter-value-wrap">
+            <span data-target="100">0</span><span class="counter-suffix">+</span>
+          </div>
+          <span class="counter-label">Alunos impactados</span>
+        </div>
+
+        <div class="counter-item reveal" data-delay="400">
+          <div class="counter-value-wrap">
+            <span data-target="10">0</span><span class="counter-suffix">+</span>
+          </div>
+          <span class="counter-label">Robôs construídos</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PROJETOS EM DESTAQUE
+       ====================================================== -->
+  <section class="section" id="projetos" aria-label="Projetos em destaque">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__subtitle">O que construímos</p>
+        <h2 class="section__title">Projetos em <em>Destaque</em></h2>
+        <p class="section__desc">Passe o mouse sobre os cards para ver detalhes de cada projeto.</p>
+      </div>
+
+      <div class="projects__grid">
+
+        <!-- Card 1: Robô Garçom -->
+        <article class="project-card reveal" data-delay="100" tabindex="0" aria-label="Projeto: Robô Garçom">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <img
+                src="assets/images/projetos/robo_garcon/versao_2_5.webp"
+                alt="Robô Garçom versão 2.5"
+                loading="lazy"
+                width="400" height="250"
+              >
+              <div class="project-card__front-info">
+                <h3>Robô Garçom</h3>
+                <p>Robô autônomo de serviço construído do zero</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Robô Garçom</h3>
+              <p>
+                Robô autônomo capaz de navegar pelo ambiente, detectar obstáculos e servir
+                itens de forma independente. Desenvolvido por alunos do ensino médio público.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Sensores Ultrassônicos</span>
+                <span class="tag">Motores DC</span>
+                <span class="tag">C++</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: Humanoide -->
+        <article class="project-card reveal" data-delay="200" tabindex="0" aria-label="Projeto: Robô Humanoide">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <img
+                src="assets/images/sobre/espaco_maker_20.webp"
+                alt="Robô Humanoide desenvolvido pelos alunos"
+                loading="lazy"
+                width="400" height="250"
+              >
+              <div class="project-card__front-info">
+                <h3>Robô Humanoide</h3>
+                <p>Estrutura humanóide com servos e controle de gestos</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Robô Humanoide</h3>
+              <p>
+                Estrutura com 17 graus de liberdade, capaz de andar, dançar e realizar gestos.
+                Projeto que integra mecânica, eletrônica e programação avançada.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Servo Motores</span>
+                <span class="tag">Raspberry Pi</span>
+                <span class="tag">Python</span>
+                <span class="tag">Impressão 3D</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3: Braço Robótico -->
+        <article class="project-card reveal" data-delay="300" tabindex="0" aria-label="Projeto: Braço Robótico">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <img
+                src="assets/images/projetos/espaco_maker/espaco_maker_5.webp"
+                alt="Braço robótico de 5 eixos"
+                loading="lazy"
+                width="400" height="250"
+              >
+              <div class="project-card__front-info">
+                <h3>Braço Robótico</h3>
+                <p>Braço articulado de 5 eixos com controle preciso</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Braço Robótico</h3>
+              <p>
+                Braço industrial em miniatura com 5 eixos de movimento, capaz de pegar,
+                mover e posicionar objetos com precisão milimétrica usando encoder.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Servo Motores</span>
+                <span class="tag">Impressão 3D</span>
+                <span class="tag">Encoder</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="projects__cta reveal">
+        <a href="projetos.html" class="btn btn--outline">
+          <i class="fa-solid fa-grip" aria-hidden="true"></i>
+          Ver todos os projetos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       QUIZ
+       ====================================================== -->
+  <section class="quiz section section--alt" id="quiz" aria-label="Quiz: qual curso é pra mim?">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__subtitle">Encontre seu caminho</p>
+        <h2 class="section__title">Qual curso é <em>pra mim?</em></h2>
+        <p class="section__desc">Responda 3 perguntas rápidas e receba uma recomendação personalizada.</p>
+      </div>
+
+      <div class="quiz__container reveal" data-delay="200">
+        <div id="quiz-container" role="form" aria-label="Quiz de recomendação de curso">
+          <!-- Preenchido por quiz.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       VENHA NOS VISITAR
+       ====================================================== -->
+  <section class="visit section" id="agendamento" aria-label="Agendar uma visita">
+
+    <video
+      class="visit__bg-video"
+      autoplay muted loop playsinline
+      aria-hidden="true"
+      poster="assets/images/projetos/espaco_maker/espaco_maker_1.webp"
+    >
+      <source src="assets/videos/espaco_maker/espaco_maker_apresentacao.mp4" type="video/mp4">
+    </video>
+
+    <div class="visit__overlay" aria-hidden="true"></div>
+
+    <div class="visit__content">
+      <div class="container">
+        <div class="section__header reveal">
+          <p class="section__subtitle">Venha nos conhecer</p>
+          <h2 class="section__title">Agende sua <em>Visita Gratuita</em></h2>
+        </div>
+
+        <div class="visit__grid">
+
+          <!-- Formulário -->
+          <div class="form-card reveal" data-delay="100">
+            <h3 class="form-card__title">Reserve sua vaga</h3>
+            <p class="form-card__desc">Preencha o formulário e entraremos em contato para confirmar.</p>
+
+            <form id="form-agendamento" novalidate>
+
+              <div class="form-group">
+                <label for="nome">Nome completo</label>
+                <input
+                  type="text"
+                  id="nome"
+                  name="nome"
+                  placeholder="Seu nome"
+                  required
+                  autocomplete="name"
+                >
+                <span class="form-group__error-msg" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="email">E-mail</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="seu@email.com"
+                  required
+                  autocomplete="email"
+                >
+                <span class="form-group__error-msg" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="perfil">Você é</label>
+                <select id="perfil" name="perfil" required>
+                  <option value="" disabled selected>Selecione seu perfil</option>
+                  <option value="aluno">Aluno</option>
+                  <option value="professor">Professor / Educador</option>
+                  <option value="responsavel">Pai / Responsável</option>
+                  <option value="escola">Gestor de escola</option>
+                  <option value="empresa">Empresa / Organização</option>
+                </select>
+                <span class="form-group__error-msg" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="data">Data desejada para a visita</label>
+                <input
+                  type="date"
+                  id="data"
+                  name="data"
+                  required
+                >
+                <span class="form-group__error-msg" role="alert"></span>
+              </div>
+
+              <button type="submit" class="btn btn--primary form-submit">
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                Agendar visita gratuita
+              </button>
+
+              <div class="local-save-badge" aria-hidden="true">
+                <span class="local-save-badge__dot"></span>
+                Dados salvos localmente até o envio real ser ativado
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Depoimentos + vagas -->
+          <div class="visit__right reveal" data-delay="300">
+
+            <div class="vagas-badge" role="status" aria-live="polite">
+              <span class="vagas-badge__dot" aria-hidden="true"></span>
+              Vagas limitadas esta semana
+            </div>
+
+            <h3 class="testimonials-title">O que dizem os alunos</h3>
+
+            <div class="testimonials-slider" aria-label="Depoimentos de alunos e professores">
+
+              <div class="testimonial-card active" role="article">
+                <p class="testimonial-card__text">
+                  Nunca imaginei que ia construir um robô com as minhas próprias mãos.
+                  O projeto mudou a forma como eu me vejo e o que acredito que posso fazer.
+                </p>
+                <div class="testimonial-card__author">
+                  <div class="testimonial-card__avatar" aria-hidden="true">🎒</div>
+                  <div>
+                    <div class="testimonial-card__name">Maria S.</div>
+                    <div class="testimonial-card__role">Aluna, 9º ano — CEF 101</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="testimonial-card" role="article">
+                <p class="testimonial-card__text">
+                  Ver meus alunos apresentando projetos de robótica para a comunidade
+                  foi a maior realização da minha carreira como professora.
+                </p>
+                <div class="testimonial-card__author">
+                  <div class="testimonial-card__avatar" aria-hidden="true">📚</div>
+                  <div>
+                    <div class="testimonial-card__name">Prof. Carla M.</div>
+                    <div class="testimonial-card__role">Professora de Ciências — CEM 804</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="testimonial-card" role="article">
+                <p class="testimonial-card__text">
+                  Meu filho passou a querer aprender mais, pesquisar sozinho.
+                  A robótica despertou nele uma curiosidade que a escola tradicional não conseguiu.
+                </p>
+                <div class="testimonial-card__author">
+                  <div class="testimonial-card__avatar" aria-hidden="true">👨‍👩‍👧</div>
+                  <div>
+                    <div class="testimonial-card__name">Responsável — Recanto das Emas</div>
+                    <div class="testimonial-card__role">Pai de aluno do 8º ano</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="testimonials-dots" role="tablist" aria-label="Navegar entre depoimentos">
+              <button class="testimonials-dot active" aria-label="Depoimento 1" aria-selected="true" role="tab"></button>
+              <button class="testimonials-dot"        aria-label="Depoimento 2" aria-selected="false" role="tab"></button>
+              <button class="testimonials-dot"        aria-label="Depoimento 3" aria-selected="false" role="tab"></button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       ESCOLAS PARCEIRAS
+       ====================================================== -->
+  <section class="section section--alt" id="escolas" aria-label="Escolas parceiras">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__subtitle">Onde atuamos</p>
+        <h2 class="section__title">Escolas <em>Parceiras</em></h2>
+        <p class="section__desc">Já atendemos 9 escolas públicas do Recanto das Emas e Brasília.</p>
+      </div>
+
+      <div class="partners__grid">
+
+        <a href="escolas.html#cef-101" class="partner-card reveal" data-delay="100">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">CEF 101</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#cef-113" class="partner-card reveal" data-delay="150">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">CEF 113</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#cef-206" class="partner-card reveal" data-delay="200">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">CEF 206</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#cef-308" class="partner-card reveal" data-delay="250">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">CEF 308</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#cef-405" class="partner-card reveal" data-delay="300">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">CEF 405</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#cem-804" class="partner-card reveal" data-delay="350">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">CEM 804</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#ec-203" class="partner-card reveal" data-delay="400">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">EC 203</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#ec-401" class="partner-card reveal" data-delay="450">
+          <div class="partner-card__icon" aria-hidden="true">🏫</div>
+          <div class="partner-card__name">EC 401</div>
+          <div class="partner-card__desc">Recanto das Emas</div>
+        </a>
+
+        <a href="escolas.html#colegio-militar" class="partner-card reveal" data-delay="500">
+          <div class="partner-card__icon" aria-hidden="true">🎖️</div>
+          <div class="partner-card__name">Colégio Militar</div>
+          <div class="partner-card__desc">Brasília, DF</div>
+        </a>
+
+      </div>
+
+      <div class="partners__cta reveal">
+        <a href="escolas.html" class="btn btn--outline">
+          <i class="fa-solid fa-school" aria-hidden="true"></i>
+          Ver todas as escolas
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+
+        <div class="footer__brand">
+          <div class="footer__brand-name">Aluno Maker Digital</div>
+          <p class="footer__brand-desc">
+            Tecnologia que transforma vidas. Robótica educacional para escolas
+            públicas do Recanto das Emas desde 2018.
+          </p>
+          <div class="footer__social" aria-label="Redes sociais">
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer"
+               class="footer__social-link" aria-label="Instagram">
+              <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer"
+               class="footer__social-link" aria-label="YouTube">
+              <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+            </a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer"
+               class="footer__social-link" aria-label="WhatsApp">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p class="footer__col-title">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="#impacto">Nosso impacto</a></li>
+            <li><a href="#projetos">Projetos</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="escolas.html">Escolas</a></li>
+            <li><a href="#agendamento">Agendar visita</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="footer__col-title">Contato</p>
+          <ul class="footer__links">
+            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
+            <li>Recanto das Emas, Brasília — DF</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copy">
+          © 2018–2026 <a href="index.html">Aluno Maker Digital</a> — Prof. Francenylson.
+          Todos os direitos reservados.
+        </p>
+        <p class="footer__copy">
+          <a href="privacidade.html">Política de privacidade</a>
+        </p>
+      </div>
+    </div>
   </footer>
+
+  <!-- JS — defer para não bloquear renderização -->
+  <script src="assets/js/animations.js"  defer></script>
+  <script src="assets/js/counter.js"     defer></script>
+  <script src="assets/js/navbar.js"      defer></script>
+  <script src="assets/js/quiz.js"        defer></script>
+  <script src="assets/js/forms.js"       defer></script>
+  <script src="assets/js/main.js"        defer></script>
+
 </body>
 </html>

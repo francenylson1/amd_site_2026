@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Agendamento confirmado — Aluno Maker Digital">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Visita agendada! — Aluno Maker Digital</title>
+
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
+
+  <style>
+    body {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .obrigado-card {
+      max-width: 560px;
+      width: 100%;
+      padding: 3rem 2.5rem;
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--blue-electric);
+      box-shadow: var(--glow-blue);
+    }
+
+    .obrigado-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--green-accent);
+      animation: float 3s ease-in-out infinite;
+      display: block;
+    }
+
+    .obrigado-title {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .obrigado-desc {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .obrigado-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="obrigado-card glass-card" role="main">
+    <i class="fa-solid fa-circle-check obrigado-icon" aria-hidden="true"></i>
+    <h1 class="obrigado-title">Visita agendada com sucesso!</h1>
+    <p class="obrigado-desc">
+      Recebemos sua solicitação e entraremos em contato em breve para confirmar
+      os detalhes. Prepare-se para conhecer o mundo da robótica de perto!
+    </p>
+    <div class="obrigado-actions">
+      <a href="index.html" class="btn btn--primary">
+        <i class="fa-solid fa-house" aria-hidden="true"></i>
+        Voltar ao início
+      </a>
+      <a
+        href="https://wa.me/5561981333875?text=Acabei+de+agendar+uma+visita+pelo+site!"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn--secondary"
+      >
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+        Falar pelo WhatsApp
+      </a>
+    </div>
+  </main>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

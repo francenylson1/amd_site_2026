@@ -1,0 +1,58 @@
+/* ============================================================
+   TOKENS DE DESIGN — Aluno Maker Digital
+   Fonte da verdade para cores, tipografia e espaçamentos.
+   ============================================================ */
+
+:root {
+  /* --- Fundos --- */
+  --bg-primary:   #0a0e1a;
+  --bg-secondary: #0d1526;
+  --bg-tertiary:  #111e35;
+  --bg-glass:     rgb(13 21 38 / 85%);
+
+  /* --- Cores principais --- */
+  --blue-primary:   #06f;
+  --blue-electric:  #00e5ff;
+  --orange-accent:  #ff6b35;
+  --purple-accent:  #a855f7;
+  --green-accent:   #00c870;
+  --gold-accent:    #ffd700;
+
+  /* --- Texto --- */
+  --text-primary:   #e0e8ff;
+  --text-secondary: #7090b0;
+  --text-muted:     #4a6080;
+
+  /* --- Bordas e efeitos luminosos --- */
+  --border-color:   #1e3a5f;
+  --glow-blue:      0 0 20px rgb(0 229 255 / 30%);
+  --glow-orange:    0 0 20px rgb(255 107 53 / 30%);
+  --glow-purple:    0 0 20px rgb(168 85 247 / 30%);
+
+  /* --- Tipografia --- */
+  --font-display: 'Orbitron', monospace;
+  --font-nav:     'Rajdhani', sans-serif;
+  --font-body:    'Inter', sans-serif;
+
+  /* --- Espaçamentos e layout --- */
+  --section-padding:   80px 0;
+  --container-max:     1200px;
+  --container-padding: 0 24px;
+  --border-radius:     12px;
+  --border-radius-lg:  20px;
+
+  /* --- Transições --- */
+  --transition-fast: 0.2s ease;
+  --transition-med:  0.4s ease;
+  --transition-slow: 0.6s ease;
+
+  /* --- Navbar --- */
+  --navbar-height: 70px;
+
+  /* --- Z-index layers --- */
+  --z-base:       1;
+  --z-dropdown:   100;
+  --z-navbar:     900;
+  --z-float:      950;
+  --z-overlay:    1000;
+}
