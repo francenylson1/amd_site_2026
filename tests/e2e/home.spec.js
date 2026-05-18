@@ -15,7 +15,7 @@ test.describe('Home — carregamento e estrutura', () => {
   });
 
   test('slogan oficial visível no hero', async ({ page }) => {
-    await expect(page.getByText('Tecnologia que transforma vidas.')).toBeVisible();
+    await expect(page.locator('.hero__subtitle')).toContainText('Tecnologia que transforma vidas.');
   });
 
   test('navbar fixa presente e acessível', async ({ page }) => {
@@ -75,16 +75,15 @@ test.describe('Home — Quiz interativo', () => {
   });
 
   test('selecionando opção avança para próxima pergunta', async ({ page }) => {
-    await page.locator('.quiz__option').first().click();
+    await page.locator('.quiz__question.active .quiz__option').first().click();
     await page.waitForTimeout(400);
     const step2 = page.locator('#quiz-step-1');
     await expect(step2).toHaveClass(/active/);
   });
 
   test('quiz completo exibe resultado com botão para cursos', async ({ page }) => {
-    // Responde as 3 perguntas
     for (let i = 0; i < 3; i++) {
-      await page.locator('.quiz__option').first().click();
+      await page.locator('.quiz__question.active .quiz__option').first().click();
       await page.waitForTimeout(400);
     }
 
@@ -98,7 +97,7 @@ test.describe('Home — Quiz interativo', () => {
 
   test('botão "refazer" reinicia o quiz', async ({ page }) => {
     for (let i = 0; i < 3; i++) {
-      await page.locator('.quiz__option').first().click();
+      await page.locator('.quiz__question.active .quiz__option').first().click();
       await page.waitForTimeout(400);
     }
     await page.locator('#quiz-restart').click();
@@ -140,8 +139,9 @@ test.describe('Home — Formulário de agendamento', () => {
     await page.fill('#data',  dateStr);
 
     await page.locator('[type="submit"]').click();
-    await page.waitForURL('**/obrigado.html', { timeout: 5000 });
-    await expect(page).toHaveURL(/obrigado\.html/);
+    // serve remove a extensão .html automaticamente (→ /obrigado)
+    await page.waitForURL(/obrigado/, { timeout: 5000 });
+    await expect(page).toHaveURL(/obrigado/);
   });
 });
 
