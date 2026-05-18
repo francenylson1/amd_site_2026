@@ -23,13 +23,13 @@
 
 .btn--primary {
   background: var(--orange-accent);
-  color: #fff;
+  color: var(--bg-primary); /* navy escuro — 6.8:1 em laranja, WCAG AA */
   box-shadow: var(--glow-orange);
 }
 
 .btn--primary:hover {
   background: #e85a25;
-  color: #fff;
+  color: var(--bg-primary); /* 5.4:1 no laranja escurecido, WCAG AA */
   transform: translateY(-2px);
   box-shadow: 0 0 30px rgb(255 107 53 / 50%);
 }
@@ -1031,7 +1031,7 @@
 
 .footer__copy a {
   color: var(--blue-electric);
-  text-decoration: none;
+  text-decoration: underline; /* distingue do texto ao redor — axe link-in-text-block */
 }
 
 .footer__links {
