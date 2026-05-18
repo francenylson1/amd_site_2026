@@ -17,7 +17,7 @@ module.exports = defineConfig({
   },
 
   webServer: {
-    command: 'npm run dev',
+    command: 'npm run serve:lhci',
     url: 'http://localhost:5500',
     reuseExistingServer: !process.env.CI,
     timeout: 15000,
