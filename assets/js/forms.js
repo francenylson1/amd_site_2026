@@ -3,7 +3,11 @@
 (function () {
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const PHONE_RE = /^\(?\d{2}\)?[\s\-]?[\s]?\d{4,5}[\s\-]?\d{4}$/;
-  const API_BASE = '/api';
+
+  // Em produção aponta para o subdomínio da API; em dev usa caminho relativo
+  const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? '/api'
+    : 'https://api.alunomakerdigital.com.br/api';
 
   // ─── Validação inline ────────────────────────────────────────────────────────
 

@@ -20,6 +20,8 @@ const PORT = process.env.PORT || 3000;
 const ALLOWED_ORIGINS = [
   'https://alunomakerdigital.com.br',
   'https://www.alunomakerdigital.com.br',
+  'https://staging.alunomakerdigital.com.br',
+  'https://api.alunomakerdigital.com.br',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
 ];
