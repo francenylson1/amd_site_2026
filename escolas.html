@@ -49,8 +49,7 @@
   <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
     <div class="navbar__inner">
       <a href="index.html" class="navbar__logo">
-        <img src="assets/images/logo/logo1.webp" alt="Logo Aluno Maker Digital" width="40" height="40" loading="eager">
-        Aluno <span>Maker</span>
+        <span class="logo-aluno">Aluno</span><span class="logo-maker">Maker</span><span class="logo-digital">Digital</span>
       </a>
       <button class="navbar__toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
         <span></span><span></span><span></span>
@@ -82,36 +81,12 @@
     </div>
   </section>
 
-  <!-- MAPA -->
-  <section class="section" id="mapa" aria-label="Mapa das escolas parceiras">
-    <div class="container">
-      <div class="section__header reveal">
-        <p class="section__subtitle">Localização</p>
-        <h2 class="section__title">Onde estamos no <em>mapa</em></h2>
-        <p class="section__desc">Atuamos no Recanto das Emas — uma das regiões administrativas de Brasília — e também levamos o projeto ao Colégio Militar de Brasília.</p>
-      </div>
-      <div class="map-wrapper reveal" data-delay="200">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30999!2d-48.063!3d-15.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
-          width="100%"
-          height="450"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Mapa do Recanto das Emas — Brasília, DF"
-          aria-label="Mapa interativo mostrando a região do Recanto das Emas em Brasília"
-        ></iframe>
-      </div>
-    </div>
-  </section>
-
   <!-- CARDS DE ESCOLAS -->
   <section class="section section--alt" id="escolas-lista" aria-label="Lista de escolas parceiras">
     <div class="container">
       <div class="section__header reveal">
         <p class="section__subtitle">Nossas parceiras</p>
-        <h2 class="section__title">As <em>9 escolas</em> que transformamos juntos</h2>
+        <h2 class="section__title">As <em>escolas</em> que transformamos juntos</h2>
         <p class="section__desc">O AMD atende alunos do 1º ano do Ensino Fundamental ao 3º ano do Ensino Médio em cada uma dessas escolas.</p>
       </div>
 
@@ -338,8 +313,80 @@
           </div>
         </article>
 
+        <!-- Pinheirinho Roxo -->
+        <article class="school-card reveal" data-delay="500" id="pinheirinho-roxo">
+          <div class="school-card__header">
+            <div class="school-card__icon" aria-hidden="true">
+              <i class="fa-solid fa-school"></i>
+            </div>
+            <div>
+              <h3 class="school-card__name">Pinheirinho Roxo</h3>
+              <span class="school-card__location">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                Recanto das Emas
+              </span>
+            </div>
+          </div>
+          <p class="school-card__desc">
+            Centro de Educação Infantil Pinheirinho Roxo — parceiro do AMD no atendimento
+            às crianças da primeira infância, onde a robótica lúdica desperta a curiosidade
+            científica desde os primeiros anos de vida.
+          </p>
+          <div class="school-card__badge">
+            <span class="badge badge--primary">Educação Infantil</span>
+          </div>
+        </article>
+
+        <!-- CeD 104 -->
+        <article class="school-card reveal" data-delay="550" id="ced-104">
+          <div class="school-card__header">
+            <div class="school-card__icon" aria-hidden="true">
+              <i class="fa-solid fa-school"></i>
+            </div>
+            <div>
+              <h3 class="school-card__name">CeD 104</h3>
+              <span class="school-card__location">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                Recanto das Emas
+              </span>
+            </div>
+          </div>
+          <p class="school-card__desc">
+            Centro Educacional 104 — escola parceira do AMD com turmas do Ensino Médio
+            que participam das oficinas de robótica e programação.
+          </p>
+          <div class="school-card__badge">
+            <span class="badge badge--secondary">Ensino Médio</span>
+          </div>
+        </article>
+
+        <!-- CEF 306 — Surdos e Mudos -->
+        <article class="school-card reveal" data-delay="600" id="cef-306">
+          <div class="school-card__header">
+            <div class="school-card__icon school-card__icon--purple" aria-hidden="true">
+              <i class="fa-solid fa-hands-asl-interpreting"></i>
+            </div>
+            <div>
+              <h3 class="school-card__name">CEF 306</h3>
+              <span class="school-card__location">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                Recanto das Emas
+              </span>
+            </div>
+          </div>
+          <p class="school-card__desc">
+            Centro de Ensino Fundamental 306 — o AMD atende a turma de inclusão de alunos
+            surdos e mudos com metodologia adaptada, comunicação visual e projetos
+            que ampliam a autonomia de cada aluno.
+          </p>
+          <div class="school-card__badge">
+            <span class="badge badge--secondary">Anos Finais</span>
+            <span class="badge badge--primary">Inclusão Surdos/Mudos</span>
+          </div>
+        </article>
+
         <!-- Colégio Militar -->
-        <article class="school-card reveal" data-delay="500" id="colegio-militar">
+        <article class="school-card reveal" data-delay="650" id="colegio-militar">
           <div class="school-card__header">
             <div class="school-card__icon school-card__icon--gold" aria-hidden="true">
               <i class="fa-solid fa-star"></i>
