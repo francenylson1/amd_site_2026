@@ -1,0 +1,120 @@
+/* ============================================================
+   ANIMAÇÕES — Keyframes + Classes de reveal ao scroll
+   ============================================================ */
+
+/* --- Keyframes --- */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: var(--glow-blue); }
+  50%       { box-shadow: 0 0 35px rgb(0 229 255 / 55%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes blink-caret {
+  0%, 100% { border-color: var(--blue-electric); }
+  50%       { border-color: transparent; }
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50%       { transform: translateX(-50%) translateY(8px); opacity: 0.4; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Reveal ao scroll (controlado por animations.js) --- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Variantes de direção */
+.reveal--left  { transform: translateX(-28px); }
+.reveal--right { transform: translateX(28px); }
+.reveal--scale { transform: scale(0.92); }
+
+.reveal--left.visible,
+.reveal--right.visible,
+.reveal--scale.visible {
+  transform: none;
+}
+
+/* Delays escalonados (data-delay em ms no HTML) */
+.reveal[data-delay="100"]  { transition-delay: 0.1s; }
+.reveal[data-delay="200"]  { transition-delay: 0.2s; }
+.reveal[data-delay="300"]  { transition-delay: 0.3s; }
+.reveal[data-delay="400"]  { transition-delay: 0.4s; }
+.reveal[data-delay="500"]  { transition-delay: 0.5s; }
+.reveal[data-delay="600"]  { transition-delay: 0.6s; }
+
+/* --- Animações Hero (aplicadas diretamente) --- */
+
+.hero__title    { animation: fadeInDown 0.8s ease forwards; }
+.hero__subtitle { animation: fadeInUp 0.8s 0.3s ease both; }
+.hero__cta      { animation: fadeInUp 0.8s 0.6s ease both; }
+
+/* --- Float para elementos flutuantes --- */
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* --- Pulse para WhatsApp e CTA destaques --- */
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+
+/* --- Respeita preferência de movimento reduzido --- */
+/* stylelint-disable declaration-no-important */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+/* stylelint-enable declaration-no-important */
