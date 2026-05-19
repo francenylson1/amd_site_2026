@@ -7,16 +7,17 @@ const { test, expect } = require('@playwright/test');
 const AxeBuilder = require('@axe-core/playwright').default;
 
 const PAGES = [
-  { name: 'Home',       path: '/'               },
-  { name: 'Obrigado',   path: '/obrigado.html'  },
-  { name: 'Sobre',      path: '/sobre.html'     },
-  { name: 'Projetos',   path: '/projetos.html'  },
-  { name: 'Escolas',    path: '/escolas.html'   },
-  { name: 'Eventos',    path: '/eventos.html'   },
-  { name: 'Cursos',     path: '/cursos.html'    },
-  { name: 'Loja',       path: '/loja.html'      },
-  { name: 'Contato',    path: '/contato.html'   },
-  { name: 'Quiz',       path: '/quiz.html'      },
+  { name: 'Home',       path: '/'                  },
+  { name: 'Obrigado',   path: '/obrigado.html'     },
+  { name: 'Sobre',      path: '/sobre.html'        },
+  { name: 'Projetos',   path: '/projetos.html'     },
+  { name: 'Escolas',    path: '/escolas.html'      },
+  { name: 'Eventos',    path: '/eventos.html'      },
+  { name: 'Cursos',     path: '/cursos.html'       },
+  { name: 'Loja',       path: '/loja.html'         },
+  { name: 'Contato',    path: '/contato.html'      },
+  { name: 'Quiz',       path: '/quiz.html'         },
+  { name: 'Animações',  path: '/animacoes.html'    },
 ];
 
 for (const { name, path } of PAGES) {

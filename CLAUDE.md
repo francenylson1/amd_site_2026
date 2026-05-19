@@ -27,7 +27,6 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ⏳ | — | — |
-| 3 — Módulo GPIO (animações) | ⏳ | — | — |
 | 4 — Backend + Admin mínimo | ⏳ | — | — |
 | 5 — Gerador com Claude API | ⏳ | — | — |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
