@@ -123,8 +123,8 @@
   line-height: 1;
 }
 
-.navbar__logo .logo-aluno  { color: #00a855; }
-.navbar__logo .logo-maker  { color: #e53935; }
+.navbar__logo .logo-aluno  { color: #00843f; }
+.navbar__logo .logo-maker  { color: #d32f2f; }
 .navbar__logo .logo-digital{ color: #0066ff; }
 
 .navbar__menu {

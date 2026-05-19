@@ -14,6 +14,7 @@ const CSS_FILES = [
   'assets/css/main.css',
   'assets/css/animations.css',
   'assets/css/components.css',
+  'assets/css/gpio.css',
   'assets/css/responsive.css',
 ];
 

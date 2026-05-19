@@ -4,14 +4,15 @@
 const { test, expect } = require('@playwright/test');
 
 const PAGES = [
-  { path: '/sobre.html',    title: /Sobre nós/,       h1: /Sobre o.*Aluno Maker Digital/i },
-  { path: '/projetos.html', title: /Projetos/,         h1: /Nossos.*Projetos/i },
-  { path: '/escolas.html',  title: /Escolas Parceiras/,h1: /Escolas.*Parceiras/i },
-  { path: '/eventos.html',  title: /Eventos/,          h1: /Eventos e.*Conquistas/i },
-  { path: '/cursos.html',   title: /Cursos/,           h1: /Nossos.*Cursos/i },
-  { path: '/loja.html',     title: /Loja/,             h1: /Nossa.*Loja/i },
-  { path: '/contato.html',  title: /Contato/,          h1: /Entre em.*Contato/i },
-  { path: '/quiz.html',     title: /Quiz/,             h1: /Qual curso é/i },
+  { path: '/sobre.html',     title: /Sobre nós/,        h1: /Sobre o.*Aluno Maker Digital/i },
+  { path: '/projetos.html',  title: /Projetos/,          h1: /Nossos.*Projetos/i },
+  { path: '/escolas.html',   title: /Escolas Parceiras/, h1: /Escolas.*Parceiras/i },
+  { path: '/eventos.html',   title: /Eventos/,           h1: /Eventos e.*Conquistas/i },
+  { path: '/cursos.html',    title: /Cursos/,            h1: /Nossos.*Cursos/i },
+  { path: '/loja.html',      title: /Loja/,              h1: /Nossa.*Loja/i },
+  { path: '/contato.html',   title: /Contato/,           h1: /Entre em.*Contato/i },
+  { path: '/quiz.html',      title: /Quiz/,              h1: /Qual curso é/i },
+  { path: '/animacoes.html', title: /Animações GPIO/,    h1: /Animações/i },
 ];
 
 test.describe('Navegação — todas as páginas carregam', () => {
