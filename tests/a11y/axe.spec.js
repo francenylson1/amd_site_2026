@@ -23,6 +23,17 @@ const PAGES = [
 for (const { name, path } of PAGES) {
   test(`${name} — zero violações axe críticas/sérias`, async ({ page }) => {
     await page.goto(path);
+    await page.waitForLoadState('networkidle');
+    // Desabilita transitions/animations e força .reveal visible antes do scan axe.
+    // Necessário em CI headless: IntersectionObserver não dispara sem scroll,
+    // e transition-delay faz axe calcular cores com opacidade parcial.
+    await page.evaluate(() => {
+      const noAnim = document.createElement('style');
+      noAnim.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; transition-delay: 0s !important; }';
+      document.head.appendChild(noAnim);
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    });
+    await page.waitForTimeout(100);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
