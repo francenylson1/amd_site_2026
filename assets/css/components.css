@@ -125,7 +125,7 @@
 
 .navbar__logo .logo-aluno  { color: #00843f; }
 .navbar__logo .logo-maker  { color: #d32f2f; }
-.navbar__logo .logo-digital{ color: #0066ff; }
+.navbar__logo .logo-digital{ color: #06f; }
 
 .navbar__menu {
   display: flex;
@@ -1213,7 +1213,11 @@
   align-items: flex-start;
 }
 
-.mvv-card__list li .fa-check { color: var(--green-accent); flex-shrink: 0; margin-top: 0.2rem; }
+.mvv-card__list li .fa-check {
+  color: var(--green-accent);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
 
 /* ---- Perfil do professor ---- */
 
@@ -1731,7 +1735,11 @@
   align-items: flex-start;
 }
 
-.course-card__topics .fa-check { color: var(--green-accent); flex-shrink: 0; margin-top: 0.2rem; }
+.course-card__topics .fa-check {
+  color: var(--green-accent);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
 
 .course-card__price {
   font-family: var(--font-display);
@@ -1815,7 +1823,11 @@
   align-items: flex-start;
 }
 
-.consultoria-text__features .fa-check { color: var(--green-accent); flex-shrink: 0; margin-top: 0.2rem; }
+.consultoria-text__features .fa-check {
+  color: var(--green-accent);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
 
 .consultoria-image img {
   width: 100%;
@@ -1962,7 +1974,11 @@
   align-items: flex-start;
 }
 
-.shop-card__includes .fa-check { color: var(--green-accent); flex-shrink: 0; margin-top: 0.2rem; }
+.shop-card__includes .fa-check {
+  color: var(--green-accent);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
 
 .shop-card__price {
   font-family: var(--font-display);
@@ -2129,10 +2145,6 @@
 }
 
 /* ---- Textarea ---- */
-
-textarea.form-group > label + & {
-  resize: vertical;
-}
 
 .form-group textarea {
   width: 100%;

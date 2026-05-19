@@ -4,6 +4,8 @@
     "declaration-no-important": [true, { "ignoreAtRules": ["media"] }],
     "selector-class-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
     "declaration-block-single-line-max-declarations": 2,
-    "keyframes-name-pattern": null
+    "keyframes-name-pattern": null,
+    "no-descending-specificity": null,
+    "nesting-selector-no-missing-scoping-root": null
   }
 }
