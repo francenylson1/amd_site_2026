@@ -26,7 +26,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 0 — Fundação documental e ambiente | ✅ Concluída | v0.1.1 | Repo Git + CI verde + placeholder no ar (produção + staging) |
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
-| 3 — Módulo GPIO (animações) | ⏳ | — | — |
+| 3 — Módulo GPIO (animações) | ✅ Concluída | — | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ⏳ | — | — |
 | 5 — Gerador com Claude API | ⏳ | — | — |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
@@ -65,13 +65,18 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **gallery.js:** usa `container.closest('section')` para escopo dos `[data-category]` — filtros e items são irmãos, não pai-filho.
 - **forms.js:** suporta `#form-agendamento` (home) e `#form-contato` (contato.html). Ambos gravam em localStorage com chaves distintas.
 - **serve strip .html:** o servidor local remove extensão `.html` das URLs — specs E2E usam regex sem `.html` (ex: `/obrigado/` não `/obrigado\.html/`).
+- **Logo navbar:** texto tricolor com fundo branco — `.logo-aluno` (verde `#00843f`), `.logo-maker` (vermelho `#d32f2f`), `.logo-digital` (azul `#0066ff`). Fonte Orbitron. Cores atendem WCAG AA 4.5:1 em fundo branco.
+- **gpio.css:** incluído no bundle; ordem no `build:css`: `variables → main → animations → components → gpio → responsive`.
+- **JSZip CDN:** `https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js` — carregado apenas em `animacoes.html`.
+- **AnimationController.state:** `'idle' | 'running' | 'paused' | 'stopped'` — transições: idle→running(play), running→paused(pause), running/paused→stopped(stop).
+- **contato.spec.js:** teste de mapa usa `iframe[title*="Localização"]` (não "Mapa") para bater com o title real do iframe.
 
 ## Paths críticos
 
 - `assets/css/bundle.min.css` — CSS único minificado usado em produção (gerado por `npm run build:css`).
 - `assets/js/main.js` — inicialização global: partículas, WhatsApp flutuante, slider depoimentos.
 - `tests/e2e/home.spec.js` — 25 testes E2E cobrindo todas as jornadas críticas da home.
-- `tests/e2e/navigation.spec.js` — navegação entre todas as 8 páginas públicas.
+- `tests/e2e/navigation.spec.js` — navegação entre todas as 9 páginas públicas (inclui animacoes.html).
 - `tests/e2e/gallery.spec.js` — filtros client-side e lightbox (projetos + eventos).
 - `tests/e2e/contato.spec.js` — formulário de contato + quiz dedicado.
 - `tests/a11y/axe.spec.js` — zero violações axe críticas/sérias (gate de deploy).
@@ -84,6 +89,10 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `eslint.config.mjs` — configuração ESLint v10 (flat config).
 - `.github/workflows/ci.yml` — pipeline: lint + E2E + Lighthouse.
 - `.github/workflows/deploy.yml` — FTP automático para staging/produção.
+- `animacoes.html` — visualizador GPIO (Fase 3): canvas 800×500 + painel de controle.
+- `assets/js/animations-gpio.js` — módulo GPIO: GPIOTemplate, RPi5/ESP8266/ESP32, AnimationController, LED/Servo/Sensor/Buzzer.
+- `assets/css/gpio.css` — estilos do módulo GPIO (incluído no bundle).
+- `tests/e2e/gpio.spec.js` — 32 testes E2E cobrindo CA-GPIO-01 a CA-GPIO-05 + acessibilidade.
 
 ## Manutenção deste arquivo
 
