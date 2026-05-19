@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Projetos de robótica do Aluno Maker Digital: Robô Garçom, Humanoide, Braço Robótico, Lixeira Inteligente e muito mais. Construídos por alunos de escolas públicas.">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://alunomakerdigital.com.br/projetos.html">
+  <meta property="og:title"       content="Projetos — Aluno Maker Digital">
+  <meta property="og:description" content="Robôs reais construídos por alunos de escolas públicas no Recanto das Emas: Garçom, Humanoide, Braço Robótico e mais.">
+  <meta property="og:image"       content="https://alunomakerdigital.com.br/assets/images/logo/logo1.webp">
+  <meta property="og:locale"      content="pt_BR">
+
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Projetos — Aluno Maker Digital">
+  <meta name="twitter:description" content="Robôs reais construídos por alunos de escolas públicas em Brasília.">
+
+  <link rel="manifest"    href="manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <title>Projetos — Aluno Maker Digital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/bundle.min.css">
+
+  <!-- GLightbox -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+  <link rel="preload" as="style"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  </noscript>
+
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <span class="logo-aluno">Aluno</span><span class="logo-maker">Maker</span><span class="logo-digital">Digital</span>
+      </a>
+      <button class="navbar__toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="nav-menu">
+        <li><a href="sobre.html"    class="navbar__link">Sobre</a></li>
+        <li><a href="projetos.html" class="navbar__link navbar__link--active">Projetos</a></li>
+        <li><a href="escolas.html"  class="navbar__link">Escolas</a></li>
+        <li><a href="eventos.html"  class="navbar__link">Eventos</a></li>
+        <li><a href="cursos.html"   class="navbar__link">Cursos</a></li>
+        <li><a href="loja.html"     class="navbar__link">Loja</a></li>
+        <li><a href="contato.html"  class="navbar__link">Contato</a></li>
+        <li><a href="index.html#agendamento" class="btn btn--primary navbar__cta">Agendar visita</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Galeria de projetos">
+    <div class="container">
+      <div class="page-hero__content reveal">
+        <p class="section__subtitle">O que construímos</p>
+        <h1 class="page-hero__title">Nossos <em>Projetos</em></h1>
+        <p class="page-hero__desc">
+          Robôs com funcionalidade real, construídos por alunos de escolas públicas.
+          Cada projeto nasceu de uma ideia em sala de aula e se tornou realidade nas bancadas do nosso espaço maker.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERIA COM FILTROS -->
+  <section class="section" id="galeria" aria-label="Galeria de projetos">
+    <div class="container">
+
+      <!-- Filtros -->
+      <div class="filter-bar reveal" role="group" aria-label="Filtrar projetos por categoria" data-gallery="projetos">
+
+        <button class="filter-btn filter-btn--active" data-filter="all" aria-pressed="true">
+          Todos
+        </button>
+        <button class="filter-btn" data-filter="roborica" aria-pressed="false">
+          Robótica
+        </button>
+        <button class="filter-btn" data-filter="ia" aria-pressed="false">
+          IA
+        </button>
+        <button class="filter-btn" data-filter="iot" aria-pressed="false">
+          IoT
+        </button>
+        <button class="filter-btn" data-filter="eletronica" aria-pressed="false">
+          Eletrônica
+        </button>
+
+      </div>
+
+      <!-- Grid de projetos -->
+      <div class="projects-gallery reveal" data-delay="200">
+
+        <!-- Robô Garçom -->
+        <article class="project-card reveal" data-delay="100" data-category="roborica" tabindex="0" aria-label="Projeto: Robô Garçom">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/robo_garcon/versao_2_5.webp" class="glightbox" data-gallery="garcom"
+                 data-title="Robô Garçom v2.5" aria-label="Ver foto ampliada do Robô Garçom">
+                <img
+                  src="assets/images/projetos/robo_garcon/versao_2_5.webp"
+                  alt="Robô Garçom versão 2.5 com duas bandejas"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Robô Garçom</h3>
+                <p>Robô semi-autônomo de serviço com duas bandejas</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Robô Garçom</h3>
+              <p>
+                Robô semi-autônomo capaz de navegar pelo ambiente e servir bebidas e comidas
+                em eventos com duas bandejas independentes. Desenvolvido por alunos do ensino médio.
+                A versão autônoma está em desenvolvimento.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Sensores Ultrassônicos</span>
+                <span class="tag">Motores DC</span>
+                <span class="tag">C++</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Humanoide 17 DOF -->
+        <article class="project-card reveal" data-delay="150" data-category="roborica" tabindex="0" aria-label="Projeto: Humanoide 17 DOF">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_20.webp" class="glightbox"
+                 data-title="Humanoide 17 DOF" aria-label="Ver foto ampliada do Humanoide">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_20.webp"
+                  alt="Robô humanoide de 17 graus de liberdade construído pelos alunos"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Humanoide 17 DOF</h3>
+                <p>Estrutura humanoide completa com movimentos de todo o corpo</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Humanoide 17 DOF</h3>
+              <p>
+                Robô humanoide de 45 cm com 17 graus de liberdade (DOF), capaz de andar,
+                dançar e realizar movimentos de todo o corpo. Integra mecânica, eletrônica
+                e programação avançada. Apresentado na Campus Party Brasília e na CLDF.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Servo Motores</span>
+                <span class="tag">Raspberry Pi</span>
+                <span class="tag">Python</span>
+                <span class="tag">Impressão 3D</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Braço Robótico com IA -->
+        <article class="project-card reveal" data-delay="200" data-category="ia" tabindex="0" aria-label="Projeto: Braço Robótico com IA">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_5.webp" class="glightbox"
+                 data-title="Braço Robótico com IA" aria-label="Ver foto ampliada do Braço Robótico">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_5.webp"
+                  alt="Braço robótico separador de frutas com inteligência artificial"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Braço Robótico com IA</h3>
+                <p>Separador de frutas com inteligência artificial</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Braço Robótico com IA</h3>
+              <p>
+                Braço articulado que usa visão computacional para identificar e separar frutas
+                por tipo e qualidade. Projeto que une robótica, programação e inteligência artificial
+                aplicadas a um problema real do cotidiano.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Python</span>
+                <span class="tag">OpenCV</span>
+                <span class="tag">Servo Motores</span>
+                <span class="tag">Raspberry Pi</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Distribuidor de Amendoins -->
+        <article class="project-card reveal" data-delay="250" data-category="roborica" tabindex="0" aria-label="Projeto: Braço Distribuidor">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_10.webp" class="glightbox"
+                 data-title="Braço Distribuidor de Amendoins" aria-label="Ver foto ampliada">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_10.webp"
+                  alt="Braço robótico distribuidor de amendoins para visitantes"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Braço Distribuidor</h3>
+                <p>Serve amendoins automaticamente para visitantes</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Braço Distribuidor</h3>
+              <p>
+                Braço robótico com funcionalidade prática: distribui amendoins automaticamente
+                para os visitantes do espaço maker. Um projeto simples e encantador que demonstra
+                como a robótica pode ter função real no cotidiano.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Servo Motores</span>
+                <span class="tag">Sensor de Presença</span>
+                <span class="tag">C++</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Lixeira Inteligente -->
+        <article class="project-card reveal" data-delay="300" data-category="iot" tabindex="0" aria-label="Projeto: Lixeira Inteligente">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_15.webp" class="glightbox"
+                 data-title="Lixeira Inteligente" aria-label="Ver foto ampliada da Lixeira Inteligente">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_15.webp"
+                  alt="Lixeira inteligente com sensor de abertura automática"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Lixeira Inteligente</h3>
+                <p>Abre automaticamente com sensor de aproximação</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Lixeira Inteligente</h3>
+              <p>
+                Lixeira com sensor de proximidade que abre automaticamente quando detecta
+                a presença de uma pessoa. Projeto que demonstra na prática como a eletrônica
+                pode melhorar objetos do dia a dia.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Sensor Ultrassônico</span>
+                <span class="tag">Servo Motor</span>
+                <span class="tag">C++</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ESP-8266 IoT -->
+        <article class="project-card reveal" data-delay="350" data-category="iot" tabindex="0" aria-label="Projeto: Projetos IoT com ESP-8266">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_30.webp" class="glightbox"
+                 data-title="Projetos IoT com ESP-8266" aria-label="Ver foto ampliada">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_30.webp"
+                  alt="Projeto de IoT usando ESP-8266 conectado à internet"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Projetos IoT</h3>
+                <p>Dispositivos conectados com ESP-8266 e sensores</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Projetos IoT com ESP-8266</h3>
+              <p>
+                Série de projetos que conectam sensores e atuadores à internet usando NodeMCU
+                ESP-8266. Inclui estação meteorológica, automação residencial simples e
+                monitoramento remoto — tudo feito por alunos do ensino fundamental e médio.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">ESP-8266</span>
+                <span class="tag">MicroPython</span>
+                <span class="tag">MQTT</span>
+                <span class="tag">Wi-Fi</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Iniciação à Eletrônica -->
+        <article class="project-card reveal" data-delay="400" data-category="eletronica" tabindex="0" aria-label="Projeto: Iniciação à Eletrônica">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_3.webp" class="glightbox"
+                 data-title="Iniciação à Eletrônica" aria-label="Ver foto ampliada">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_3.webp"
+                  alt="Alunos aprendendo eletrônica básica com LEDs e buzzers"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Iniciação à Eletrônica</h3>
+                <p>LEDs, buzzers e sensores — o primeiro passo de todo criador</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Iniciação à Eletrônica</h3>
+              <p>
+                Módulo inicial onde os alunos aprendem a programar LEDs, buzzers e sensores
+                diversos. É o ponto de partida para todos que chegam ao AMD — a base que dá
+                confiança para criar projetos cada vez mais complexos.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">LEDs</span>
+                <span class="tag">Buzzers</span>
+                <span class="tag">Sensores</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Humanoides com fala -->
+        <article class="project-card reveal" data-delay="450" data-category="roborica" tabindex="0" aria-label="Projeto: Humanoide com Fala">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/espaco_maker/espaco_maker_25.webp" class="glightbox"
+                 data-title="Humanoide com Fala" aria-label="Ver foto ampliada">
+                <img
+                  src="assets/images/projetos/espaco_maker/espaco_maker_25.webp"
+                  alt="Robô humanoide com habilidade de fala e movimentos dos membros superiores"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Humanoide com Fala</h3>
+                <p>Fala e movimenta os membros superiores de forma coordenada</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Humanoide com Fala</h3>
+              <p>
+                Robô com síntese de voz e movimentos coordenados dos membros superiores.
+                Capaz de cumprimentar visitantes e executar gestos predefinidos. Um marco
+                na trajetória do AMD que encanta alunos e professores em eventos.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Text-to-Speech</span>
+                <span class="tag">Servo Motores</span>
+                <span class="tag">Python</span>
+                <span class="tag">Raspberry Pi</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Altas Habilidades -->
+        <article class="project-card reveal" data-delay="500" data-category="eletronica" tabindex="0" aria-label="Projeto: Altas Habilidades 2019">
+          <div class="project-card__inner">
+            <div class="project-card__front">
+              <a href="assets/images/projetos/altas_habilidades/altas_habilidades_2019.webp" class="glightbox"
+                 data-title="Altas Habilidades — 2019" aria-label="Ver foto ampliada">
+                <img
+                  src="assets/images/projetos/altas_habilidades/altas_habilidades_2019.webp"
+                  alt="Projeto apresentado no programa de altas habilidades em 2019"
+                  loading="lazy" width="400" height="280"
+                >
+              </a>
+              <div class="project-card__front-info">
+                <h3>Altas Habilidades — 2019</h3>
+                <p>Apresentação para programa de altas habilidades e superdotação</p>
+              </div>
+              <div class="project-card__flip-hint" aria-hidden="true">
+                <i class="fa-solid fa-rotate"></i> ver mais
+              </div>
+            </div>
+            <div class="project-card__back">
+              <h3>Altas Habilidades — 2019</h3>
+              <p>
+                Apresentação especial para alunos do programa de altas habilidades e superdotação
+                do Distrito Federal. Demonstrou que a robótica é um caminho de excelência também
+                para jovens com potencial acima da média.
+              </p>
+              <div class="project-card__tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Eletrônica</span>
+                <span class="tag">Programação</span>
+                <span class="tag">2019</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section section--alt" aria-label="Agendar visita">
+    <div class="container">
+      <div class="cta-banner reveal">
+        <h2 class="cta-banner__title">Quer ver os robôs ao vivo?</h2>
+        <p class="cta-banner__desc">Agende uma visita gratuita e conheça de perto os projetos construídos pelos nossos alunos. Uma experiência que transforma a visão de qualquer pessoa sobre o poder da educação.</p>
+        <div class="cta-banner__actions">
+          <a href="index.html#agendamento" class="btn btn--primary">
+            <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+            Agendar visita gratuita
+          </a>
+          <a href="cursos.html" class="btn btn--secondary">
+            <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+            Ver nossos cursos
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="footer__brand-name">Aluno Maker Digital</div>
+          <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
+          <div class="footer__social" aria-label="Redes sociais">
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div>
+          <p class="footer__col-title">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="projetos.html">Projetos</a></li>
+            <li><a href="escolas.html">Escolas</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="loja.html">Loja</a></li>
+            <li><a href="contato.html">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__col-title">Contato</p>
+          <ul class="footer__links">
+            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
+            <li>Recanto das Emas, Brasília — DF</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2018–2026 <a href="index.html">Aluno Maker Digital</a> — Prof. Francenylson. Todos os direitos reservados.</p>
+        <p class="footer__copy"><a href="privacidade.html">Política de privacidade</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/animations.js" defer></script>
+  <script src="assets/js/navbar.js"     defer></script>
+  <script src="assets/js/gallery.js"    defer></script>
+  <script src="assets/js/main.js"       defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
+
+</body>
+</html>
