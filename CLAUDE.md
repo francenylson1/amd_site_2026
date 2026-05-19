@@ -27,7 +27,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
-| 4 — Backend + Admin mínimo | ⏳ | — | — |
+| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | server/ ESM, admin/ painel JWT, forms.js fallback localStorage |
 | 5 — Gerador com Claude API | ⏳ | — | — |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
@@ -38,6 +38,11 @@ npm install                        # instala todas as devDependencies
 npx playwright install             # baixa todos os browsers para testes locais
 npm run dev                        # servidor + watchers (CSS, imagens, vídeos) em http://localhost:5500
 npm run build:css                  # gera assets/css/bundle.min.css (rode antes de commitar CSS)
+npm run server:install             # instala dependências em server/ (na primeira vez)
+npm run server:dev                 # inicia backend com --watch na porta 3000
+npm run server:start               # inicia backend em produção
+npm run test:unit                  # Vitest — testes unitários (validators)
+npm run test:api                   # Vitest — testes de API (Supertest)
 npm test                           # Playwright — todos os browsers (e2e + axe)
 npm run test:ci                    # Playwright — só Chromium (CI)
 npm run lint                       # ESLint + Stylelint
@@ -76,6 +81,13 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **JSZip CDN:** `https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js` — carregado apenas em `animacoes.html`.
 - **AnimationController.state:** `'idle' | 'running' | 'paused' | 'stopped'` — transições: idle→running(play), running→paused(pause), running/paused→stopped(stop).
 - **contato.spec.js:** teste de mapa usa `iframe[title*="Localização"]` (não "Mapa") para bater com o title real do iframe.
+- **contato.html campos obrigatórios:** nome-contato, email-contato, assunto (select), mensagem — o select#assunto é required e deve ser preenchido em testes E2E.
+- **server/:** ESM (`"type": "module"`). Todos os arquivos usam `import`/`export`; `require()` proibido.
+- **Vitest API tests:** mocks CJS/ESM com `{ ...pool, default: pool }` para que `require()` e `import default` compartilhem a mesma instância de vi.fn().
+- **admin/login.html:** standalone (sem navbar), token JWT em `sessionStorage.amd_admin_token`.
+- **admin/index.html:** GET /api/admin/contacts + /api/admin/visits com Bearer token; redireciona para login se 401.
+- **forms.js fallback:** tenta POST /api/* com AbortSignal.timeout(8000); em caso de falha → localStorage + indicador amarelo `.form-status`.
+- **robots.txt:** já bloqueia `/admin/` desde a Fase 0.
 
 ## Paths críticos
 
@@ -91,7 +103,16 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `scripts/watch-css.js` — watcher que reconstrói bundle.min.css ao salvar qualquer .css.
 - `scripts/watch-images.js` — converte JPG/PNG para WebP automaticamente.
 - `scripts/watch-videos.js` — comprime MP4 + gera poster WebP (requer ffmpeg).
-- `.env.example` — template de variáveis (Fase 4+).
+- `.env.example` — template de variáveis (Fase 4+). Copiar para `.env` com credenciais reais.
+- `server/index.js` — entry point ESM; `npm run server:start` ou `npm run server:dev`.
+- `server/db/schema.sql` — DDL MySQL: visits, contacts, admin_users, feature_flags.
+- `server/middleware/validate.js` — validadores isValidEmail, isValidPhone, isValidDate, isFutureOrToday.
+- `server/services/emailService.js` — Nodemailer + Brevo SMTP.
+- `admin/login.html` — página de login admin (standalone).
+- `admin/index.html` — dashboard admin (contatos + agendamentos).
+- `server/tests/unit/validators.test.js` — 13 testes Vitest (validadores).
+- `server/tests/api/*.test.js` — 21 testes Supertest (contratos de endpoint).
+- `tests/e2e/backend.spec.js` — 4 testes E2E Playwright (fallback + admin).
 - `eslint.config.mjs` — configuração ESLint v10 (flat config).
 - `.github/workflows/ci.yml` — pipeline: lint + E2E + Lighthouse.
 - `.github/workflows/deploy.yml` — FTP automático para staging/produção.
