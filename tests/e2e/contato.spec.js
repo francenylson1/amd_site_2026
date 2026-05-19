@@ -24,7 +24,7 @@ test.describe('Contato — carregamento', () => {
   });
 
   test('mapa embed está presente', async ({ page }) => {
-    await expect(page.locator('iframe[title*="Mapa"]')).toBeVisible();
+    await expect(page.locator('iframe[title*="Localização"]')).toBeVisible();
   });
 
   test('informações de contato visíveis', async ({ page }) => {

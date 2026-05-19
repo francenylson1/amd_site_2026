@@ -1,0 +1,439 @@
+/* ============================================================
+   GPIO ANIMATIONS MODULE — Aluno Maker Digital
+   Estilos exclusivos de animacoes.html
+   ============================================================ */
+
+/* --- Layout principal --- */
+.gpio-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: var(--section-padding);
+}
+
+.gpio-panel {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 28px 24px;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: calc(var(--navbar-height) + 16px);
+}
+
+.gpio-panel__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--blue-electric);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* --- Grupos de campos --- */
+.gpio-field-group {
+  margin-bottom: 18px;
+}
+
+.gpio-label {
+  display: block;
+  font-family: var(--font-nav);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.gpio-select,
+.gpio-input {
+  width: 100%;
+  background: rgb(255 255 255 / 4%);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  appearance: none;
+}
+
+.gpio-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237494b4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.gpio-select:focus,
+.gpio-input:focus {
+  border-color: var(--blue-electric);
+  box-shadow: 0 0 0 3px rgb(0 229 255 / 15%);
+}
+
+.gpio-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* --- Configurações dinâmicas --- */
+.gpio-config-section {
+  margin-bottom: 18px;
+  padding: 14px;
+  background: rgb(255 255 255 / 2%);
+  border: 1px solid rgb(255 255 255 / 6%);
+  border-radius: 8px;
+}
+
+.gpio-config-section__title {
+  font-family: var(--font-nav);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.gpio-range-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gpio-range {
+  flex: 1;
+  appearance: none;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.gpio-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--blue-electric);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.gpio-range::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.gpio-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: var(--blue-electric);
+  cursor: pointer;
+}
+
+.gpio-range:focus {
+  outline: 2px solid var(--blue-electric);
+  outline-offset: 4px;
+}
+
+.gpio-range-value {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--blue-electric);
+  min-width: 42px;
+  text-align: right;
+}
+
+/* --- Controles de playback --- */
+.gpio-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.gpio-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 4%);
+  color: var(--text-primary);
+  font-family: var(--font-nav);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.gpio-btn:focus-visible {
+  outline: 2px solid var(--blue-electric);
+  outline-offset: 2px;
+}
+
+.gpio-btn--play {
+  border-color: var(--green-accent);
+  color: var(--green-accent);
+}
+
+.gpio-btn--play:hover,
+.gpio-btn--play:focus-visible {
+  background: rgb(0 200 112 / 12%);
+}
+
+.gpio-btn--pause {
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+}
+
+.gpio-btn--pause:hover,
+.gpio-btn--pause:focus-visible {
+  background: rgb(255 215 0 / 10%);
+}
+
+.gpio-btn--stop {
+  border-color: var(--orange-accent);
+  color: var(--orange-accent);
+}
+
+.gpio-btn--stop:hover,
+.gpio-btn--stop:focus-visible {
+  background: rgb(255 107 53 / 12%);
+}
+
+.gpio-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Status indicator --- */
+.gpio-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: rgb(255 255 255 / 2%);
+  border-radius: 6px;
+  font-family: var(--font-nav);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.gpio-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.gpio-status__dot--running {
+  background: var(--green-accent);
+  animation: gpio-pulse 1.2s ease-in-out infinite;
+}
+
+.gpio-status__dot--paused {
+  background: var(--gold-accent);
+}
+
+.gpio-status__dot--stopped {
+  background: var(--orange-accent);
+}
+
+@keyframes gpio-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* --- Velocidade --- */
+.gpio-speed-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.gpio-speed-label {
+  font-family: var(--font-nav);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* --- Exportação --- */
+.gpio-export {
+  display: flex;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.gpio-export-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border: 1px solid #c084fc;
+  border-radius: 8px;
+  background: rgb(192 132 252 / 8%);
+  color: #c084fc; /* roxo mais claro: 6.7:1 em bg escuro */
+  font-family: var(--font-nav);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.gpio-export-btn:hover,
+.gpio-export-btn:focus-visible {
+  background: rgb(192 132 252 / 18%);
+}
+
+.gpio-export-btn:focus-visible {
+  outline: 2px solid #c084fc;
+  outline-offset: 2px;
+}
+
+.gpio-export-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Canvas area --- */
+.gpio-canvas-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gpio-canvas-wrapper {
+  position: relative;
+  background: #0a0e1a;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+#gpio-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 800px;
+}
+
+.gpio-canvas-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 24px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.gpio-canvas-placeholder i {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+/* --- Legenda de cores --- */
+.gpio-legend {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 16px 20px;
+  backdrop-filter: blur(10px);
+}
+
+.gpio-legend__title {
+  font-family: var(--font-nav);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.gpio-legend__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.gpio-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.gpio-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* --- FPS counter --- */
+.gpio-fps {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--green-accent);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* --- Responsive --- */
+@media (width <= 900px) {
+  .gpio-layout {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+@media (width <= 768px) {
+  .gpio-layout {
+    grid-template-columns: 1fr;
+    padding: 40px 0;
+  }
+
+  .gpio-panel {
+    position: static;
+  }
+
+  .gpio-controls {
+    flex-wrap: wrap;
+  }
+
+  .gpio-btn {
+    flex: 1 1 calc(33% - 6px);
+  }
+}

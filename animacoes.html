@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visualizador interativo de circuitos GPIO para Raspberry Pi 5, ESP8266 e ESP32. Anime LEDs, Servos, Sensores e Buzzers e exporte como PNG ou ZIP.">
+  <meta name="keywords" content="GPIO, Raspberry Pi 5, ESP8266, ESP32, animações circuito, robótica educacional, programação, Arduino, maker">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://alunomakerdigital.com.br/animacoes.html">
+  <meta property="og:title"       content="Animações GPIO — Aluno Maker Digital">
+  <meta property="og:description" content="Visualizador interativo de circuitos GPIO para RPi5, ESP8266 e ESP32. Ferramenta educacional gratuita.">
+  <meta property="og:image"       content="https://alunomakerdigital.com.br/assets/images/logo/logo1.webp">
+  <meta property="og:locale"      content="pt_BR">
+
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Animações GPIO — Aluno Maker Digital">
+  <meta name="twitter:description" content="Visualizador de circuitos GPIO com animações e exportação PNG/ZIP.">
+
+  <link rel="manifest"    href="manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <title>Animações GPIO — Aluno Maker Digital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/bundle.min.css">
+
+  <link rel="preload" as="style"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+  </noscript>
+
+  <link rel="icon" type="image/webp" href="assets/images/logo/logo1.webp">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principal">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <span class="logo-aluno">Aluno</span><span class="logo-maker">Maker</span><span class="logo-digital">Digital</span>
+      </a>
+      <button class="navbar__toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="nav-menu">
+        <li><a href="sobre.html"      class="navbar__link">Sobre</a></li>
+        <li><a href="projetos.html"   class="navbar__link">Projetos</a></li>
+        <li><a href="escolas.html"    class="navbar__link">Escolas</a></li>
+        <li><a href="eventos.html"    class="navbar__link">Eventos</a></li>
+        <li><a href="cursos.html"     class="navbar__link">Cursos</a></li>
+        <li><a href="loja.html"       class="navbar__link">Loja</a></li>
+        <li><a href="contato.html"    class="navbar__link">Contato</a></li>
+        <li><a href="animacoes.html"  class="navbar__link navbar__link--active">Animações</a></li>
+        <li><a href="index.html#agendamento" class="btn btn--primary navbar__cta">Agendar visita</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" aria-label="Visualizador de Circuitos GPIO">
+    <div class="container">
+      <div class="page-hero__content reveal">
+        <p class="section__subtitle">Ferramenta educacional</p>
+        <h1 class="page-hero__title">Animações <em>GPIO</em></h1>
+        <p class="page-hero__desc">
+          Visualize e anime circuitos GPIO para Raspberry Pi 5, ESP8266 e ESP32.
+          Exporte frames em PNG ou sequências em ZIP para usar em aulas e apresentações.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÓDULO GPIO -->
+  <section class="section" id="gpio-visualizer" aria-label="Visualizador de circuitos GPIO">
+    <div class="container">
+
+      <div class="gpio-layout">
+
+        <!-- PAINEL DE CONTROLE -->
+        <aside class="gpio-panel" aria-label="Painel de controle GPIO">
+
+          <h2 class="gpio-panel__title">
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+            Controles
+          </h2>
+
+          <!-- Plataforma -->
+          <div class="gpio-field-group">
+            <label class="gpio-label" for="gpio-platform">Plataforma</label>
+            <select id="gpio-platform" class="gpio-select" aria-label="Selecionar plataforma">
+              <option value="">— Selecione —</option>
+              <option value="rpi5">Raspberry Pi 5</option>
+              <option value="esp8266">NodeMCU ESP8266</option>
+              <option value="esp32">ESP32 DevKit C</option>
+            </select>
+          </div>
+
+          <!-- Tipo de animação -->
+          <div class="gpio-field-group">
+            <label class="gpio-label" for="gpio-animation">Tipo de Animação</label>
+            <select id="gpio-animation" class="gpio-select" aria-label="Selecionar tipo de animação">
+              <option value="">— Selecione —</option>
+              <option value="led">LED (pisca)</option>
+              <option value="servo">Servo Motor</option>
+              <option value="sensor">Sensor (leitura)</option>
+              <option value="buzzer">Buzzer</option>
+            </select>
+          </div>
+
+          <!-- Pino -->
+          <div class="gpio-field-group">
+            <label class="gpio-label" for="gpio-pin">Pino</label>
+            <select id="gpio-pin" class="gpio-select" aria-label="Selecionar pino GPIO">
+              <option value="">Selecione a plataforma primeiro</option>
+            </select>
+          </div>
+
+          <!-- Configurações por animação -->
+
+          <!-- LED -->
+          <div id="config-led" class="gpio-config-section" hidden>
+            <p class="gpio-config-section__title">Configuração — LED</p>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-led-color">Cor do LED</label>
+              <input type="color" id="gpio-led-color" class="gpio-input" value="#ff0000"
+                     data-gpio-config aria-label="Cor do LED">
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-blink-rate">
+                Frequência de pisca: <span id="gpio-blink-rate-val">1</span> Hz
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-blink-rate" class="gpio-range"
+                       min="0.1" max="10" step="0.1" value="1"
+                       data-gpio-config aria-label="Frequência de pisca em Hz">
+                <span class="gpio-range-value" aria-hidden="true" id="gpio-blink-rate-val2"></span>
+              </div>
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-duty-cycle">
+                Duty cycle: <span id="gpio-duty-cycle-val">50</span>%
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-duty-cycle" class="gpio-range"
+                       min="0.05" max="0.95" step="0.05" value="0.5"
+                       data-gpio-config aria-label="Duty cycle do LED">
+              </div>
+            </div>
+          </div>
+
+          <!-- Servo -->
+          <div id="config-servo" class="gpio-config-section" hidden>
+            <p class="gpio-config-section__title">Configuração — Servo</p>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-start-angle">
+                Ângulo inicial: <span id="gpio-start-angle-val">0</span>°
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-start-angle" class="gpio-range"
+                       min="0" max="170" step="5" value="0"
+                       data-gpio-config aria-label="Ângulo inicial do servo">
+              </div>
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-end-angle">
+                Ângulo final: <span id="gpio-end-angle-val">180</span>°
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-end-angle" class="gpio-range"
+                       min="10" max="180" step="5" value="180"
+                       data-gpio-config aria-label="Ângulo final do servo">
+              </div>
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-servo-speed">
+                Velocidade: <span id="gpio-servo-speed-val">60</span>°/s
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-servo-speed" class="gpio-range"
+                       min="10" max="360" step="10" value="60"
+                       data-gpio-config aria-label="Velocidade do servo em graus por segundo">
+              </div>
+            </div>
+          </div>
+
+          <!-- Sensor -->
+          <div id="config-sensor" class="gpio-config-section" hidden>
+            <p class="gpio-config-section__title">Configuração — Sensor</p>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-min-val">
+                Valor mínimo: <span id="gpio-min-val-val">0</span>
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-min-val" class="gpio-range"
+                       min="-100" max="490" step="1" value="0"
+                       data-gpio-config aria-label="Valor mínimo do sensor">
+              </div>
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-max-val">
+                Valor máximo: <span id="gpio-max-val-val">100</span>
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-max-val" class="gpio-range"
+                       min="-99" max="500" step="1" value="100"
+                       data-gpio-config aria-label="Valor máximo do sensor">
+              </div>
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-unit">Unidade</label>
+              <select id="gpio-unit" class="gpio-select" data-gpio-config aria-label="Unidade de medida do sensor">
+                <option value="°C">°C (Temperatura)</option>
+                <option value="%">% (Umidade)</option>
+                <option value="lux">lux (Luminosidade)</option>
+                <option value="cm">cm (Distância)</option>
+                <option value="hPa">hPa (Pressão)</option>
+                <option value="">— sem unidade —</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Buzzer -->
+          <div id="config-buzzer" class="gpio-config-section" hidden>
+            <p class="gpio-config-section__title">Configuração — Buzzer</p>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-frequency">
+                Frequência: <span id="gpio-frequency-val">440</span> Hz
+              </label>
+              <div class="gpio-range-wrapper">
+                <input type="range" id="gpio-frequency" class="gpio-range"
+                       min="50" max="4000" step="10" value="440"
+                       data-gpio-config aria-label="Frequência do buzzer em Hz">
+              </div>
+            </div>
+
+            <div class="gpio-field-group">
+              <label class="gpio-label" for="gpio-waveform">Forma de onda</label>
+              <select id="gpio-waveform" class="gpio-select" data-gpio-config aria-label="Forma de onda do buzzer">
+                <option value="square">Quadrada (square)</option>
+                <option value="sine">Senoidal (sine)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="gpio-status" role="status" aria-live="polite" aria-label="Status da animação">
+            <span class="gpio-status__dot" id="gpio-status-dot" aria-hidden="true"></span>
+            <span id="gpio-status-text">Aguardando</span>
+          </div>
+
+          <!-- Velocidade -->
+          <div class="gpio-speed-wrapper">
+            <span class="gpio-speed-label" id="gpio-speed-label">Vel:</span>
+            <input type="range" id="gpio-speed" class="gpio-range"
+                   min="0.25" max="4" step="0.25" value="1"
+                   aria-labelledby="gpio-speed-label"
+                   aria-label="Velocidade da animação">
+            <span class="gpio-range-value" id="gpio-speed-val">1x</span>
+          </div>
+
+          <!-- Controles de playback -->
+          <div class="gpio-controls" role="group" aria-label="Controles de reprodução">
+            <button id="gpio-btn-play"  class="gpio-btn gpio-btn--play"  aria-label="Iniciar animação">
+              <i class="fa-solid fa-play"  aria-hidden="true"></i> Play
+            </button>
+            <button id="gpio-btn-pause" class="gpio-btn gpio-btn--pause" disabled aria-label="Pausar animação">
+              <i class="fa-solid fa-pause" aria-hidden="true"></i> Pausa
+            </button>
+            <button id="gpio-btn-stop"  class="gpio-btn gpio-btn--stop"  disabled aria-label="Parar animação">
+              <i class="fa-solid fa-stop"  aria-hidden="true"></i> Stop
+            </button>
+          </div>
+
+          <!-- Exportação -->
+          <div class="gpio-export" role="group" aria-label="Exportar animação">
+            <button id="gpio-export-png" class="gpio-export-btn" aria-label="Exportar frame atual como PNG">
+              <i class="fa-solid fa-image"       aria-hidden="true"></i> PNG
+            </button>
+            <button id="gpio-export-zip" class="gpio-export-btn" aria-label="Exportar sequência de frames como ZIP">
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i> ZIP
+            </button>
+          </div>
+
+        </aside>
+
+        <!-- CANVAS + LEGENDA -->
+        <div class="gpio-canvas-area">
+
+          <div class="gpio-canvas-wrapper">
+            <canvas id="gpio-canvas"
+                    width="800" height="500"
+                    role="img"
+                    aria-label="Diagrama animado do circuito GPIO">
+              Seu navegador não suporta Canvas HTML5. Por favor atualize-o para usar esta ferramenta.
+            </canvas>
+            <span class="gpio-fps" id="gpio-fps" aria-hidden="true"></span>
+          </div>
+
+          <!-- Legenda de cores -->
+          <div class="gpio-legend" aria-label="Legenda de cores dos pinos">
+            <p class="gpio-legend__title">Legenda de cores</p>
+            <div class="gpio-legend__grid">
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#c0392b" aria-hidden="true"></span>
+                3V3
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#e74c3c" aria-hidden="true"></span>
+                5V
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#444" aria-hidden="true"></span>
+                GND
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#0066ff" aria-hidden="true"></span>
+                GPIO
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#8e44ad" aria-hidden="true"></span>
+                I2C
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#f39c12" aria-hidden="true"></span>
+                SPI
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#27ae60" aria-hidden="true"></span>
+                UART
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#16a085" aria-hidden="true"></span>
+                ADC
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#1abc9c" aria-hidden="true"></span>
+                DAC
+              </span>
+              <span class="gpio-legend__item">
+                <span class="gpio-legend__dot" style="background:#2980b9" aria-hidden="true"></span>
+                Touch
+              </span>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.gpio-canvas-area -->
+
+      </div>
+      <!-- /.gpio-layout -->
+
+    </div>
+  </section>
+
+  <!-- SOBRE A FERRAMENTA -->
+  <section class="section section--alt" aria-label="Sobre a ferramenta">
+    <div class="container">
+      <div style="text-align:center;max-width:680px;margin:0 auto;">
+        <p class="section__subtitle">Educação maker</p>
+        <h2 class="section__title">Para que serve essa <em>ferramenta</em>?</h2>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:2rem;">
+          O Visualizador GPIO é usado em aulas de robótica para mostrar o comportamento
+          elétrico dos pinos de microcontroladores em tempo real. Selecione a plataforma,
+          escolha um componente (LED, Servo, Sensor ou Buzzer), configure os parâmetros
+          e exporte para usar em slides, vídeos ou material didático.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+          <a href="cursos.html" class="btn btn--primary">
+            <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+            Ver cursos
+          </a>
+          <a href="https://wa.me/5561981333875?text=Olá! Quero saber mais sobre o Visualizador GPIO."
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn--outline">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            Falar com o professor
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="footer__brand-name">Aluno Maker Digital</div>
+          <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
+          <div class="footer__social" aria-label="Redes sociais">
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div>
+          <p class="footer__col-title">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="projetos.html">Projetos</a></li>
+            <li><a href="escolas.html">Escolas</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="loja.html">Loja</a></li>
+            <li><a href="contato.html">Contato</a></li>
+            <li><a href="animacoes.html">Animações GPIO</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__col-title">Contato</p>
+          <ul class="footer__links">
+            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
+            <li>Recanto das Emas, Brasília — DF</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2018–2026 <a href="index.html">Aluno Maker Digital</a> — Prof. Francenylson. Todos os direitos reservados.</p>
+        <p class="footer__copy"><a href="privacidade.html">Política de privacidade</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JSZip para exportação de sequência -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
+
+  <script src="assets/js/animations.js"     defer></script>
+  <script src="assets/js/navbar.js"         defer></script>
+  <script src="assets/js/animations-gpio.js" defer></script>
+  <script src="assets/js/main.js"           defer></script>
+</body>
+</html>
