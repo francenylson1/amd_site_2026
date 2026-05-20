@@ -8,19 +8,46 @@ curl_setopt_array($ch, [
     CURLOPT_CUSTOMREQUEST  => $method,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HEADER         => true,
-    CURLOPT_TIMEOUT        => 10,
+    CURLOPT_TIMEOUT        => 30,
     CURLOPT_FOLLOWLOCATION => false,
 ]);
 
+// Encaminhar Authorization sempre; Content-Type só para requisições sem arquivo
 $fwdHeaders = [];
-$map = ['CONTENT_TYPE'=>'Content-Type','HTTP_AUTHORIZATION'=>'Authorization'];
-foreach ($map as $srv => $hdr) {
-    if (!empty($_SERVER[$srv])) $fwdHeaders[] = $hdr . ': ' . $_SERVER[$srv];
+if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+    $fwdHeaders[] = 'Authorization: ' . $_SERVER['HTTP_AUTHORIZATION'];
 }
-if ($fwdHeaders) curl_setopt($ch, CURLOPT_HTTPHEADER, $fwdHeaders);
 
-if (in_array($method, ['POST','PUT','PATCH']))
-    curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents('php://input'));
+if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+    if (!empty($_FILES)) {
+        // multipart/form-data: usa CURLFile para reencaminhar os arquivos ao Node.js
+        // Não define Content-Type — o curl define automaticamente com o boundary correto
+        $postFields = [];
+        foreach ($_POST as $k => $v) {
+            $postFields[$k] = $v;
+        }
+        foreach ($_FILES as $field => $info) {
+            if ($info['error'] === UPLOAD_ERR_OK) {
+                $postFields[$field] = new CURLFile(
+                    $info['tmp_name'],
+                    $info['type'],
+                    $info['name']
+                );
+            }
+        }
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+    } else {
+        // JSON ou form-urlencoded: encaminhar body bruto
+        if (!empty($_SERVER['CONTENT_TYPE'])) {
+            $fwdHeaders[] = 'Content-Type: ' . $_SERVER['CONTENT_TYPE'];
+        }
+        curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents('php://input'));
+    }
+}
+
+if ($fwdHeaders) {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $fwdHeaders);
+}
 
 $raw     = curl_exec($ch);
 $code    = curl_getinfo($ch, CURLINFO_HTTP_CODE);
