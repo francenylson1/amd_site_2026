@@ -5,9 +5,7 @@
   const PHONE_RE = /^\(?\d{2}\)?[\s\-]?[\s]?\d{4,5}[\s\-]?\d{4}$/;
 
   // Em produção aponta para o subdomínio da API; em dev usa caminho relativo
-  const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? '/api'
-    : 'https://api.alunomakerdigital.com.br/api';
+  const API_BASE = '/api';
 
   // ─── Validação inline ────────────────────────────────────────────────────────
 
