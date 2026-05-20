@@ -87,57 +87,6 @@
     } catch { /* storage indisponível */ }
   }
 
-  // ─── Formulário de agendamento (#form-agendamento) ────────────────────────────
-
-  function handleScheduleForm(form) {
-    const fields = form.querySelectorAll('input[required], select[required]');
-    const submit = form.querySelector('[type="submit"]');
-
-    fields.forEach((f) => {
-      f.addEventListener('blur', () => validateField(f));
-      f.addEventListener('input', () => {
-        if (f.closest('.form-group--error')) validateField(f);
-      });
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      let allValid = true;
-      fields.forEach((f) => { if (!validateField(f)) allValid = false; });
-      if (!allValid) return;
-
-      if (submit) {
-        submit.setAttribute('aria-busy', 'true');
-        submit.textContent = 'Enviando…';
-        submit.disabled = true;
-      }
-
-      const data = Object.fromEntries(new FormData(form));
-      data._savedAt = new Date().toISOString();
-
-      let savedToServer = false;
-      try {
-        await submitToApi('/visits', {
-          name:       data.nome,
-          email:      data.email,
-          phone:      data.telefone,
-          visit_date: data.data,
-          message:    data.mensagem || '',
-        });
-        savedToServer = true;
-      } catch {
-        saveToLocalStorage('amd_agendamentos', data);
-      }
-
-      showStatusIndicator(form, savedToServer);
-
-      setTimeout(() => {
-        window.location.href = 'obrigado.html';
-      }, 1200);
-    });
-  }
-
   // ─── Formulário de contato (#form-contato) ────────────────────────────────────
 
   function handleContactForm(form) {
@@ -192,9 +141,6 @@
   // ─── Init ──────────────────────────────────────────────────────────────────────
 
   function init() {
-    const scheduleForm = document.getElementById('form-agendamento');
-    if (scheduleForm) handleScheduleForm(scheduleForm);
-
     const contactForm = document.getElementById('form-contato');
     if (contactForm) handleContactForm(contactForm);
   }
