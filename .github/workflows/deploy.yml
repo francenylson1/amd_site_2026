@@ -31,6 +31,7 @@ jobs:
             .env*
             server/**
             snapshots/**
+            api-proxy/**
 
   deploy-production:
     name: Deploy → Produção
@@ -39,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy via FTP para produção
+      - name: Deploy site via FTP para produção
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -55,3 +56,15 @@ jobs:
             .env*
             server/**
             snapshots/**
+            api-proxy/**
+
+      - name: Deploy proxy PHP para subdomínio api.*
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          server-dir: ${{ secrets.FTP_DIR_API }}
+          local-dir: ./api-proxy/
+          exclude: |
+            **/.git*

@@ -1,0 +1,14 @@
+Options -Indexes
+
+# CORS no nível Apache — garante preflight OPTIONS mesmo sem PHP
+Header always set Access-Control-Allow-Origin "https://alunomakerdigital.com.br"
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+Header always set Access-Control-Max-Age "86400"
+
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L,QSA]
