@@ -27,7 +27,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
-| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 (pendente merge) | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
+| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy no domínio principal, PM2 + start.sh, MySQL via socket |
 | 5 — Gerador com Claude API | ⏳ | — | — |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
@@ -68,7 +68,7 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Páginas internas:** todas usam navbar com links para páginas (não âncoras da home). Link ativo marcado com `.navbar__link--active`.
 - **GLightbox:** carregado via CDN apenas nas páginas que usam (projetos.html, eventos.html). Script `defer` após `gallery.js`.
 - **gallery.js:** usa `container.closest('section')` para escopo dos `[data-category]` — filtros e items são irmãos, não pai-filho.
-- **forms.js:** suporta `#form-agendamento` (home) e `#form-contato` (contato.html). Ambos gravam em localStorage com chaves distintas.
+- **forms.js:** suporta apenas `#form-contato` (contato.html). O `#form-agendamento` foi substituído por CTA WhatsApp na home (PR #13, 2026-05-20).
 - **serve strip .html:** o servidor local remove extensão `.html` das URLs — specs E2E usam regex sem `.html` (ex: `/obrigado/` não `/obrigado\.html/`).
 - **Logo navbar:** texto tricolor com fundo branco — `.logo-aluno` (verde `#00843f`), `.logo-maker` (vermelho `#d32f2f`), `.logo-digital` (azul `#0066ff`). Fonte Orbitron. Cores atendem WCAG AA 4.5:1 em fundo branco.
 - **Mapa:** iframe Google Maps está em `contato.html` (endereço: Quadra 203 Lote 32, Recanto das Emas, CEP 72610-300). Removido de `escolas.html`.
@@ -91,9 +91,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **MySQL via socket:** `DB_SOCKET=/var/lib/mysql/mysql.sock` — Hostinger só permite conexão localhost via socket Unix. `db/connection.js` usa `socketPath` quando `DB_SOCKET` está setado.
 - **dotenv e `#`:** valores `.env` com `#` devem ser entre aspas duplas (ex: `DB_PASS="Amd@2018#2020"`). dotenv trata `#` sem aspas como início de comentário.
 - **PM2 + ESM:** PM2 não inicia ESM diretamente via ecosystem. Solução: `start.sh` bash wrapper que exporta todas as vars e faz `exec node index.js`. PM2 usa `--interpreter bash`.
-- **PHP proxy:** `public_html/api/index.php` + `.htaccess` no servidor `api.alunomakerdigital.com.br` roteiam requisições externas para `localhost:3000`. NÃO estão no repo (específico do servidor).
-- **Deploy API:** FTP deploy só vai para o domínio principal. O subdomínio `api.` tem estrutura separada. Os arquivos em `~/domains/api.alunomakerdigital.com.br/` persistem entre deploys.
+- **PHP proxy (domínio principal):** `api/index.php` + `api/.htaccess` estão no REPO e são deployados para `alunomakerdigital.com.br/api/`. Roteia `/api/*` para `localhost:3000` sem CORS (mesma origem).
+- **PHP proxy (api. subdomain):** `api-proxy/api/index.php` + `.htaccess` no repo; deployados para `api.alunomakerdigital.com.br/public_html/api/` via step separado no deploy.yml com secret `FTP_DIR_API`.
+- **API_BASE:** sempre `/api` (relativo). Sem diferença localhost/produção. Sem cross-origin.
+- **Deploy:** FTP_DIR_PROD → domínio principal. FTP_DIR_API → subdomínio api.*. FTP_DIR_STAGING → staging.
 - **Credenciais servidor:** SSH `82.112.247.253:65002` user `u562242543`. Scripts sensíveis (`start.sh`, `ecosystem.config.cjs`) ficam APENAS no servidor, não no repo.
+- **WhatsApp CTA:** seção `#agendamento` na home usa `.whatsapp-cta` + `.btn--whatsapp` em vez de form. Link: `wa.me/5561981333875?text=...`.
 
 ## Paths críticos
 
@@ -118,7 +121,9 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `admin/index.html` — dashboard admin (contatos + agendamentos).
 - `server/tests/unit/validators.test.js` — 13 testes Vitest (validadores).
 - `server/tests/api/*.test.js` — 21 testes Supertest (contratos de endpoint).
-- `tests/e2e/backend.spec.js` — 4 testes E2E Playwright (fallback + admin).
+- `tests/e2e/backend.spec.js` — 3 testes E2E Playwright (fallback contato + admin login). Agendamento removido (seção virou WhatsApp CTA).
+- `api/index.php` + `api/.htaccess` — proxy PHP no domínio principal (no repo, deployado via FTP_DIR_PROD).
+- `api-proxy/api/index.php` + `.htaccess` — proxy PHP para api.* subdomain (no repo, deployado via FTP_DIR_API).
 - `eslint.config.mjs` — configuração ESLint v10 (flat config).
 - `.github/workflows/ci.yml` — pipeline: lint + E2E + Lighthouse.
 - `.github/workflows/deploy.yml` — FTP automático para staging/produção.
