@@ -759,6 +759,71 @@
 
 /* .visit__right: sem estilos próprios — apenas filho do visit__grid */
 
+/* ---- WhatsApp CTA (substitui form de agendamento) ---- */
+
+.btn--whatsapp {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  width: 100%;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgb(37 211 102 / 35%);
+}
+
+.btn--whatsapp:hover {
+  background: #1ebe5a;
+  border-color: #1ebe5a;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgb(37 211 102 / 50%);
+}
+
+.btn--whatsapp .fa-whatsapp {
+  font-size: 1.3rem;
+}
+
+.whatsapp-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.whatsapp-cta__icon {
+  font-size: 3.5rem;
+  color: #25d366;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.whatsapp-cta .btn--whatsapp {
+  margin-bottom: 1.5rem;
+}
+
+.whatsapp-cta__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.whatsapp-cta__list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.whatsapp-cta__list .fa-check {
+  color: #25d366;
+  font-size: 0.85rem;
+}
+
 .vagas-badge {
   display: inline-flex;
   align-items: center;

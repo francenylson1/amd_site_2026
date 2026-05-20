@@ -36,34 +36,6 @@ test.describe('Formulário de contato — fallback localStorage', () => {
   });
 });
 
-// ─── Formulário de agendamento — fallback (sem backend real) ──────────────────
-
-test.describe('Formulário de agendamento — fallback localStorage', () => {
-  test('envio sem backend grava no localStorage e redireciona', async ({ page }) => {
-    await page.goto('/');
-    await page.locator('#form-agendamento').scrollIntoViewIfNeeded();
-
-    await page.evaluate(() => localStorage.removeItem('amd_agendamentos'));
-
-    await page.fill('#nome', 'Agendamento Fallback');
-    await page.fill('#email', 'agend@teste.com');
-    await page.selectOption('#perfil', 'aluno');
-
-    const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + 7);
-    await page.fill('#data', futureDate.toISOString().split('T')[0]);
-
-    await page.click('#form-agendamento [type="submit"]');
-
-    await page.waitForURL(/obrigado/, { timeout: 10000 });
-    await expect(page).toHaveURL(/obrigado/);
-
-    const stored = await page.evaluate(() => localStorage.getItem('amd_agendamentos'));
-    const records = JSON.parse(stored || '[]');
-    expect(records.length).toBeGreaterThan(0);
-  });
-});
-
 // ─── Página admin/login.html ──────────────────────────────────────────────────
 
 test.describe('Página admin/login.html', () => {
