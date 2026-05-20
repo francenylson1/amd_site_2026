@@ -1,13 +1,12 @@
 
-# Próxima sessão: Deploy Fase 4 — Finalizar API em produção
+# Próxima sessão: Fase 5 — Gerador com Claude API
 
 ## Prompt para iniciar a sessão
 
 ```
-Continuar o deploy da Fase 4 do projeto Aluno Maker Digital.
+Continuar o projeto Aluno Maker Digital — Fase 5: Gerador com Claude API.
 Leia o CLAUDE.md e este arquivo antes de qualquer ação.
-O código está pronto e testado. O problema restante é roteamento externo da API na Hostinger.
-Branch ativo: feature/fase-4-backend-admin
+Branch atual: feature/fase-4-backend-admin (merge pendente → v2.0.0)
 ```
 
 ---
@@ -20,103 +19,74 @@ Branch ativo: feature/fase-4-backend-admin
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | — |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | — |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | — |
-| 4 — Backend + Admin mínimo | 🔶 Código pronto, deploy parcial | v2.0.0 (pendente merge) | Ver pendências abaixo |
+| 4 — Backend + Admin mínimo | ✅ Deploy completo | v2.0.0 (merge pendente) | API pública funcionando |
 | 5 — Gerador com Claude API | ⏳ Próxima | — | — |
 
 ---
 
-## ✅ O que foi concluído nesta sessão (2026-05-20)
+## ✅ Fase 4 concluída em 2026-05-20
 
-### Código (100% pronto e testado)
-- `server/` ESM completo: Express 4, JWT, bcrypt, helmet, rate-limit, Nodemailer/Brevo
-- `server/db/schema.sql`: DDL MySQL aplicado na Hostinger
-- `admin/login.html` + `admin/index.html`: painel JWT funcional
-- `assets/js/forms.js`: POST API → fallback localStorage → indicador visual
-- **34/34 Vitest + 108/108 E2E Chromium verdes**
-- PR #7 aberto no GitHub (feature/fase-4-backend-admin → develop)
+### O que está funcionando em produção
 
-### Infraestrutura (parcialmente concluída)
-- ✅ MySQL configurado na Hostinger (banco `u562242543_amd_db`, 4 tabelas criadas)
-- ✅ `.env` criado com credenciais reais (DB, JWT, Brevo SMTP)
-- ✅ Brevo SMTP testado e funcionando (e-mail de teste enviado)
-- ✅ NVM + Node.js 20.20.2 instalado no servidor via SSH
-- ✅ `server/` transferido para `~/domains/api.alunomakerdigital.com.br/server/`
-- ✅ `npm install` executado no Linux (binários nativos compilados)
-- ✅ Servidor responde `{"status":"ok"}` internamente na porta 3000
-- ✅ `api.alunomakerdigital.com.br` existe com Apache configurado
-- ⚠️ `nohup node index.js` iniciado — **pode precisar reiniciar amanhã**
+| Endpoint | Status |
+|---|---|
+| `GET https://api.alunomakerdigital.com.br/api/health` | ✅ `{"status":"ok"}` |
+| `POST https://api.alunomakerdigital.com.br/api/contact` | ✅ 201 + MySQL + e-mail |
+| `POST https://api.alunomakerdigital.com.br/api/visits` | ✅ 201 + MySQL + e-mail |
+| `POST https://api.alunomakerdigital.com.br/api/admin/login` | ✅ JWT token |
+| `GET https://api.alunomakerdigital.com.br/api/admin/contacts` | ✅ lista com Bearer |
+| `GET https://api.alunomakerdigital.com.br/api/admin/visits` | ✅ lista com Bearer |
+
+### Arquitetura do servidor
+
+```
+Requisição externa → Hostinger CDN (hcdn)
+  → Apache em ~/domains/api.alunomakerdigital.com.br/public_html/
+  → api/.htaccess (RewriteRule → index.php)
+  → api/index.php (PHP proxy curl para localhost:3000)
+  → Node.js Express (PM2 com start.sh bash wrapper)
+  → MySQL via Unix socket /var/lib/mysql/mysql.sock
+```
+
+### Arquivos críticos no SERVIDOR (não no repo)
+
+| Arquivo | Localização | Função |
+|---|---|---|
+| `start.sh` | `~/domains/api.alunomakerdigital.com.br/server/` | Bash wrapper com env vars — inicia o Node.js |
+| `ecosystem.config.cjs` | `~/domains/api.alunomakerdigital.com.br/server/` | Config PM2 (fallback) |
+| `.env` | `~/domains/api.alunomakerdigital.com.br/` | Vars de ambiente (com aspas em valores com `#`) |
+| `api/index.php` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | PHP proxy |
+| `api/.htaccess` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | Rewrite → index.php |
+| `restart-api.sh` | `~/` | Script de restart (se PM2 cair) |
+
+### Comandos para reiniciar o servidor (se necessário)
+
+```bash
+ssh -p 65002 u562242543@82.112.247.253
+
+# Verificar estado
+/home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 list
+
+# Matar tudo e reiniciar
+pkill -9 -f node 2>/dev/null; sleep 2
+env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
+  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 kill 2>/dev/null; sleep 2
+env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
+  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 start \
+  /home/u562242543/domains/api.alunomakerdigital.com.br/server/start.sh \
+  --name amd-api --interpreter bash
+```
+
+### Admin do painel
+- **URL:** `https://alunomakerdigital.com.br/admin/login.html`
+- **Email:** `francenylson@gmail.com`
+- **Senha:** `Amd@2026!Admin`
 
 ---
 
-## ❌ Pendências críticas para amanhã
+## ⚠️ Pendências menores (não bloqueiam Fase 5)
 
-### 1. API não acessível externamente (problema principal)
-O servidor Node.js funciona em `localhost:3000` mas não chega ao mundo externo.
-
-**Diagnóstico:**
-- `curl -sk https://api.alunomakerdigital.com.br/api/health` retorna "This Page Does Not Exist" (página da Hostinger)
-- PHP proxy (`index.php`) em `public_html/` não é executado para paths `/api/*`
-- Hostinger CDN intercepta antes do Apache para paths desconhecidos
-- `mod_proxy` bloqueado (503 na tentativa)
-- Phusion Passenger instalado (`PASSENGER_INSTANCE_REGISTRY_DIR=/var/passenger`) — não testado completamente
-
-**Tentativas já feitas (não repetir):**
-- `.htaccess` com `RewriteRule` → falhou (não chega ao Apache)
-- `.htaccess` com `ProxyPass` → 503 (mod_proxy bloqueado)
-- PHP proxy via `index.php` → Hostinger CDN intercepta antes
-- PM2 → crashava 199x (era conflito de porta, não bug do código)
-
-**Estado do servidor agora:**
-```
-SSH: ssh -p 65002 u562242543@82.112.247.253
-Senha: Amd@2018#2020
-Servidor: ~/domains/api.alunomakerdigital.com.br/server/
-.env: ~/domains/api.alunomakerdigital.com.br/.env
-public_html: tem index.php (proxy PHP) + .htaccess
-Node.js: pode estar rodando ou não (verificar com: cat ~/node-server.log)
-```
-
-**Próximas tentativas sugeridas (em ordem):**
-
-**Opção A — Passenger via .htaccess (mais promissora):**
-```bash
-cat > ~/domains/api.alunomakerdigital.com.br/public_html/.htaccess << 'EOF'
-PassengerEnabled On
-PassengerNodejs /home/u562242543/.nvm/versions/node/v20.20.2/bin/node
-PassengerStartupFile /home/u562242543/domains/api.alunomakerdigital.com.br/server/index.js
-PassengerAppRoot /home/u562242543/domains/api.alunomakerdigital.com.br
-PassengerAppType node
-EOF
-```
-Passenger está instalado (`PASSENGER_INSTANCE_REGISTRY_DIR=/var/passenger`). Pode funcionar.
-
-**Opção B — Contato com suporte Hostinger:**
-Abrir ticket: "A aplicação Node.js `api.alunomakerdigital.com.br` foi criada via wizard mas o vhost não foi completamente configurado. Preciso que o Passenger seja configurado para servir `~/domains/api.alunomakerdigital.com.br/server/index.js` com Node.js `/home/u562242543/.nvm/versions/node/v20.20.2/bin/node`."
-
-**Opção C — Deletar e refazer wizard completamente:**
-Deletar `api.alunomakerdigital.com.br` no painel → Sites → Node.js → wizard novamente, desta vez clicar "Implantar" sem hesitar.
-
-### 2. Usuário admin não criado
-Após a API funcionar, criar o admin via SSH:
-```bash
-# Gerar hash bcrypt no servidor
-export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-cd ~/domains/api.alunomakerdigital.com.br/server
-node -e "
-import bcrypt from 'bcrypt';
-const hash = await bcrypt.hash('SENHA_ADMIN_AQUI', 12);
-console.log(hash);
-"
-# Depois inserir no MySQL via phpMyAdmin:
-# INSERT INTO admin_users (email, password_hash) VALUES ('francenylson@gmail.com', 'HASH_GERADO');
-```
-
-### 3. Smoke manual (após API funcionar)
-- Preencher formulário de contato → verificar MySQL → verificar e-mail Fran
-- Preencher agendamento → verificar MySQL → verificar e-mail Fran
-- Acessar admin/login.html → logar → ver painel com dados
-
-### 4. Merge PR e tag
+### 1. Merge PR #7 e tag v2.0.0
 ```bash
 gh api --method DELETE repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
 gh pr merge 7 --merge --admin
@@ -124,46 +94,20 @@ gh api --method POST repos/francenylson1/amd_site_2026/branches/main/protection/
 git tag v2.0.0 && git push --tags
 ```
 
----
-
-## Credenciais e configurações do servidor
-
-| Item | Valor |
-|---|---|
-| SSH host | `82.112.247.253` |
-| SSH porta | `65002` |
-| SSH usuário | `u562242543` |
-| SSH senha | `Amd@2018#2020` |
-| MySQL banco | `u562242543_amd_db` |
-| MySQL usuário | `u562242543_amd_user` |
-| MySQL host (interno) | `localhost` |
-| Node.js | `/home/u562242543/.nvm/versions/node/v20.20.2/bin/node` |
-| Servidor app | `~/domains/api.alunomakerdigital.com.br/server/` |
-| .env | `~/domains/api.alunomakerdigital.com.br/.env` |
-| public_html | `~/domains/api.alunomakerdigital.com.br/public_html/` |
-| Log Node.js | `~/node-server.log` |
-
----
-
-## Como reiniciar o servidor Node.js (amanhã)
-
-```bash
-ssh -p 65002 u562242543@82.112.247.253
-# Ativar NVM
-export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-# Matar processo anterior se existir
-pkill -f "node index.js" 2>/dev/null
-sleep 1
-# Iniciar
-cd ~/domains/api.alunomakerdigital.com.br/server
-nohup node index.js > ~/node-server.log 2>&1 &
-disown
-sleep 2 && cat ~/node-server.log
+### 2. Crontab de restart (manual via hPanel)
+`crontab` não disponível via SSH. Configurar via Hostinger hPanel → Avançado → Tarefas Cron:
+```
+*/5 * * * * /home/u562242543/restart-api.sh
 ```
 
+### 3. Smoke manual do formulário
+- Preencher formulário de contato em `https://alunomakerdigital.com.br/contato.html`
+- Verificar entrada no MySQL e e-mail recebido em `francenylson@gmail.com`
+- Acessar `https://alunomakerdigital.com.br/admin/login.html` e ver o contato no painel
+
 ---
 
-## Fase 5 — Escopo (quando Fase 4 estiver 100% no ar)
+## Fase 5 — Escopo
 
 1. Branch `feature/fase-5-gerador-claude-api` a partir de `develop`
 2. `admin/gerador.html` — formulário tema + tipo de conteúdo
@@ -179,6 +123,7 @@ sleep 2 && cat ~/node-server.log
 - Vanilla JS no front — sem React, Vue ou Angular
 - Todo copy e commits em pt-BR
 - `server/` usa ESM (`"type": "module"`) — não usar `require()`
+- PM2 via `start.sh` bash wrapper (NÃO ecosystem direto com node interpreter — ESM bug)
 - `npm run test:unit` e `npm run test:api` antes de commitar (server/)
-- `npm run test:ci` antes de commitar (front)
 - gh CLI em `C:\Program Files\GitHub CLI\gh.exe`
+- `DB_SOCKET=/var/lib/mysql/mysql.sock` obrigatório no .env do servidor Hostinger

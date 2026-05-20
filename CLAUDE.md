@@ -27,7 +27,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
-| 4 — Backend + Admin mínimo | 🔶 Código pronto, deploy parcial | v2.0.0 (pendente merge) | server/ ESM ok, API interna ok, roteamento externo pendente |
+| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 (pendente merge) | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
 | 5 — Gerador com Claude API | ⏳ | — | — |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
@@ -88,6 +88,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **admin/index.html:** GET /api/admin/contacts + /api/admin/visits com Bearer token; redireciona para login se 401.
 - **forms.js fallback:** tenta POST /api/* com AbortSignal.timeout(8000); em caso de falha → localStorage + indicador amarelo `.form-status`.
 - **robots.txt:** já bloqueia `/admin/` desde a Fase 0.
+- **MySQL via socket:** `DB_SOCKET=/var/lib/mysql/mysql.sock` — Hostinger só permite conexão localhost via socket Unix. `db/connection.js` usa `socketPath` quando `DB_SOCKET` está setado.
+- **dotenv e `#`:** valores `.env` com `#` devem ser entre aspas duplas (ex: `DB_PASS="Amd@2018#2020"`). dotenv trata `#` sem aspas como início de comentário.
+- **PM2 + ESM:** PM2 não inicia ESM diretamente via ecosystem. Solução: `start.sh` bash wrapper que exporta todas as vars e faz `exec node index.js`. PM2 usa `--interpreter bash`.
+- **PHP proxy:** `public_html/api/index.php` + `.htaccess` no servidor `api.alunomakerdigital.com.br` roteiam requisições externas para `localhost:3000`. NÃO estão no repo (específico do servidor).
+- **Deploy API:** FTP deploy só vai para o domínio principal. O subdomínio `api.` tem estrutura separada. Os arquivos em `~/domains/api.alunomakerdigital.com.br/` persistem entre deploys.
+- **Credenciais servidor:** SSH `82.112.247.253:65002` user `u562242543`. Scripts sensíveis (`start.sh`, `ecosystem.config.cjs`) ficam APENAS no servidor, não no repo.
 
 ## Paths críticos
 
