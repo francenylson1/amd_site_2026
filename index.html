@@ -371,74 +371,31 @@
 
         <div class="visit__grid">
 
-          <!-- Formulário -->
-          <div class="form-card reveal" data-delay="100">
-            <h3 class="form-card__title">Reserve sua vaga</h3>
-            <p class="form-card__desc">Preencha o formulário e entraremos em contato para confirmar.</p>
-
-            <form id="form-agendamento" novalidate>
-
-              <div class="form-group">
-                <label for="nome">Nome completo</label>
-                <input
-                  type="text"
-                  id="nome"
-                  name="nome"
-                  placeholder="Seu nome"
-                  required
-                  autocomplete="name"
-                >
-                <span class="form-group__error-msg" role="alert"></span>
-              </div>
-
-              <div class="form-group">
-                <label for="email">E-mail</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="seu@email.com"
-                  required
-                  autocomplete="email"
-                >
-                <span class="form-group__error-msg" role="alert"></span>
-              </div>
-
-              <div class="form-group">
-                <label for="perfil">Você é</label>
-                <select id="perfil" name="perfil" required>
-                  <option value="" disabled selected>Selecione seu perfil</option>
-                  <option value="aluno">Aluno</option>
-                  <option value="professor">Professor / Educador</option>
-                  <option value="responsavel">Pai / Responsável</option>
-                  <option value="escola">Gestor de escola</option>
-                  <option value="empresa">Empresa / Organização</option>
-                </select>
-                <span class="form-group__error-msg" role="alert"></span>
-              </div>
-
-              <div class="form-group">
-                <label for="data">Data desejada para a visita</label>
-                <input
-                  type="date"
-                  id="data"
-                  name="data"
-                  required
-                >
-                <span class="form-group__error-msg" role="alert"></span>
-              </div>
-
-              <button type="submit" class="btn btn--primary form-submit">
-                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-                Agendar visita gratuita
-              </button>
-
-              <div class="local-save-badge" aria-hidden="true">
-                <span class="local-save-badge__dot"></span>
-                Dados salvos localmente até o envio real ser ativado
-              </div>
-
-            </form>
+          <!-- WhatsApp CTA -->
+          <div class="form-card whatsapp-cta reveal" data-delay="100">
+            <div class="whatsapp-cta__icon" aria-hidden="true">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <h3 class="form-card__title">Agende pelo WhatsApp</h3>
+            <p class="form-card__desc">
+              Fale diretamente com nossa equipe. Respondemos em minutos e
+              marcamos sua visita gratuita sem burocracia.
+            </p>
+            <a
+              href="https://wa.me/5561981333875?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20visita%20gratuita%20ao%20Aluno%20Maker%20Digital."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn--whatsapp"
+              aria-label="Agendar visita pelo WhatsApp"
+            >
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              Falar no WhatsApp
+            </a>
+            <ul class="whatsapp-cta__list" aria-label="Benefícios">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Visita 100% gratuita</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Resposta em minutos</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Sem formulários</li>
+            </ul>
           </div>
 
           <!-- Depoimentos + vagas -->
