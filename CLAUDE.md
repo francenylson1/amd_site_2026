@@ -28,7 +28,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
-| 4.5 — Gerenciador de Conteúdo | ⏳ Em revisão | — | CMS completo — aguardando schema no servidor + merge PR |
+| 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0 | CMS completo — 9 projetos, 6 eventos, 12 escolas no banco. admin/galeria.html funcional |
 | 5 — Gerador com Claude API | ⏳ | — | Só após 4.5 deployed |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
