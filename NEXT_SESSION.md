@@ -1,12 +1,12 @@
 
-# Próxima sessão: Fase 5 — Gerador com Claude API
+# Próxima sessão: Fase 5 — Gerador de Conteúdo com Claude API
 
 ## Prompt para iniciar a sessão
 
 ```
-Continuar o projeto Aluno Maker Digital — Fase 5: Gerador com Claude API.
-Leia o CLAUDE.md e este arquivo antes de qualquer ação.
-Branch atual: feature/fase-4-backend-admin (merge pendente → v2.0.0)
+Continuar o projeto Aluno Maker Digital — Fase 5: Gerador de conteúdo com Claude API.
+Leia o CLAUDE.md e este arquivo NEXT_SESSION.md antes de qualquer ação.
+Branch de trabalho: criar feature/fase-5-gerador-claude-api a partir de develop.
 ```
 
 ---
@@ -19,103 +19,137 @@ Branch atual: feature/fase-4-backend-admin (merge pendente → v2.0.0)
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | — |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | — |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | — |
-| 4 — Backend + Admin mínimo | ✅ Deploy completo | v2.0.0 (merge pendente) | API pública funcionando |
+| 4 — Backend + Admin | ✅ Concluída | v2.0.0 | Deploy completo em produção |
 | 5 — Gerador com Claude API | ⏳ Próxima | — | — |
 
 ---
 
-## ✅ Fase 4 concluída em 2026-05-20
+## ✅ O que está em produção (Fase 4 + hotfixes)
 
-### O que está funcionando em produção
+### Arquitetura atual
+
+```
+Browser (alunomakerdigital.com.br)
+  → /api/* → api/index.php (proxy PHP, sem CORS)
+  → localhost:3000 → Node.js Express (PM2 + start.sh)
+  → MySQL via /var/lib/mysql/mysql.sock
+```
+
+### Endpoints funcionando
 
 | Endpoint | Status |
 |---|---|
-| `GET https://api.alunomakerdigital.com.br/api/health` | ✅ `{"status":"ok"}` |
-| `POST https://api.alunomakerdigital.com.br/api/contact` | ✅ 201 + MySQL + e-mail |
-| `POST https://api.alunomakerdigital.com.br/api/visits` | ✅ 201 + MySQL + e-mail |
-| `POST https://api.alunomakerdigital.com.br/api/admin/login` | ✅ JWT token |
-| `GET https://api.alunomakerdigital.com.br/api/admin/contacts` | ✅ lista com Bearer |
-| `GET https://api.alunomakerdigital.com.br/api/admin/visits` | ✅ lista com Bearer |
+| `GET /api/health` | ✅ 200 |
+| `POST /api/contact` | ✅ 201 + MySQL + e-mail Brevo |
+| `POST /api/admin/login` | ✅ JWT token |
+| `GET /api/admin/contacts` | ✅ Bearer auth |
+| `GET /api/admin/visits` | ✅ Bearer auth |
 
-### Arquitetura do servidor
+### Painel admin
+- URL: `https://alunomakerdigital.com.br/admin/login.html`
+- Email: `francenylson@gmail.com` | Senha: `Amd@2026!Admin`
 
+### Mudanças da sessão de hoje (2026-05-20)
+- Formulário de agendamento substituído por **CTA WhatsApp** (`.whatsapp-cta` + `.btn--whatsapp`)
+- PHP proxy movido para o domínio principal (`api/index.php` no repo) — elimina CORS
+- FTP_DIR_PROD corrigido para domínio principal
+- `API_BASE = '/api'` (relativo) em todos os JS
+
+---
+
+## ⚠️ Pendência operacional (não bloqueia Fase 5)
+
+**Crontab de restart:** configurar via hPanel → Avançado → Tarefas Cron (o usuário já sabe, mas ainda não confirmou que fez):
 ```
-Requisição externa → Hostinger CDN (hcdn)
-  → Apache em ~/domains/api.alunomakerdigital.com.br/public_html/
-  → api/.htaccess (RewriteRule → index.php)
-  → api/index.php (PHP proxy curl para localhost:3000)
-  → Node.js Express (PM2 com start.sh bash wrapper)
-  → MySQL via Unix socket /var/lib/mysql/mysql.sock
+Tipo: Personalizado
+Comando: /home/u562242543/restart-api.sh
+Frequência: A cada 5 minutos
 ```
 
-### Arquivos críticos no SERVIDOR (não no repo)
+---
 
-| Arquivo | Localização | Função |
-|---|---|---|
-| `start.sh` | `~/domains/api.alunomakerdigital.com.br/server/` | Bash wrapper com env vars — inicia o Node.js |
-| `ecosystem.config.cjs` | `~/domains/api.alunomakerdigital.com.br/server/` | Config PM2 (fallback) |
-| `.env` | `~/domains/api.alunomakerdigital.com.br/` | Vars de ambiente (com aspas em valores com `#`) |
-| `api/index.php` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | PHP proxy |
-| `api/.htaccess` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | Rewrite → index.php |
-| `restart-api.sh` | `~/` | Script de restart (se PM2 cair) |
+## Fase 5 — Escopo completo
 
-### Comandos para reiniciar o servidor (se necessário)
+### Objetivo
+Adicionar ao painel admin um gerador de conteúdo educacional que usa a Claude API para produzir textos em 5 formatos diferentes a partir de um tema informado.
 
+### Tarefas
+
+1. **Branch:** `feature/fase-5-gerador-claude-api` a partir de `develop`
+
+2. **Banco de dados** — nova tabela:
+```sql
+CREATE TABLE generations (
+  id           INT AUTO_INCREMENT PRIMARY KEY,
+  theme        VARCHAR(255) NOT NULL,
+  content_type VARCHAR(100) NOT NULL,
+  output_json  JSON         NOT NULL,
+  cost_usd     DECIMAL(10,6) DEFAULT 0,
+  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+3. **Backend** — novos endpoints em `server/routes/admin.js`:
+   - `POST /api/admin/generate` — recebe `{ theme, content_type }`, chama `claude-sonnet-4-6`, retorna 5 formatos
+   - `GET /api/admin/generations` — histórico com custo acumulado
+
+4. **Frontend** — `admin/gerador.html`:
+   - Formulário: campo tema + select tipo de conteúdo
+   - Exibição dos 5 formatos gerados: blog, TikTok, Instagram, X thread, WhatsApp
+   - Botão copiar por formato
+   - Histórico com custo total da conta
+
+5. **Testes:**
+   - Vitest unitário para o prompt builder
+   - Supertest para os endpoints (mock da Anthropic SDK)
+   - E2E: gerador carrega, submit com API mockada
+
+6. **Merge PR → tag `v2.1.0`**
+
+### 5 formatos de saída esperados
+```json
+{
+  "blog": "texto longo com título e parágrafos...",
+  "tiktok": "roteiro curto com ganchos...",
+  "instagram": "legenda com emojis e hashtags...",
+  "x_thread": "fio de 5 tweets...",
+  "whatsapp": "mensagem informal para grupo de pais..."
+}
+```
+
+### Custo estimado por geração
+~$0.003 USD por chamada com `claude-sonnet-4-6` (input ~200 tokens + output ~800 tokens)
+
+---
+
+## Arquivos críticos no servidor (não no repo)
+
+| Arquivo | Localização |
+|---|---|
+| `start.sh` | `~/domains/api.alunomakerdigital.com.br/server/` |
+| `.env` | `~/domains/api.alunomakerdigital.com.br/` |
+| `restart-api.sh` | `~/` |
+
+### Reiniciar servidor (se necessário)
 ```bash
+# Via Python+paramiko (sem SSH interativo):
+# Usar o script Python com env -i HOME=... PATH=... pm2 start start.sh --interpreter bash
+# Ver NEXT_SESSION anterior para o script completo
+
+# Ou via SSH direto:
 ssh -p 65002 u562242543@82.112.247.253
-
-# Verificar estado
-/home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 list
-
-# Matar tudo e reiniciar
-pkill -9 -f node 2>/dev/null; sleep 2
-env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
-  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 kill 2>/dev/null; sleep 2
 env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
   /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 start \
   /home/u562242543/domains/api.alunomakerdigital.com.br/server/start.sh \
   --name amd-api --interpreter bash
 ```
 
-### Admin do painel
-- **URL:** `https://alunomakerdigital.com.br/admin/login.html`
-- **Email:** `francenylson@gmail.com`
-- **Senha:** `Amd@2026!Admin`
-
----
-
-## ⚠️ Pendências menores (não bloqueiam Fase 5)
-
-### 1. Merge PR #7 e tag v2.0.0
-```bash
-gh api --method DELETE repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
-gh pr merge 7 --merge --admin
-gh api --method POST repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
-git tag v2.0.0 && git push --tags
+### Adicionar ANTHROPIC_API_KEY ao servidor
+Para a Fase 5 funcionar, adicionar no `.env` do servidor:
 ```
-
-### 2. Crontab de restart (manual via hPanel)
-`crontab` não disponível via SSH. Configurar via Hostinger hPanel → Avançado → Tarefas Cron:
+ANTHROPIC_API_KEY=sk-ant-...
 ```
-*/5 * * * * /home/u562242543/restart-api.sh
-```
-
-### 3. Smoke manual do formulário
-- Preencher formulário de contato em `https://alunomakerdigital.com.br/contato.html`
-- Verificar entrada no MySQL e e-mail recebido em `francenylson@gmail.com`
-- Acessar `https://alunomakerdigital.com.br/admin/login.html` e ver o contato no painel
-
----
-
-## Fase 5 — Escopo
-
-1. Branch `feature/fase-5-gerador-claude-api` a partir de `develop`
-2. `admin/gerador.html` — formulário tema + tipo de conteúdo
-3. `POST /api/admin/generate` — chama Anthropic SDK (claude-sonnet-4-6)
-4. Gera 5 formatos: blog, TikTok, Instagram, X thread, WhatsApp
-5. Tabela `generations` (theme, type, output_json, cost_usd)
-6. `GET /api/admin/generations` — histórico + custo acumulado
-7. Merge PR → tag `v2.1.0`
+E atualizar o `start.sh` com a mesma variável.
 
 ---
 
@@ -123,7 +157,9 @@ git tag v2.0.0 && git push --tags
 - Vanilla JS no front — sem React, Vue ou Angular
 - Todo copy e commits em pt-BR
 - `server/` usa ESM (`"type": "module"`) — não usar `require()`
-- PM2 via `start.sh` bash wrapper (NÃO ecosystem direto com node interpreter — ESM bug)
-- `npm run test:unit` e `npm run test:api` antes de commitar (server/)
+- PM2 via `start.sh` bash wrapper (NÃO ecosystem direto com node — ESM bug)
+- `API_BASE = '/api'` (relativo) — nunca URL absoluta
+- `npm run test:unit` e `npm run test:api` antes de commitar server/
+- `npm run test:ci` antes de commitar front
 - gh CLI em `C:\Program Files\GitHub CLI\gh.exe`
-- `DB_SOCKET=/var/lib/mysql/mysql.sock` obrigatório no .env do servidor Hostinger
+- SSH via Python+paramiko: `/c/Users/User/AppData/Local/Programs/Python/Python311/python.exe`
