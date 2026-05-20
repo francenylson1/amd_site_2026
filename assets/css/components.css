@@ -762,22 +762,22 @@
 /* ---- WhatsApp CTA (substitui form de agendamento) ---- */
 
 .btn--whatsapp {
-  background: #25d366;
+  background: #0f7832;
   color: #fff;
-  border-color: #25d366;
+  border-color: #0f7832;
   font-size: 1.1rem;
   padding: 1rem 2rem;
   width: 100%;
   justify-content: center;
-  box-shadow: 0 4px 20px rgb(37 211 102 / 35%);
+  box-shadow: 0 4px 20px rgb(15 120 50 / 35%);
 }
 
 .btn--whatsapp:hover {
-  background: #1ebe5a;
-  border-color: #1ebe5a;
+  background: #0c6028;
+  border-color: #0c6028;
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgb(37 211 102 / 50%);
+  box-shadow: 0 6px 28px rgb(15 120 50 / 50%);
 }
 
 .btn--whatsapp .fa-whatsapp {
@@ -2237,3 +2237,15 @@
   max-width: 700px;
   margin-inline: auto;
 }
+
+/* Conteúdo dinâmico — estados de carregamento e erro */
+.content-loading,
+.content-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.95rem;
+  color: var(--color-muted, #94a3b8);
+}
+
+.content-error { color: #f87171; }

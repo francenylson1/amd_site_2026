@@ -7,10 +7,8 @@
 
     // Procura itens na seção pai; fallback para o documento inteiro
     const scope = container.closest('section') || document;
-    const items = scope.querySelectorAll('[data-category]');
 
-    if (!items.length) return;
-
+    // Usa função que relê itens no momento do clique para suportar conteúdo dinâmico
     filterBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         filterBtns.forEach((b) => {
@@ -21,6 +19,7 @@
         btn.setAttribute('aria-pressed', 'true');
 
         const filter = btn.dataset.filter;
+        const items  = scope.querySelectorAll('[data-category]');
 
         items.forEach((item) => {
           const match = filter === 'all' || item.dataset.category === filter;

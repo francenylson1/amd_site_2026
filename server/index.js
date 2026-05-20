@@ -11,8 +11,9 @@ import express from 'express';
 import helmet  from 'helmet';
 import cors    from 'cors';
 
-import apiRoutes   from './routes/api.js';
-import adminRoutes from './routes/admin.js';
+import apiRoutes     from './routes/api.js';
+import adminRoutes   from './routes/admin.js';
+import contentRoutes from './routes/content.js';
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -32,13 +33,14 @@ app.use(cors({
     if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
     cb(new Error('CORS: origem não permitida.'));
   },
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json({ limit: '100kb' }));
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 app.use('/api', apiRoutes);
+app.use('/api', contentRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use((_req, res) => res.status(404).json({ erro: 'Rota não encontrada.' }));

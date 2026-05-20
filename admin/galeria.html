@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciador de Conteúdo — Aluno Maker Digital</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/css/admin.css" />
+  <link rel="stylesheet" href="assets/css/galeria.css" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Navegação do painel">
+      <a href="index.html" class="admin-sidebar__logo">AMD Admin</a>
+      <nav class="admin-sidebar__nav" aria-label="Menu principal">
+        <a href="index.html" class="admin-sidebar__link">Dashboard</a>
+        <a href="galeria.html" class="admin-sidebar__link admin-sidebar__link--active" aria-current="page">
+          Gerenciador de Conteúdo
+        </a>
+      </nav>
+      <div class="admin-sidebar__footer">
+        <button id="btn-logout" class="admin-sidebar__logout" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <div class="admin-main">
+      <header class="admin-header">
+        <h1 class="admin-header__title">Gerenciador de Conteúdo</h1>
+        <span id="admin-user" class="admin-header__user"></span>
+      </header>
+
+      <main class="admin-content" id="admin-content">
+
+        <!-- Abas -->
+        <div class="cms-tabs" role="tablist" aria-label="Seções do gerenciador">
+          <button class="cms-tab cms-tab--active" role="tab" data-tab="eventos"
+                  aria-selected="true" aria-controls="tab-eventos" id="btn-tab-eventos">
+            <span>Eventos</span>
+          </button>
+          <button class="cms-tab" role="tab" data-tab="projetos"
+                  aria-selected="false" aria-controls="tab-projetos" id="btn-tab-projetos">
+            <span>Projetos</span>
+          </button>
+          <button class="cms-tab" role="tab" data-tab="escolas"
+                  aria-selected="false" aria-controls="tab-escolas" id="btn-tab-escolas">
+            <span>Escolas</span>
+          </button>
+          <button class="cms-tab" role="tab" data-tab="cursos"
+                  aria-selected="false" aria-controls="tab-cursos" id="btn-tab-cursos">
+            <span>Cursos</span>
+          </button>
+        </div>
+
+        <!-- Painel — Eventos -->
+        <div id="tab-eventos" class="cms-panel cms-panel--active" role="tabpanel" aria-labelledby="btn-tab-eventos">
+          <div class="cms-panel__toolbar">
+            <h2>Eventos</h2>
+            <button class="btn-cms btn-cms--primary" id="btn-novo-evento">+ Novo evento</button>
+          </div>
+
+          <div id="form-evento" class="cms-form" hidden>
+            <h3 id="form-evento-titulo">Novo evento</h3>
+            <input type="hidden" id="evento-id" />
+            <div class="cms-form__row">
+              <label for="evento-title">Título *</label>
+              <input type="text" id="evento-title" required />
+            </div>
+            <div class="cms-form__row">
+              <label for="evento-category">Categoria *</label>
+              <select id="evento-category">
+                <option value="campus-party">Campus Party</option>
+                <option value="institucional">Institucional</option>
+                <option value="robotica">Robótica</option>
+                <option value="escola">Na escola</option>
+              </select>
+            </div>
+            <div class="cms-form__row">
+              <label for="evento-description">Descrição</label>
+              <textarea id="evento-description" rows="3"></textarea>
+            </div>
+            <div class="cms-form__row">
+              <label for="evento-date">Data</label>
+              <input type="date" id="evento-date" />
+            </div>
+            <div class="cms-form__row cms-form__row--inline">
+              <label>
+                <input type="checkbox" id="evento-active" checked /> Ativo
+              </label>
+              <label>Ordem <input type="number" id="evento-sort" value="0" min="0" style="width:70px"></label>
+            </div>
+            <div class="cms-form__actions">
+              <button class="btn-cms btn-cms--primary" id="btn-salvar-evento">Salvar</button>
+              <button class="btn-cms btn-cms--ghost" id="btn-cancelar-evento">Cancelar</button>
+              <span id="evento-status" class="cms-status"></span>
+            </div>
+          </div>
+
+          <div id="lista-eventos" class="cms-list" aria-live="polite">
+            <p class="cms-loading">Carregando eventos…</p>
+          </div>
+
+          <!-- Sub-painel de fotos (aparece ao clicar "Fotos" num evento) -->
+          <div id="painel-fotos" class="cms-fotos-panel" hidden>
+            <div class="cms-fotos-panel__header">
+              <h3 id="fotos-titulo">Fotos do evento</h3>
+              <button class="btn-cms btn-cms--ghost" id="btn-fechar-fotos">← Voltar à lista</button>
+            </div>
+            <div class="cms-form cms-form--compact">
+              <input type="hidden" id="foto-evento-id" />
+              <input type="hidden" id="foto-id" />
+              <div class="cms-form__row">
+                <label for="foto-url">Caminho da imagem *</label>
+                <input type="text" id="foto-url" placeholder="assets/images/eventos/slug/foto.webp" />
+              </div>
+              <div class="cms-form__row">
+                <label for="foto-caption">Legenda</label>
+                <input type="text" id="foto-caption" />
+              </div>
+              <div class="cms-form__row">
+                <label>Ordem <input type="number" id="foto-sort" value="0" min="0" style="width:70px"></label>
+              </div>
+              <div class="cms-form__actions">
+                <button class="btn-cms btn-cms--primary" id="btn-salvar-foto">Adicionar foto</button>
+                <button class="btn-cms btn-cms--ghost" id="btn-cancelar-foto" hidden>Cancelar edição</button>
+                <span id="foto-status" class="cms-status"></span>
+              </div>
+            </div>
+            <div id="lista-fotos" class="cms-list cms-list--fotos" aria-live="polite">
+              <p class="cms-loading">Carregando fotos…</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel — Projetos -->
+        <div id="tab-projetos" class="cms-panel" role="tabpanel" aria-labelledby="btn-tab-projetos" hidden>
+          <div class="cms-panel__toolbar">
+            <h2>Projetos</h2>
+            <button class="btn-cms btn-cms--primary" id="btn-novo-projeto">+ Novo projeto</button>
+          </div>
+
+          <div id="form-projeto" class="cms-form" hidden>
+            <h3 id="form-projeto-titulo">Novo projeto</h3>
+            <input type="hidden" id="projeto-id" />
+            <div class="cms-form__row">
+              <label for="projeto-title">Título *</label>
+              <input type="text" id="projeto-title" required />
+            </div>
+            <div class="cms-form__row">
+              <label for="projeto-category">Categoria *</label>
+              <select id="projeto-category">
+                <option value="roborica">Robótica</option>
+                <option value="ia">IA</option>
+                <option value="iot">IoT</option>
+                <option value="eletronica">Eletrônica</option>
+              </select>
+            </div>
+            <div class="cms-form__row">
+              <label for="projeto-short">Descrição curta (frente do card)</label>
+              <input type="text" id="projeto-short" />
+            </div>
+            <div class="cms-form__row">
+              <label for="projeto-full">Descrição completa (verso do card)</label>
+              <textarea id="projeto-full" rows="4"></textarea>
+            </div>
+            <div class="cms-form__row">
+              <label for="projeto-image">Caminho da imagem</label>
+              <input type="text" id="projeto-image" placeholder="assets/images/projetos/slug/foto.webp" />
+            </div>
+            <div class="cms-form__row">
+              <label for="projeto-tags">Tags (separadas por vírgula)</label>
+              <input type="text" id="projeto-tags" placeholder="Arduino, Python, C++" />
+            </div>
+            <div class="cms-form__row cms-form__row--inline">
+              <label>
+                <input type="checkbox" id="projeto-active" checked /> Ativo
+              </label>
+              <label>Ordem <input type="number" id="projeto-sort" value="0" min="0" style="width:70px"></label>
+            </div>
+            <div class="cms-form__actions">
+              <button class="btn-cms btn-cms--primary" id="btn-salvar-projeto">Salvar</button>
+              <button class="btn-cms btn-cms--ghost" id="btn-cancelar-projeto">Cancelar</button>
+              <span id="projeto-status" class="cms-status"></span>
+            </div>
+          </div>
+
+          <div id="lista-projetos" class="cms-list" aria-live="polite">
+            <p class="cms-loading">Carregando projetos…</p>
+          </div>
+        </div>
+
+        <!-- Painel — Escolas -->
+        <div id="tab-escolas" class="cms-panel" role="tabpanel" aria-labelledby="btn-tab-escolas" hidden>
+          <div class="cms-panel__toolbar">
+            <h2>Escolas</h2>
+            <button class="btn-cms btn-cms--primary" id="btn-nova-escola">+ Nova escola</button>
+          </div>
+
+          <div id="form-escola" class="cms-form" hidden>
+            <h3 id="form-escola-titulo">Nova escola</h3>
+            <input type="hidden" id="escola-id" />
+            <div class="cms-form__row">
+              <label for="escola-name">Nome *</label>
+              <input type="text" id="escola-name" required />
+            </div>
+            <div class="cms-form__row">
+              <label for="escola-location">Localização</label>
+              <input type="text" id="escola-location" placeholder="Recanto das Emas" />
+            </div>
+            <div class="cms-form__row">
+              <label for="escola-description">Descrição</label>
+              <textarea id="escola-description" rows="3"></textarea>
+            </div>
+            <div class="cms-form__row">
+              <label for="escola-image">Caminho da imagem</label>
+              <input type="text" id="escola-image" placeholder="assets/images/escolas/slug/foto.webp" />
+            </div>
+            <div class="cms-form__row">
+              <label for="escola-since">Desde</label>
+              <input type="text" id="escola-since" placeholder="2018" />
+            </div>
+            <div class="cms-form__row">
+              <label for="escola-levels">Níveis (separados por vírgula)</label>
+              <input type="text" id="escola-levels" placeholder="Anos Finais, Ensino Médio" />
+            </div>
+            <div class="cms-form__row">
+              <label for="escola-icon">Variante do ícone</label>
+              <select id="escola-icon">
+                <option value="default">Padrão (escola)</option>
+                <option value="purple">Roxo (inclusão/Libras)</option>
+                <option value="gold">Dourado (militar/especial)</option>
+              </select>
+            </div>
+            <div class="cms-form__row cms-form__row--inline">
+              <label>
+                <input type="checkbox" id="escola-active" checked /> Ativo
+              </label>
+              <label>Ordem <input type="number" id="escola-sort" value="0" min="0" style="width:70px"></label>
+            </div>
+            <div class="cms-form__actions">
+              <button class="btn-cms btn-cms--primary" id="btn-salvar-escola">Salvar</button>
+              <button class="btn-cms btn-cms--ghost" id="btn-cancelar-escola">Cancelar</button>
+              <span id="escola-status" class="cms-status"></span>
+            </div>
+          </div>
+
+          <div id="lista-escolas" class="cms-list" aria-live="polite">
+            <p class="cms-loading">Carregando escolas…</p>
+          </div>
+        </div>
+
+        <!-- Painel — Cursos -->
+        <div id="tab-cursos" class="cms-panel" role="tabpanel" aria-labelledby="btn-tab-cursos" hidden>
+          <div class="cms-panel__toolbar">
+            <h2>Cursos</h2>
+            <button class="btn-cms btn-cms--primary" id="btn-novo-curso">+ Novo curso</button>
+          </div>
+
+          <div id="form-curso" class="cms-form" hidden>
+            <h3 id="form-curso-titulo">Novo curso</h3>
+            <input type="hidden" id="curso-id" />
+            <div class="cms-form__row">
+              <label for="curso-title">Título *</label>
+              <input type="text" id="curso-title" required />
+            </div>
+            <div class="cms-form__row">
+              <label for="curso-category">Categoria *</label>
+              <select id="curso-category">
+                <option value="alunos">Para alunos</option>
+                <option value="professores">Para professores</option>
+                <option value="escola">Para escolas</option>
+              </select>
+            </div>
+            <div class="cms-form__row">
+              <label for="curso-level">Nível</label>
+              <select id="curso-level">
+                <option value="iniciante">Iniciante</option>
+                <option value="intermediario">Intermediário</option>
+                <option value="avancado">Avançado</option>
+              </select>
+            </div>
+            <div class="cms-form__row">
+              <label for="curso-duration">Duração</label>
+              <input type="text" id="curso-duration" placeholder="20h" />
+            </div>
+            <div class="cms-form__row">
+              <label for="curso-description">Descrição</label>
+              <textarea id="curso-description" rows="3"></textarea>
+            </div>
+            <div class="cms-form__row">
+              <label for="curso-image">Caminho da imagem</label>
+              <input type="text" id="curso-image" placeholder="assets/images/cursos/slug/capa.webp" />
+            </div>
+            <div class="cms-form__row">
+              <label for="curso-price">Preço (R$)</label>
+              <input type="number" id="curso-price" min="0" step="0.01" placeholder="197.00" />
+            </div>
+            <div class="cms-form__row cms-form__row--inline">
+              <label>
+                <input type="checkbox" id="curso-price-active" /> Exibir preço
+              </label>
+              <label>
+                <input type="checkbox" id="curso-active" checked /> Ativo
+              </label>
+              <label>Ordem <input type="number" id="curso-sort" value="0" min="0" style="width:70px"></label>
+            </div>
+            <div class="cms-form__actions">
+              <button class="btn-cms btn-cms--primary" id="btn-salvar-curso">Salvar</button>
+              <button class="btn-cms btn-cms--ghost" id="btn-cancelar-curso">Cancelar</button>
+              <span id="curso-status" class="cms-status"></span>
+            </div>
+          </div>
+
+          <div id="lista-cursos" class="cms-list" aria-live="polite">
+            <p class="cms-loading">Carregando cursos…</p>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/galeria.js"></script>
+</body>
+</html>
