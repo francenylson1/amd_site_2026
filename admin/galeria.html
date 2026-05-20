@@ -112,8 +112,16 @@
               <input type="hidden" id="foto-evento-id" />
               <input type="hidden" id="foto-id" />
               <div class="cms-form__row">
-                <label for="foto-url">Caminho da imagem *</label>
-                <input type="text" id="foto-url" placeholder="assets/images/eventos/slug/foto.webp" />
+                <label>Imagem *</label>
+                <div class="cms-upload-group">
+                  <label class="btn-cms btn-cms--ghost btn-cms--sm cms-file-label">
+                    📎 Escolher arquivo
+                    <input type="file" accept="image/*" id="foto-file" class="cms-file-hidden" data-folder="eventos">
+                  </label>
+                  <input type="text" id="foto-url" placeholder="assets/images/eventos/foto-1234.webp" />
+                  <img id="foto-preview" class="cms-img-preview" hidden alt="Preview">
+                  <span id="foto-upload-status" class="cms-status"></span>
+                </div>
               </div>
               <div class="cms-form__row">
                 <label for="foto-caption">Legenda</label>
@@ -166,8 +174,16 @@
               <textarea id="projeto-full" rows="4"></textarea>
             </div>
             <div class="cms-form__row">
-              <label for="projeto-image">Caminho da imagem</label>
-              <input type="text" id="projeto-image" placeholder="assets/images/projetos/slug/foto.webp" />
+              <label>Imagem</label>
+              <div class="cms-upload-group">
+                <label class="btn-cms btn-cms--ghost btn-cms--sm cms-file-label">
+                  📎 Escolher arquivo
+                  <input type="file" accept="image/*" id="projeto-file" class="cms-file-hidden" data-folder="projetos">
+                </label>
+                <input type="text" id="projeto-image" placeholder="assets/images/projetos/foto-1234.webp" />
+                <img id="projeto-preview" class="cms-img-preview" hidden alt="Preview">
+                <span id="projeto-upload-status" class="cms-status"></span>
+              </div>
             </div>
             <div class="cms-form__row">
               <label for="projeto-tags">Tags (separadas por vírgula)</label>
@@ -214,8 +230,16 @@
               <textarea id="escola-description" rows="3"></textarea>
             </div>
             <div class="cms-form__row">
-              <label for="escola-image">Caminho da imagem</label>
-              <input type="text" id="escola-image" placeholder="assets/images/escolas/slug/foto.webp" />
+              <label>Imagem</label>
+              <div class="cms-upload-group">
+                <label class="btn-cms btn-cms--ghost btn-cms--sm cms-file-label">
+                  📎 Escolher arquivo
+                  <input type="file" accept="image/*" id="escola-file" class="cms-file-hidden" data-folder="escolas">
+                </label>
+                <input type="text" id="escola-image" placeholder="assets/images/escolas/foto-1234.webp" />
+                <img id="escola-preview" class="cms-img-preview" hidden alt="Preview">
+                <span id="escola-upload-status" class="cms-status"></span>
+              </div>
             </div>
             <div class="cms-form__row">
               <label for="escola-since">Desde</label>
@@ -290,8 +314,16 @@
               <textarea id="curso-description" rows="3"></textarea>
             </div>
             <div class="cms-form__row">
-              <label for="curso-image">Caminho da imagem</label>
-              <input type="text" id="curso-image" placeholder="assets/images/cursos/slug/capa.webp" />
+              <label>Imagem</label>
+              <div class="cms-upload-group">
+                <label class="btn-cms btn-cms--ghost btn-cms--sm cms-file-label">
+                  📎 Escolher arquivo
+                  <input type="file" accept="image/*" id="curso-file" class="cms-file-hidden" data-folder="cursos">
+                </label>
+                <input type="text" id="curso-image" placeholder="assets/images/cursos/foto-1234.webp" />
+                <img id="curso-preview" class="cms-img-preview" hidden alt="Preview">
+                <span id="curso-upload-status" class="cms-status"></span>
+              </div>
             </div>
             <div class="cms-form__row">
               <label for="curso-price">Preço (R$)</label>

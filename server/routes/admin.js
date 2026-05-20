@@ -1,7 +1,9 @@
 import express from 'express';
+import multer  from 'multer';
 import { loginLimiter } from '../middleware/rateLimiter.js';
 import { requireAuth }  from '../middleware/auth.js';
 import { login }        from '../controllers/adminController.js';
+import { uploadImage }  from '../controllers/uploadController.js';
 import { listContacts } from '../controllers/contactController.js';
 import { listVisits }   from '../controllers/visitController.js';
 import {
@@ -18,11 +20,22 @@ import {
   adminListCourses, createCourse, updateCourse, deleteCourse,
 } from '../controllers/courseController.js';
 
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 },
+  fileFilter(_req, file, cb) {
+    cb(null, file.mimetype.startsWith('image/'));
+  },
+});
+
 const router = express.Router();
 
 router.post('/login',    loginLimiter, login);
 router.get('/contacts',  requireAuth,  listContacts);
 router.get('/visits',    requireAuth,  listVisits);
+
+// Upload de imagem
+router.post('/upload', requireAuth, upload.single('file'), uploadImage);
 
 // Eventos
 router.get('/events',                        requireAuth, adminListEvents);

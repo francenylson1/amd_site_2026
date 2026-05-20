@@ -3,6 +3,61 @@
 const API = '/api/admin';
 let token = sessionStorage.getItem('amd_admin_token');
 
+// ── Upload de imagem ──────────────────────────────────────────────────────────
+async function uploadFile(fileInput, pathInput, previewEl, statusEl) {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const folder = fileInput.dataset.folder || 'projetos';
+
+  statusEl.textContent = 'Enviando…';
+  statusEl.className = 'cms-status';
+  previewEl.hidden = true;
+
+  const form = new FormData();
+  form.append('file', file);
+  form.append('folder', folder);
+
+  try {
+    const res = await fetch(`${API}/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    if (res.status === 401) { sessionStorage.removeItem('amd_admin_token'); window.location.href = 'login.html'; return; }
+    if (!res.ok) { const e = await res.json(); throw new Error(e.erro || 'Erro no upload.'); }
+
+    const data = await res.json();
+    pathInput.value = data.path;
+    previewEl.src = '/' + data.path;
+    previewEl.hidden = false;
+    statusEl.textContent = data.webp ? 'Convertido para WebP ✓' : 'Salvo ✓';
+    statusEl.className = 'cms-status cms-status--ok';
+  } catch (err) {
+    statusEl.textContent = err.message;
+    statusEl.className = 'cms-status cms-status--error';
+  }
+}
+
+function initUploadFields() {
+  const pairs = [
+    ['foto-file',    'foto-url',      'foto-preview',    'foto-upload-status'],
+    ['projeto-file', 'projeto-image', 'projeto-preview', 'projeto-upload-status'],
+    ['escola-file',  'escola-image',  'escola-preview',  'escola-upload-status'],
+    ['curso-file',   'curso-image',   'curso-preview',   'curso-upload-status'],
+  ];
+  for (const [fileId, pathId, previewId, statusId] of pairs) {
+    const fi = document.getElementById(fileId);
+    if (!fi) continue;
+    fi.addEventListener('change', () =>
+      uploadFile(fi,
+        document.getElementById(pathId),
+        document.getElementById(previewId),
+        document.getElementById(statusId))
+    );
+  }
+}
+
 // ── Auth ──────────────────────────────────────────────────────────────────────
 function checkAuth() {
   if (!token) { window.location.href = 'login.html'; return; }
@@ -183,6 +238,10 @@ function openEditFoto(photoId) {
   document.getElementById('foto-url').value     = ph.image_url;
   document.getElementById('foto-caption').value = ph.caption ?? '';
   document.getElementById('foto-sort').value    = ph.sort_order;
+  const prev = document.getElementById('foto-preview');
+  prev.src    = '/' + ph.image_url;
+  prev.hidden = false;
+  document.getElementById('foto-upload-status').textContent = '';
   document.getElementById('btn-salvar-foto').textContent = 'Salvar alterações';
   document.getElementById('btn-cancelar-foto').removeAttribute('hidden');
 }
@@ -258,6 +317,10 @@ function openFormProjeto(id = null) {
   document.getElementById('projeto-tags').value     = p?.tags       ?? '';
   document.getElementById('projeto-active').checked = p ? Boolean(p.active) : true;
   document.getElementById('projeto-sort').value     = p?.sort_order ?? 0;
+  const pPrev = document.getElementById('projeto-preview');
+  pPrev.src = p?.image_url ? '/' + p.image_url : '';
+  pPrev.hidden = !p?.image_url;
+  document.getElementById('projeto-upload-status').textContent = '';
   document.getElementById('form-projeto').removeAttribute('hidden');
 }
 
@@ -331,6 +394,10 @@ function openFormEscola(id = null) {
   document.getElementById('escola-icon').value        = s?.icon_variant ?? 'default';
   document.getElementById('escola-active').checked    = s ? Boolean(s.active) : true;
   document.getElementById('escola-sort').value        = s?.sort_order   ?? 0;
+  const sPrev = document.getElementById('escola-preview');
+  sPrev.src = s?.image_url ? '/' + s.image_url : '';
+  sPrev.hidden = !s?.image_url;
+  document.getElementById('escola-upload-status').textContent = '';
   document.getElementById('form-escola').removeAttribute('hidden');
 }
 
@@ -406,6 +473,10 @@ function openFormCurso(id = null) {
   document.getElementById('curso-price-active').checked = c ? Boolean(c.price_active) : false;
   document.getElementById('curso-active').checked      = c ? Boolean(c.active) : true;
   document.getElementById('curso-sort').value          = c?.sort_order  ?? 0;
+  const cPrev = document.getElementById('curso-preview');
+  cPrev.src = c?.image_url ? '/' + c.image_url : '';
+  cPrev.hidden = !c?.image_url;
+  document.getElementById('curso-upload-status').textContent = '';
   document.getElementById('form-curso').removeAttribute('hidden');
 }
 
@@ -467,6 +538,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('foto-id').value = '';
     document.getElementById('foto-url').value = '';
     document.getElementById('foto-caption').value = '';
+    document.getElementById('foto-preview').hidden = true;
+    document.getElementById('foto-upload-status').textContent = '';
     document.getElementById('btn-salvar-foto').textContent = 'Adicionar foto';
     document.getElementById('btn-cancelar-foto').setAttribute('hidden', '');
   });
@@ -476,6 +549,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('painel-fotos').setAttribute('hidden', '');
     fotoEventoId = null;
   });
+
+  // Inicializa campos de upload
+  initUploadFields();
 
   // Carrega todas as listas ao iniciar
   loadEventos();
