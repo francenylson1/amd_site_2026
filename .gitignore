@@ -34,3 +34,7 @@ Thumbs.db
 
 # Claude Code — configurações locais (não compartilhadas)
 .claude/settings.local.json
+
+# Backend — dependências e arquivos gerados
+server/node_modules/
+server/package-lock.json

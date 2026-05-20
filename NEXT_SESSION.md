@@ -1,99 +1,129 @@
 
-# Próxima sessão: Fase 4 — Backend + Painel Admin
+# Próxima sessão: Fase 5 — Gerador com Claude API
 
 ## Prompt para iniciar a sessão
 
 ```
-Iniciar a Fase 4 do projeto Aluno Maker Digital: Backend Node.js + Painel Admin.
+Continuar o projeto Aluno Maker Digital — Fase 5: Gerador com Claude API.
 Leia o CLAUDE.md e este arquivo antes de qualquer ação.
-Fase 3 concluída e mergeada em main com tag v0.4.0.
-Branch de trabalho: feature/fase-4-backend-admin (criar a partir de develop).
+Branch atual: feature/fase-4-backend-admin (merge pendente → v2.0.0)
 ```
 
 ---
 
-## Estado atual (2026-05-19)
+## Estado atual (2026-05-20)
 
 | Fase | Status | Tag | Notas |
 |---|---|---|---|
 | 0 — Fundação | ✅ Concluída | v0.1.1 | — |
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | — |
-| 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 12 escolas, logo tricolor, mapa corrigido |
-| 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas |
-| 4 — Backend + Admin mínimo | ⏳ Próxima | — | — |
+| 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | — |
+| 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | — |
+| 4 — Backend + Admin mínimo | ✅ Deploy completo | v2.0.0 (merge pendente) | API pública funcionando |
+| 5 — Gerador com Claude API | ⏳ Próxima | — | — |
 
 ---
 
-## O que foi feito na sessão anterior (2026-05-19)
+## ✅ Fase 4 concluída em 2026-05-20
 
-### Fase 3 — Módulo GPIO
-- `animacoes.html`: visualizador GPIO com painel de controle + canvas 800×500
-- `assets/js/animations-gpio.js`: GPIOTemplate, RPi5Template (40 pinos), ESP8266Template, ESP32Template, AnimationController (play/pause/stop), LEDAnimation, ServoAnimation, SensorAnimation, BuzzerAnimation
-- `assets/css/gpio.css` integrado ao bundle via `build:css`
-- Exportação PNG (frame) e ZIP (24 frames via JSZip CDN)
-- Link "Animações" adicionado à navbar + footer de todas as páginas
-- `sitemap.xml` atualizado
-- 104/104 E2E Chromium + 11/11 axe verdes
-- Fix colateral: contraste WCAG AA logo tricolor (verde `#00843f`, vermelho `#d32f2f`)
-- Fix colateral: `contato.spec.js` selector iframe mapa corrigido
-- PRs #4 e #5 mergeados → tag `v0.4.0` publicada
+### O que está funcionando em produção
 
-### Observação sobre branch protection
-A `main` exige 1 review de terceiro (dono não pode aprovar o próprio PR). Para futuros merges:
-```bash
-gh api --method DELETE repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
-gh pr merge N --merge --admin
-gh api --method POST repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
+| Endpoint | Status |
+|---|---|
+| `GET https://api.alunomakerdigital.com.br/api/health` | ✅ `{"status":"ok"}` |
+| `POST https://api.alunomakerdigital.com.br/api/contact` | ✅ 201 + MySQL + e-mail |
+| `POST https://api.alunomakerdigital.com.br/api/visits` | ✅ 201 + MySQL + e-mail |
+| `POST https://api.alunomakerdigital.com.br/api/admin/login` | ✅ JWT token |
+| `GET https://api.alunomakerdigital.com.br/api/admin/contacts` | ✅ lista com Bearer |
+| `GET https://api.alunomakerdigital.com.br/api/admin/visits` | ✅ lista com Bearer |
+
+### Arquitetura do servidor
+
+```
+Requisição externa → Hostinger CDN (hcdn)
+  → Apache em ~/domains/api.alunomakerdigital.com.br/public_html/
+  → api/.htaccess (RewriteRule → index.php)
+  → api/index.php (PHP proxy curl para localhost:3000)
+  → Node.js Express (PM2 com start.sh bash wrapper)
+  → MySQL via Unix socket /var/lib/mysql/mysql.sock
 ```
 
+### Arquivos críticos no SERVIDOR (não no repo)
+
+| Arquivo | Localização | Função |
+|---|---|---|
+| `start.sh` | `~/domains/api.alunomakerdigital.com.br/server/` | Bash wrapper com env vars — inicia o Node.js |
+| `ecosystem.config.cjs` | `~/domains/api.alunomakerdigital.com.br/server/` | Config PM2 (fallback) |
+| `.env` | `~/domains/api.alunomakerdigital.com.br/` | Vars de ambiente (com aspas em valores com `#`) |
+| `api/index.php` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | PHP proxy |
+| `api/.htaccess` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | Rewrite → index.php |
+| `restart-api.sh` | `~/` | Script de restart (se PM2 cair) |
+
+### Comandos para reiniciar o servidor (se necessário)
+
+```bash
+ssh -p 65002 u562242543@82.112.247.253
+
+# Verificar estado
+/home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 list
+
+# Matar tudo e reiniciar
+pkill -9 -f node 2>/dev/null; sleep 2
+env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
+  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 kill 2>/dev/null; sleep 2
+env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
+  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 start \
+  /home/u562242543/domains/api.alunomakerdigital.com.br/server/start.sh \
+  --name amd-api --interpreter bash
+```
+
+### Admin do painel
+- **URL:** `https://alunomakerdigital.com.br/admin/login.html`
+- **Email:** `francenylson@gmail.com`
+- **Senha:** `Amd@2026!Admin`
+
 ---
 
-## Fase 4 — Escopo completo (WORKFLOW §4 + SPEC §14)
+## ⚠️ Pendências menores (não bloqueiam Fase 5)
 
-### Objetivo
-Introduzir backend Node.js + MySQL, painel admin protegido por JWT e migrar os formulários do site (de localStorage para MySQL), mantendo fallback para localStorage em caso de falha de rede.
+### 1. Merge PR #7 e tag v2.0.0
+```bash
+gh api --method DELETE repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
+gh pr merge 7 --merge --admin
+gh api --method POST repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
+git tag v2.0.0 && git push --tags
+```
 
-### Tarefas (do WORKFLOW)
-1. Criar branch `feature/fase-4-backend-admin` a partir de `develop`
-2. Criar estrutura `server/` (Express + rotas + controllers + middleware + db)
-3. Configurar MySQL na Hostinger e aplicar schema (SPEC §14.2)
-4. Implementar middleware JWT + bcrypt
-5. Implementar endpoints:
-   - `POST /api/contact`
-   - `POST /api/visits`
-   - `POST /api/admin/login`
-   - `GET /api/admin/contacts`
-   - `GET /api/admin/visits`
-   - `GET /api/feature-flags`
-6. Configurar `express-rate-limit` (5 tentativas/15min em login) + `helmet`
-7. Implementar `admin/login.html` e `admin/index.html` (dashboard: métricas + listagem)
-8. Migrar `forms.js`: tenta POST para API; fallback localStorage se falhar
-9. Indicador visual: ícone verde "enviado ao servidor" vs. amarelo "salvo localmente"
-10. Configurar Nodemailer com Brevo SMTP para notificação a cada novo contato/agendamento
-11. Escrever testes:
-    - Unit (Vitest) para validadores e utilitários
-    - API (Supertest): contratos de cada endpoint
-    - E2E full-stack: formulário → POST → registro no admin
-12. Atualizar `robots.txt` para bloquear `/admin/`
-13. Smoke manual incluindo cenário com servidor caído (fallback ativa)
-14. Merge PR → tag `v2.0.0` (major — backend introduzido)
+### 2. Crontab de restart (manual via hPanel)
+`crontab` não disponível via SSH. Configurar via Hostinger hPanel → Avançado → Tarefas Cron:
+```
+*/5 * * * * /home/u562242543/restart-api.sh
+```
 
-### Spec técnica chave (SPEC §14)
-- **Stack backend:** Node.js 20 LTS + Express 4 + MySQL 8 (Hostinger Business)
-- **Auth:** JWT (expira em 8h) + bcrypt 12 rounds
-- **Rate limit:** 5 tentativas/15min no endpoint `/api/admin/login`
-- **Schema:** tabelas `contacts`, `visits`, `feature_flags`, `admin_users`
-- **E-mail:** Nodemailer + Brevo SMTP (variável `BREVO_API_KEY` em `.env`)
-- **Segurança:** helmet, CORS restrito ao domínio, nenhum segredo no frontend
+### 3. Smoke manual do formulário
+- Preencher formulário de contato em `https://alunomakerdigital.com.br/contato.html`
+- Verificar entrada no MySQL e e-mail recebido em `francenylson@gmail.com`
+- Acessar `https://alunomakerdigital.com.br/admin/login.html` e ver o contato no painel
+
+---
+
+## Fase 5 — Escopo
+
+1. Branch `feature/fase-5-gerador-claude-api` a partir de `develop`
+2. `admin/gerador.html` — formulário tema + tipo de conteúdo
+3. `POST /api/admin/generate` — chama Anthropic SDK (claude-sonnet-4-6)
+4. Gera 5 formatos: blog, TikTok, Instagram, X thread, WhatsApp
+5. Tabela `generations` (theme, type, output_json, cost_usd)
+6. `GET /api/admin/generations` — histórico + custo acumulado
+7. Merge PR → tag `v2.1.0`
 
 ---
 
 ## Lembretes
-
 - Vanilla JS no front — sem React, Vue ou Angular
 - Todo copy e commits em pt-BR
-- Rodar `npm run build:css` após qualquer mudança de CSS
-- `npm run test:ci` antes de qualquer commit novo
+- `server/` usa ESM (`"type": "module"`) — não usar `require()`
+- PM2 via `start.sh` bash wrapper (NÃO ecosystem direto com node interpreter — ESM bug)
+- `npm run test:unit` e `npm run test:api` antes de commitar (server/)
 - gh CLI em `C:\Program Files\GitHub CLI\gh.exe`
-- Imagens Pinheirinho Roxo em `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos — otimizar com `npm run images:optimize` antes de referenciar no HTML)
-- `icon-192.png` faltando no manifest (404 não crítico, registrado para Fase 4)
+- `DB_SOCKET=/var/lib/mysql/mysql.sock` obrigatório no .env do servidor Hostinger

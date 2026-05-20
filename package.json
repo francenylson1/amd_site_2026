@@ -19,7 +19,12 @@
     "lint:css": "stylelint \"assets/css/**/*.css\" \"!assets/css/bundle.min.css\" --allow-empty-input",
     "lint": "npm run lint:js && npm run lint:css",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "server:install": "npm install --prefix server",
+    "server:dev": "node --watch server/index.js",
+    "server:start": "node server/index.js",
+    "test:unit": "cd server && npx vitest run tests/unit",
+    "test:api": "cd server && npx vitest run tests/api"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
