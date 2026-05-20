@@ -1,12 +1,20 @@
 
-# Próxima sessão: Fase 5 — Gerador com Claude API
+# Próxima sessão: Deploy Fase 4.5 + Fase 5 — Gerador com Claude API
 
 ## Prompt para iniciar a sessão
 
 ```
-Continuar o projeto Aluno Maker Digital — Fase 5: Gerador com Claude API.
-Leia o CLAUDE.md e este arquivo antes de qualquer ação.
-Branch atual: feature/fase-4-backend-admin (merge pendente → v2.0.0)
+Deploy da Fase 4.5 — Gerenciador de Conteúdo no servidor.
+Leia o CLAUDE.md e este NEXT_SESSION.md antes de qualquer ação.
+Branch atual: feature/fase-4.5-cms (código pronto, 106/106 Chromium)
+
+Passos de deploy:
+1. Aplicar schema-v2.sql no MySQL do servidor via SSH
+2. Reiniciar PM2 (Node.js) no servidor
+3. Smoke manual: projetos.html + admin/galeria.html
+4. Criar PR → merge main → tag v2.5.0
+5. Atualizar CLAUDE.md: Fase 4.5 ✅ Concluída
+6. Iniciar Fase 5 em nova branch a partir de main
 ```
 
 ---
@@ -15,115 +23,111 @@ Branch atual: feature/fase-4-backend-admin (merge pendente → v2.0.0)
 
 | Fase | Status | Tag | Notas |
 |---|---|---|---|
-| 0 — Fundação | ✅ Concluída | v0.1.1 | — |
-| 1 — Home + layout global | ✅ Concluída | v0.2.0 | — |
-| 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | — |
-| 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | — |
-| 4 — Backend + Admin mínimo | ✅ Deploy completo | v2.0.0 (merge pendente) | API pública funcionando |
-| 5 — Gerador com Claude API | ⏳ Próxima | — | — |
+| 0 a 4 | ✅ Concluídas | v0.1.1 – v2.0.0 | — |
+| **4.5 — Gerenciador de Conteúdo** | **✅ Código completo** | — | Branch feature/fase-4.5-cms, aguardando deploy |
+| 5 — Gerador Claude API | ⏳ | — | Só após 4.5 deployed |
 
 ---
 
-## ✅ Fase 4 concluída em 2026-05-20
+## Deploy Fase 4.5 (passo a passo)
 
-### O que está funcionando em produção
-
-| Endpoint | Status |
-|---|---|
-| `GET https://api.alunomakerdigital.com.br/api/health` | ✅ `{"status":"ok"}` |
-| `POST https://api.alunomakerdigital.com.br/api/contact` | ✅ 201 + MySQL + e-mail |
-| `POST https://api.alunomakerdigital.com.br/api/visits` | ✅ 201 + MySQL + e-mail |
-| `POST https://api.alunomakerdigital.com.br/api/admin/login` | ✅ JWT token |
-| `GET https://api.alunomakerdigital.com.br/api/admin/contacts` | ✅ lista com Bearer |
-| `GET https://api.alunomakerdigital.com.br/api/admin/visits` | ✅ lista com Bearer |
-
-### Arquitetura do servidor
-
-```
-Requisição externa → Hostinger CDN (hcdn)
-  → Apache em ~/domains/api.alunomakerdigital.com.br/public_html/
-  → api/.htaccess (RewriteRule → index.php)
-  → api/index.php (PHP proxy curl para localhost:3000)
-  → Node.js Express (PM2 com start.sh bash wrapper)
-  → MySQL via Unix socket /var/lib/mysql/mysql.sock
-```
-
-### Arquivos críticos no SERVIDOR (não no repo)
-
-| Arquivo | Localização | Função |
-|---|---|---|
-| `start.sh` | `~/domains/api.alunomakerdigital.com.br/server/` | Bash wrapper com env vars — inicia o Node.js |
-| `ecosystem.config.cjs` | `~/domains/api.alunomakerdigital.com.br/server/` | Config PM2 (fallback) |
-| `.env` | `~/domains/api.alunomakerdigital.com.br/` | Vars de ambiente (com aspas em valores com `#`) |
-| `api/index.php` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | PHP proxy |
-| `api/.htaccess` | `~/domains/api.alunomakerdigital.com.br/public_html/api/` | Rewrite → index.php |
-| `restart-api.sh` | `~/` | Script de restart (se PM2 cair) |
-
-### Comandos para reiniciar o servidor (se necessário)
-
+### 1. Push e CI
 ```bash
-ssh -p 65002 u562242543@82.112.247.253
-
-# Verificar estado
-/home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 list
-
-# Matar tudo e reiniciar
-pkill -9 -f node 2>/dev/null; sleep 2
-env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
-  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 kill 2>/dev/null; sleep 2
-env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.20.2/bin:/usr/local/bin:/usr/bin:/bin \
-  /home/u562242543/.nvm/versions/node/v20.20.2/bin/pm2 start \
-  /home/u562242543/domains/api.alunomakerdigital.com.br/server/start.sh \
-  --name amd-api --interpreter bash
+git push -u origin feature/fase-4.5-cms
+# Aguardar CI verde em GitHub Actions
 ```
 
-### Admin do painel
-- **URL:** `https://alunomakerdigital.com.br/admin/login.html`
-- **Email:** `francenylson@gmail.com`
-- **Senha:** `Amd@2026!Admin`
-
----
-
-## ⚠️ Pendências menores (não bloqueiam Fase 5)
-
-### 1. Merge PR #7 e tag v2.0.0
+### 2. Aplicar schema no servidor via SSH
 ```bash
-gh api --method DELETE repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
-gh pr merge 7 --merge --admin
-gh api --method POST repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
-git tag v2.0.0 && git push --tags
+# SSH: 82.112.247.253:65002 / user: u562242543
+# O schema-v2.sql foi deployado via FTP pelo CI. Aplicar:
+mysql -u u562242543_amd_user -p'Amd@2018#2020' u562242543_amd_db < ~/alunomakerdigital.com.br/server/db/schema-v2.sql
 ```
 
-### 2. Crontab de restart (manual via hPanel)
-`crontab` não disponível via SSH. Configurar via Hostinger hPanel → Avançado → Tarefas Cron:
-```
-*/5 * * * * /home/u562242543/restart-api.sh
+### 3. Reiniciar Node.js
+```bash
+env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.18.1/bin:/usr/bin:/bin \
+  pm2 restart amd-api
 ```
 
-### 3. Smoke manual do formulário
-- Preencher formulário de contato em `https://alunomakerdigital.com.br/contato.html`
-- Verificar entrada no MySQL e e-mail recebido em `francenylson@gmail.com`
-- Acessar `https://alunomakerdigital.com.br/admin/login.html` e ver o contato no painel
+### 4. Verificar endpoints
+```bash
+curl https://alunomakerdigital.com.br/api/events   | python3 -m json.tool | head -20
+curl https://alunomakerdigital.com.br/api/projects | python3 -m json.tool | head -20
+```
+
+### 5. Smoke manual
+- projetos.html: cards carregam dinamicamente
+- eventos.html: seções de eventos aparecem
+- escolas.html: cards de escolas aparecem
+- admin/galeria.html: CRUD funcional com dados do banco
+
+### 6. Merge + tag
+```bash
+gh api --method DELETE repos/francenylson1/amd-site-2026/branches/main/protection/enforce_admins
+gh pr merge --admin --merge
+gh api --method POST repos/francenylson1/amd-site-2026/branches/main/protection/enforce_admins
+git tag v2.5.0 && git push origin v2.5.0
+```
 
 ---
 
-## Fase 5 — Escopo
+## O que foi implementado na Fase 4.5
 
-1. Branch `feature/fase-5-gerador-claude-api` a partir de `develop`
-2. `admin/gerador.html` — formulário tema + tipo de conteúdo
-3. `POST /api/admin/generate` — chama Anthropic SDK (claude-sonnet-4-6)
-4. Gera 5 formatos: blog, TikTok, Instagram, X thread, WhatsApp
-5. Tabela `generations` (theme, type, output_json, cost_usd)
-6. `GET /api/admin/generations` — histórico + custo acumulado
-7. Merge PR → tag `v2.1.0`
+### Backend (server/)
+- `db/schema-v2.sql` — 5 tabelas: events, event_photos, projects, schools, courses + seed completo com 9 projetos, 6 eventos (19 fotos), 12 escolas
+- `controllers/event|project|school|courseController.js` — CRUD completo
+- `routes/content.js` — rotas públicas (GET /api/events|projects|schools|courses)
+- `routes/admin.js` — expandido com 20 rotas admin (Bearer JWT)
+- `index.js` — monta content routes + PUT/DELETE no CORS
+
+### Frontend (assets/js/)
+- `projetos.js`, `eventos.js`, `escolas.js`, `cursos.js` — fetch + render
+- `animations.js` — expõe `window.AMD.observeReveal()`
+- `gallery.js` — event delegation nos filtros (suporta conteúdo dinâmico)
+
+### Páginas convertidas
+- projetos.html, eventos.html, escolas.html, cursos.html → `<div id="xxx-grid">` + JS
+
+### Admin
+- `admin/galeria.html` — 4 abas CRUD (Eventos + Fotos | Projetos | Escolas | Cursos)
+- `admin/assets/js/galeria.js`, `css/galeria.css`
+
+### Testes (106/106 Chromium)
+- `server/tests/api/content.test.js` — 6 testes, 27/27 total Vitest
+- `tests/e2e/gallery.spec.js` — mocks API + waitForSelector dinâmico
+- `tests/a11y/axe.spec.js` — mocks API para páginas dinâmicas
+
+### Correções de acessibilidade
+- `.btn--whatsapp` corrigido de `#25d366` para `#0f7832` (contraste 5.6:1 ≥ 4.5:1)
+- `.content-error` de `#dc2626` para `#f87171` (contraste 8.3:1 no fundo escuro)
 
 ---
 
-## Lembretes
-- Vanilla JS no front — sem React, Vue ou Angular
-- Todo copy e commits em pt-BR
-- `server/` usa ESM (`"type": "module"`) — não usar `require()`
-- PM2 via `start.sh` bash wrapper (NÃO ecosystem direto com node interpreter — ESM bug)
-- `npm run test:unit` e `npm run test:api` antes de commitar (server/)
-- gh CLI em `C:\Program Files\GitHub CLI\gh.exe`
-- `DB_SOCKET=/var/lib/mysql/mysql.sock` obrigatório no .env do servidor Hostinger
+## Pendências para o Prof. Fran revisar após deploy
+
+1. **Braço Robótico com IA** (projeto #3): imagem atual pode estar errada. Corrigir via `admin/galeria.html`.
+2. **Imagens Pinheirinho Roxo**: em `assets/images/escolas/pinheirinho_roxo/` como JPGs brutos. Rodar `npm run images:optimize` → associar à escola via admin.
+
+---
+
+## Fase 5 — Gerador com Claude API (referência futura)
+
+**Objetivo:** No painel admin, o Prof. Fran seleciona um projeto/evento e recebe copy gerada por Claude para publicar nas redes sociais.
+
+**Arquivos a criar:**
+```
+server/controllers/generatorController.js
+admin/gerador.html
+admin/assets/js/gerador.js
+```
+
+**Dependência:** `npm install @anthropic-ai/sdk` no server/
+
+**Modelo:** claude-sonnet-4-6 (atual Sonnet 4.6) com prompt caching para o contexto do projeto.
+
+**Lembretes técnicos Fase 5:**
+- Usar `claude-api` skill no Claude Code para implementação
+- Incluir prompt caching (`cache_control: { type: "ephemeral" }`) no system prompt
+- Chave API em `ANTHROPIC_API_KEY` no `.env` do servidor
+- Rate limiting específico para a rota `/api/admin/generate`

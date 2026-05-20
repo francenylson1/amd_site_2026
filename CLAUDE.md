@@ -27,8 +27,9 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | Home completa, 120/120 E2E, bundle CSS. Lighthouse ≥ 85 em staging |
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
-| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 (pendente merge) | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
-| 5 — Gerador com Claude API | ⏳ | — | — |
+| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
+| 4.5 — Gerenciador de Conteúdo | ⏳ Em revisão | — | CMS completo — aguardando schema no servidor + merge PR |
+| 5 — Gerador com Claude API | ⏳ | — | Só após 4.5 deployed |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
 ## Comandos úteis
@@ -72,10 +73,10 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **serve strip .html:** o servidor local remove extensão `.html` das URLs — specs E2E usam regex sem `.html` (ex: `/obrigado/` não `/obrigado\.html/`).
 - **Logo navbar:** texto tricolor com fundo branco — `.logo-aluno` (verde `#00843f`), `.logo-maker` (vermelho `#d32f2f`), `.logo-digital` (azul `#0066ff`). Fonte Orbitron. Cores atendem WCAG AA 4.5:1 em fundo branco.
 - **Mapa:** iframe Google Maps está em `contato.html` (endereço: Quadra 203 Lote 32, Recanto das Emas, CEP 72610-300). Removido de `escolas.html`.
-- **cursos.html:** seções com preços ocultas via `hidden` — só quiz CTA + banner "em construção". Reativar quando plataforma de pagamento estiver pronta (Fase 6).
+- **cursos.html:** seção `#cursos-dinamicos` oculta via `hidden` — cursos.js a exibe automaticamente quando API retornar cursos com `active=TRUE`.
 - **school-card__icon--purple:** variante roxa para escolas de inclusão (ex: CEF 306).
 - **Escolas cadastradas:** CEF 101, CEF 113, CEF 206, CEF 308, CEF 405, CEM 804, EC 203, EC 401, Colégio Militar, Pinheirinho Roxo (Ed. Infantil), CeD 104, CEF 306 (surdos/mudos).
-- **Imagens Pinheirinho Roxo:** em `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos, aguardando otimização para WebP antes de referenciar no HTML).
+- **Imagens Pinheirinho Roxo:** em `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos, aguardando otimização para WebP antes de referenciar no banco).
 - **Branch protection main:** requer 1 review de terceiros — dono do repo não pode aprovar o próprio PR. Workaround: desabilitar `enforce_admins` via API temporariamente (`gh api --method DELETE repos/.../branches/main/protection/enforce_admins`), fazer merge com `--admin`, reativar com `--method POST`.
 - **gpio.css:** incluído no bundle; ordem no `build:css`: `variables → main → animations → components → gpio → responsive`.
 - **JSZip CDN:** `https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js` — carregado apenas em `animacoes.html`.
@@ -86,14 +87,23 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Vitest API tests:** mocks CJS/ESM com `{ ...pool, default: pool }` para que `require()` e `import default` compartilhem a mesma instância de vi.fn().
 - **admin/login.html:** standalone (sem navbar), token JWT em `sessionStorage.amd_admin_token`.
 - **admin/index.html:** GET /api/admin/contacts + /api/admin/visits com Bearer token; redireciona para login se 401.
+- **admin/galeria.html:** gerenciador de conteúdo com 4 abas — Eventos, Projetos, Escolas, Cursos. CRUD completo com JWT.
 - **forms.js fallback:** tenta POST /api/* com AbortSignal.timeout(8000); em caso de falha → localStorage + indicador amarelo `.form-status`.
 - **robots.txt:** já bloqueia `/admin/` desde a Fase 0.
 - **MySQL via socket:** `DB_SOCKET=/var/lib/mysql/mysql.sock` — Hostinger só permite conexão localhost via socket Unix. `db/connection.js` usa `socketPath` quando `DB_SOCKET` está setado.
 - **dotenv e `#`:** valores `.env` com `#` devem ser entre aspas duplas (ex: `DB_PASS="Amd@2018#2020"`). dotenv trata `#` sem aspas como início de comentário.
 - **PM2 + ESM:** PM2 não inicia ESM diretamente via ecosystem. Solução: `start.sh` bash wrapper que exporta todas as vars e faz `exec node index.js`. PM2 usa `--interpreter bash`.
-- **PHP proxy:** `public_html/api/index.php` + `.htaccess` no servidor `api.alunomakerdigital.com.br` roteiam requisições externas para `localhost:3000`. NÃO estão no repo (específico do servidor).
-- **Deploy API:** FTP deploy só vai para o domínio principal. O subdomínio `api.` tem estrutura separada. Os arquivos em `~/domains/api.alunomakerdigital.com.br/` persistem entre deploys.
+- **PHP proxy (domínio principal):** `api/index.php` + `api/.htaccess` estão no REPO e são deployados para `alunomakerdigital.com.br/api/`. Roteia `/api/*` para `localhost:3000` sem CORS (mesma origem).
+- **PHP proxy (api. subdomain):** `api-proxy/api/index.php` + `.htaccess` no repo; deployados para `api.alunomakerdigital.com.br/public_html/api/` via step separado no deploy.yml com secret `FTP_DIR_API`.
+- **API_BASE:** sempre `/api` (relativo). Sem diferença localhost/produção.
+- **Deploy:** FTP_DIR_PROD → domínio principal. FTP_DIR_API → subdomínio api.*. FTP_DIR_STAGING → staging.
 - **Credenciais servidor:** SSH `82.112.247.253:65002` user `u562242543`. Scripts sensíveis (`start.sh`, `ecosystem.config.cjs`) ficam APENAS no servidor, não no repo.
+- **WhatsApp CTA:** seção `#agendamento` na home usa `.whatsapp-cta` + `.btn--whatsapp` em vez de form. Link: `wa.me/5561981333875?text=...`.
+- **gallery.js:** usa event delegation — relê `[data-category]` a cada clique de filtro, suportando conteúdo dinâmico (Fase 4.5).
+- **animations.js:** expõe `window.AMD.observeReveal()` para páginas com conteúdo renderizado via JS.
+- **Conteúdo dinâmico:** projetos/eventos/escolas/cursos rendem via `fetch('/api/...')` em JS. DB armazena paths relativos de imagem (`assets/images/...`).
+- **schema-v2.sql:** 5 novas tabelas (events, event_photos, projects, schools, courses) + seed dos dados hardcoded. Aplicar via SSH + MySQL.
+- **Regra de exibição de cursos:** `active=FALSE` → oculto; `active=TRUE + price_active=FALSE` → badge "Em breve"; `active=TRUE + price_active=TRUE` → com preço (Fase 6).
 
 ## Paths críticos
 
@@ -112,12 +122,25 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `.env.example` — template de variáveis (Fase 4+). Copiar para `.env` com credenciais reais.
 - `server/index.js` — entry point ESM; `npm run server:start` ou `npm run server:dev`.
 - `server/db/schema.sql` — DDL MySQL: visits, contacts, admin_users, feature_flags.
+- `server/db/schema-v2.sql` — Fase 4.5: 5 novas tabelas + seed com dados migrados do HTML.
 - `server/middleware/validate.js` — validadores isValidEmail, isValidPhone, isValidDate, isFutureOrToday.
 - `server/services/emailService.js` — Nodemailer + Brevo SMTP.
+- `server/routes/content.js` — rotas públicas: GET /api/events|projects|schools|courses.
+- `server/controllers/eventController.js` — CRUD eventos + fotos.
+- `server/controllers/projectController.js` — CRUD projetos.
+- `server/controllers/schoolController.js` — CRUD escolas.
+- `server/controllers/courseController.js` — CRUD cursos.
 - `admin/login.html` — página de login admin (standalone).
 - `admin/index.html` — dashboard admin (contatos + agendamentos).
+- `admin/galeria.html` — gerenciador de conteúdo: 4 abas CRUD.
+- `admin/assets/js/galeria.js` — lógica do gerenciador.
+- `admin/assets/css/galeria.css` — estilos do gerenciador.
+- `assets/js/projetos.js` — fetch + render dos project-cards (flip).
+- `assets/js/eventos.js` — fetch + render por grupo de evento + GLightbox.
+- `assets/js/escolas.js` — fetch + render dos school-cards.
+- `assets/js/cursos.js` — fetch + render dos course-cards.
 - `server/tests/unit/validators.test.js` — 13 testes Vitest (validadores).
-- `server/tests/api/*.test.js` — 21 testes Supertest (contratos de endpoint).
+- `server/tests/api/*.test.js` — 27 testes Supertest (contratos de endpoint, inclui content.test.js).
 - `tests/e2e/backend.spec.js` — 4 testes E2E Playwright (fallback + admin).
 - `eslint.config.mjs` — configuração ESLint v10 (flat config).
 - `.github/workflows/ci.yml` — pipeline: lint + E2E + Lighthouse.
@@ -126,6 +149,8 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `assets/js/animations-gpio.js` — módulo GPIO: GPIOTemplate, RPi5/ESP8266/ESP32, AnimationController, LED/Servo/Sensor/Buzzer.
 - `assets/css/gpio.css` — estilos do módulo GPIO (incluído no bundle).
 - `tests/e2e/gpio.spec.js` — 32 testes E2E cobrindo CA-GPIO-01 a CA-GPIO-05 + acessibilidade.
+- `api/index.php` + `api/.htaccess` — proxy PHP no domínio principal (no repo, deployado via FTP_DIR_PROD).
+- `api-proxy/api/index.php` + `.htaccess` — proxy PHP para api.* subdomain (no repo, deployado via FTP_DIR_API).
 
 ## Manutenção deste arquivo
 
