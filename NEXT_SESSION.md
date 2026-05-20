@@ -1,118 +1,184 @@
 
-# Próxima sessão: Fase 5 — Gerador de Conteúdo com Claude API
+# Próxima sessão: Deploy Fase 4 — Finalizar API em produção
 
 ## Prompt para iniciar a sessão
 
 ```
-Iniciar a Fase 5 do projeto Aluno Maker Digital: Gerador de Conteúdo com Claude API.
+Continuar o deploy da Fase 4 do projeto Aluno Maker Digital.
 Leia o CLAUDE.md e este arquivo antes de qualquer ação.
-Fase 4 concluída (backend + admin). Branch de trabalho: feature/fase-5-gerador-claude-api (criar a partir de develop).
+O código está pronto e testado. O problema restante é roteamento externo da API na Hostinger.
+Branch ativo: feature/fase-4-backend-admin
 ```
 
 ---
 
-## Estado atual (2026-05-19)
+## Estado atual (2026-05-20)
 
 | Fase | Status | Tag | Notas |
 |---|---|---|---|
 | 0 — Fundação | ✅ Concluída | v0.1.1 | — |
 | 1 — Home + layout global | ✅ Concluída | v0.2.0 | — |
-| 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 12 escolas, logo tricolor, mapa corrigido |
-| 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas |
-| 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 (pendente merge) | server/ ESM, admin/ JWT, forms.js fallback |
+| 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | — |
+| 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | — |
+| 4 — Backend + Admin mínimo | 🔶 Código pronto, deploy parcial | v2.0.0 (pendente merge) | Ver pendências abaixo |
 | 5 — Gerador com Claude API | ⏳ Próxima | — | — |
 
 ---
 
-## O que foi feito na Fase 4 (2026-05-19)
+## ✅ O que foi concluído nesta sessão (2026-05-20)
 
-### Backend Node.js + Express (server/)
-- `server/index.js`: Entry point ESM, helmet, CORS restrito, JSON limit 100kb
-- `server/db/connection.js`: mysql2/promise pool
-- `server/db/schema.sql`: DDL MySQL (visits, contacts, admin_users, feature_flags)
-- `server/middleware/auth.js`: JWT verify (requireAuth)
-- `server/middleware/rateLimiter.js`: 5 tentativas/15min em /api/admin/login
-- `server/middleware/validate.js`: validateContact, validateVisit + utilitários exportados
-- `server/services/emailService.js`: Nodemailer + Brevo SMTP (silencia se SMTP_USER vazio)
-- `server/controllers/`: contactController, visitController, adminController (login), featureFlagController
-- `server/routes/api.js`: POST /api/contact, POST /api/visits, GET /api/feature-flags
-- `server/routes/admin.js`: POST /api/admin/login (rate-limited), GET /api/admin/contacts (auth), GET /api/admin/visits (auth)
+### Código (100% pronto e testado)
+- `server/` ESM completo: Express 4, JWT, bcrypt, helmet, rate-limit, Nodemailer/Brevo
+- `server/db/schema.sql`: DDL MySQL aplicado na Hostinger
+- `admin/login.html` + `admin/index.html`: painel JWT funcional
+- `assets/js/forms.js`: POST API → fallback localStorage → indicador visual
+- **34/34 Vitest + 108/108 E2E Chromium verdes**
+- PR #7 aberto no GitHub (feature/fase-4-backend-admin → develop)
 
-### Painel Admin (admin/)
-- `admin/login.html`: login standalone com Bearer token JWT em sessionStorage
-- `admin/index.html`: dashboard com métricas (total contatos, visitas, pendentes) + tabelas
-- `admin/assets/css/admin.css`: CSS autônomo (não incluso no bundle front)
-- `admin/assets/js/admin-auth.js`: login/logout + redirect guards + exposição window.AMD_ADMIN
-- `admin/assets/js/admin-dashboard.js`: fetch contatos e agendamentos + escape XSS
+### Infraestrutura (parcialmente concluída)
+- ✅ MySQL configurado na Hostinger (banco `u562242543_amd_db`, 4 tabelas criadas)
+- ✅ `.env` criado com credenciais reais (DB, JWT, Brevo SMTP)
+- ✅ Brevo SMTP testado e funcionando (e-mail de teste enviado)
+- ✅ NVM + Node.js 20.20.2 instalado no servidor via SSH
+- ✅ `server/` transferido para `~/domains/api.alunomakerdigital.com.br/server/`
+- ✅ `npm install` executado no Linux (binários nativos compilados)
+- ✅ Servidor responde `{"status":"ok"}` internamente na porta 3000
+- ✅ `api.alunomakerdigital.com.br` existe com Apache configurado
+- ⚠️ `nohup node index.js` iniciado — **pode precisar reiniciar amanhã**
 
-### Migração forms.js
-- Tenta POST /api/* antes de gravar em localStorage
-- Em caso de falha: fallback localStorage + indicador amarelo (`.form-status`)
-- AbortSignal.timeout(8000) para não bloquear o UX
+---
 
-### Testes
-- `server/tests/unit/validators.test.js`: 13 testes Vitest
-- `server/tests/api/contact.test.js`: 5 testes Supertest
-- `server/tests/api/visits.test.js`: 5 testes Supertest
-- `server/tests/api/admin.test.js`: 11 testes Supertest
-- `tests/e2e/backend.spec.js`: 4 testes Playwright (fallback contato, agendamento, admin login)
-- **Total: 34/34 Vitest + 108/108 E2E Chromium verdes**
+## ❌ Pendências críticas para amanhã
 
-### Pendente para deploy (DoD Fase 4)
-- [ ] Configurar MySQL na Hostinger Business e aplicar schema.sql
-- [ ] Criar usuário admin: `INSERT INTO admin_users (email, password_hash) VALUES ('francenylson@gmail.com', bcrypt12rounds)`
-- [ ] Preencher `.env` com DB_HOST, DB_PASS, JWT_SECRET, SMTP_USER, SMTP_PASS
-- [ ] Deploy do server/ no Node.js da Hostinger (App na Hostinger → Node.js)
-- [ ] Smoke manual: formulário → MySQL → e-mail Fran → admin lista registro
-- [ ] Merge PR → tag `v2.0.0`
+### 1. API não acessível externamente (problema principal)
+O servidor Node.js funciona em `localhost:3000` mas não chega ao mundo externo.
 
-### Observação merge (branch protection)
+**Diagnóstico:**
+- `curl -sk https://api.alunomakerdigital.com.br/api/health` retorna "This Page Does Not Exist" (página da Hostinger)
+- PHP proxy (`index.php`) em `public_html/` não é executado para paths `/api/*`
+- Hostinger CDN intercepta antes do Apache para paths desconhecidos
+- `mod_proxy` bloqueado (503 na tentativa)
+- Phusion Passenger instalado (`PASSENGER_INSTANCE_REGISTRY_DIR=/var/passenger`) — não testado completamente
+
+**Tentativas já feitas (não repetir):**
+- `.htaccess` com `RewriteRule` → falhou (não chega ao Apache)
+- `.htaccess` com `ProxyPass` → 503 (mod_proxy bloqueado)
+- PHP proxy via `index.php` → Hostinger CDN intercepta antes
+- PM2 → crashava 199x (era conflito de porta, não bug do código)
+
+**Estado do servidor agora:**
+```
+SSH: ssh -p 65002 u562242543@82.112.247.253
+Senha: Amd@2018#2020
+Servidor: ~/domains/api.alunomakerdigital.com.br/server/
+.env: ~/domains/api.alunomakerdigital.com.br/.env
+public_html: tem index.php (proxy PHP) + .htaccess
+Node.js: pode estar rodando ou não (verificar com: cat ~/node-server.log)
+```
+
+**Próximas tentativas sugeridas (em ordem):**
+
+**Opção A — Passenger via .htaccess (mais promissora):**
+```bash
+cat > ~/domains/api.alunomakerdigital.com.br/public_html/.htaccess << 'EOF'
+PassengerEnabled On
+PassengerNodejs /home/u562242543/.nvm/versions/node/v20.20.2/bin/node
+PassengerStartupFile /home/u562242543/domains/api.alunomakerdigital.com.br/server/index.js
+PassengerAppRoot /home/u562242543/domains/api.alunomakerdigital.com.br
+PassengerAppType node
+EOF
+```
+Passenger está instalado (`PASSENGER_INSTANCE_REGISTRY_DIR=/var/passenger`). Pode funcionar.
+
+**Opção B — Contato com suporte Hostinger:**
+Abrir ticket: "A aplicação Node.js `api.alunomakerdigital.com.br` foi criada via wizard mas o vhost não foi completamente configurado. Preciso que o Passenger seja configurado para servir `~/domains/api.alunomakerdigital.com.br/server/index.js` com Node.js `/home/u562242543/.nvm/versions/node/v20.20.2/bin/node`."
+
+**Opção C — Deletar e refazer wizard completamente:**
+Deletar `api.alunomakerdigital.com.br` no painel → Sites → Node.js → wizard novamente, desta vez clicar "Implantar" sem hesitar.
+
+### 2. Usuário admin não criado
+Após a API funcionar, criar o admin via SSH:
+```bash
+# Gerar hash bcrypt no servidor
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+cd ~/domains/api.alunomakerdigital.com.br/server
+node -e "
+import bcrypt from 'bcrypt';
+const hash = await bcrypt.hash('SENHA_ADMIN_AQUI', 12);
+console.log(hash);
+"
+# Depois inserir no MySQL via phpMyAdmin:
+# INSERT INTO admin_users (email, password_hash) VALUES ('francenylson@gmail.com', 'HASH_GERADO');
+```
+
+### 3. Smoke manual (após API funcionar)
+- Preencher formulário de contato → verificar MySQL → verificar e-mail Fran
+- Preencher agendamento → verificar MySQL → verificar e-mail Fran
+- Acessar admin/login.html → logar → ver painel com dados
+
+### 4. Merge PR e tag
 ```bash
 gh api --method DELETE repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
-gh pr merge N --merge --admin
+gh pr merge 7 --merge --admin
 gh api --method POST repos/francenylson1/amd_site_2026/branches/main/protection/enforce_admins
+git tag v2.0.0 && git push --tags
 ```
 
 ---
 
-## Fase 5 — Escopo (WORKFLOW §5 + SPEC §14.1)
+## Credenciais e configurações do servidor
 
-### Objetivo
-Adicionar ao admin a ferramenta de geração de conteúdo para redes sociais e blog usando Claude API (Anthropic SDK).
+| Item | Valor |
+|---|---|
+| SSH host | `82.112.247.253` |
+| SSH porta | `65002` |
+| SSH usuário | `u562242543` |
+| SSH senha | `Amd@2018#2020` |
+| MySQL banco | `u562242543_amd_db` |
+| MySQL usuário | `u562242543_amd_user` |
+| MySQL host (interno) | `localhost` |
+| Node.js | `/home/u562242543/.nvm/versions/node/v20.20.2/bin/node` |
+| Servidor app | `~/domains/api.alunomakerdigital.com.br/server/` |
+| .env | `~/domains/api.alunomakerdigital.com.br/.env` |
+| public_html | `~/domains/api.alunomakerdigital.com.br/public_html/` |
+| Log Node.js | `~/node-server.log` |
 
-### Tarefas (do WORKFLOW)
-1. Criar branch `feature/fase-5-gerador-claude-api` a partir de `develop`
-2. Implementar `admin/gerador.html` com formulário: tema + tipo de conteúdo
-3. Implementar `POST /api/admin/generate` (protegido por JWT) que chama Anthropic SDK
-4. Gerar 5 formatos automaticamente:
-   - Blog longo (Português BR, 800–1200 palavras)
-   - Roteiro TikTok 30–60s (texto + hashtags)
-   - Legenda Instagram + 30 hashtags
-   - Thread X com 5 tweets
-   - Mensagem WhatsApp
-5. Gravar em tabela `generations` (theme, type, output_json, cost_usd)
-6. Implementar `GET /api/admin/generations` — histórico com custo acumulado
-7. Exibir custo estimado no dashboard principal
-8. Testes: unit (prompt builder), API (mock Anthropic SDK), E2E (form → generate → exibe)
-9. Merge PR → tag `v2.1.0`
+---
 
-### Spec técnica chave (SPEC §14.1)
-- **Endpoint:** `POST /api/admin/generate` (Fase 5)
-- **SDK:** `@anthropic-ai/sdk` (não `openai`)
-- **Modelo:** `claude-sonnet-4-6` (último disponível — ver CLAUDE.md da sessão)
-- **Auth:** Bearer JWT (mesmo middleware `requireAuth` da Fase 4)
-- **Variável:** `ANTHROPIC_API_KEY` em `.env`
-- **Custo:** registrar `cost_usd` baseado nos usage tokens retornados pelo SDK
+## Como reiniciar o servidor Node.js (amanhã)
+
+```bash
+ssh -p 65002 u562242543@82.112.247.253
+# Ativar NVM
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# Matar processo anterior se existir
+pkill -f "node index.js" 2>/dev/null
+sleep 1
+# Iniciar
+cd ~/domains/api.alunomakerdigital.com.br/server
+nohup node index.js > ~/node-server.log 2>&1 &
+disown
+sleep 2 && cat ~/node-server.log
+```
+
+---
+
+## Fase 5 — Escopo (quando Fase 4 estiver 100% no ar)
+
+1. Branch `feature/fase-5-gerador-claude-api` a partir de `develop`
+2. `admin/gerador.html` — formulário tema + tipo de conteúdo
+3. `POST /api/admin/generate` — chama Anthropic SDK (claude-sonnet-4-6)
+4. Gera 5 formatos: blog, TikTok, Instagram, X thread, WhatsApp
+5. Tabela `generations` (theme, type, output_json, cost_usd)
+6. `GET /api/admin/generations` — histórico + custo acumulado
+7. Merge PR → tag `v2.1.0`
 
 ---
 
 ## Lembretes
-
 - Vanilla JS no front — sem React, Vue ou Angular
 - Todo copy e commits em pt-BR
 - `server/` usa ESM (`"type": "module"`) — não usar `require()`
 - `npm run test:unit` e `npm run test:api` antes de commitar (server/)
 - `npm run test:ci` antes de commitar (front)
 - gh CLI em `C:\Program Files\GitHub CLI\gh.exe`
-- Imagens Pinheirinho Roxo em `assets/images/escolas/pinheirinho_roxo/` (aguardando WebP)
-- `icon-192.png` faltando no manifest (404 não crítico)
