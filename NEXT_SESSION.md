@@ -1,20 +1,20 @@
 
-# Próxima sessão: Fase 4.5 — Gerenciador de Conteúdo
+# Próxima sessão: Deploy Fase 4.5 + Fase 5 — Gerador com Claude API
 
 ## Prompt para iniciar a sessão
 
 ```
-Iniciar a Fase 4.5 do projeto Aluno Maker Digital: Gerenciador de Conteúdo.
-Leia o CLAUDE.md e este NEXT_SESSION.md inteiros antes de qualquer ação.
-Branch de trabalho: criar feature/fase-4.5-cms a partir de develop.
+Deploy da Fase 4.5 — Gerenciador de Conteúdo no servidor.
+Leia o CLAUDE.md e este NEXT_SESSION.md antes de qualquer ação.
+Branch atual: feature/fase-4.5-cms (código pronto, 106/106 Chromium)
 
-Contexto essencial:
-- As páginas projetos.html, eventos.html, escolas.html e cursos.html têm conteúdo
-  hardcoded no HTML. Precisam se tornar dinâmicas, com conteúdo gerenciado pelo admin.
-- O admin já existe em admin/login.html e admin/index.html (JWT funcional).
-- A API já está no ar em alunomakerdigital.com.br/api/ (PHP proxy → Node.js → MySQL).
-- Imagens ficam no repositório (assets/images/). O DB armazena apenas o path relativo.
-- O visual das páginas públicas NÃO muda — o JS vai gerar o mesmo HTML que existe hoje.
+Passos de deploy:
+1. Aplicar schema-v2.sql no MySQL do servidor via SSH
+2. Reiniciar PM2 (Node.js) no servidor
+3. Smoke manual: projetos.html + admin/galeria.html
+4. Criar PR → merge main → tag v2.5.0
+5. Atualizar CLAUDE.md: Fase 4.5 ✅ Concluída
+6. Iniciar Fase 5 em nova branch a partir de main
 ```
 
 ---
@@ -23,287 +23,111 @@ Contexto essencial:
 
 | Fase | Status | Tag | Notas |
 |---|---|---|---|
-| 0 a 3 | ✅ Concluídas | v0.1.1 – v0.4.0 | — |
-| 4 — Backend + Admin | ✅ Concluída | v2.0.0 | API + painel admin funcionando |
-| **4.5 — Gerenciador de Conteúdo** | **⏳ Próxima** | — | **Esta sessão** |
-| 5 — Gerador Claude API | ⏳ | — | Só após 4.5 concluída |
+| 0 a 4 | ✅ Concluídas | v0.1.1 – v2.0.0 | — |
+| **4.5 — Gerenciador de Conteúdo** | **✅ Código completo** | — | Branch feature/fase-4.5-cms, aguardando deploy |
+| 5 — Gerador Claude API | ⏳ | — | Só após 4.5 deployed |
 
 ---
 
-## Por que esta fase existe
+## Deploy Fase 4.5 (passo a passo)
 
-As páginas projetos.html, eventos.html, escolas.html e cursos.html têm conteúdo
-**hardcoded no HTML**. O Professor Fran tem:
-- Centenas de fotos de eventos ainda não publicadas
-- Dezenas de projetos para adicionar
-- Escolas a atualizar
-- Imagens erradas/invertidas já no ar que precisam correção
-
-Sem um gerenciador, cada atualização exige abrir uma sessão Claude Code para editar HTML.
-Esta fase resolve isso de forma permanente.
-
----
-
-## Arquitetura após esta fase
-
-```
-ANTES (hoje):
-  projetos.html → HTML estático com 7 cards hardcoded
-  eventos.html  → HTML estático com seções hardcoded
-  escolas.html  → HTML estático com 12 cards hardcoded
-  cursos.html   → HTML estático com hidden sections
-
-DEPOIS:
-  projetos.html → <div id="projects-grid"></div>
-                → assets/js/projetos.js fetch('/api/projects') → renderiza idêntico
-  eventos.html  → <div id="events-container"></div>
-                → assets/js/eventos.js fetch('/api/events') → renderiza por grupo
-  escolas.html  → <div id="schools-grid"></div>
-                → assets/js/escolas.js fetch('/api/schools') → renderiza cards
-  cursos.html   → <div id="courses-grid"></div>
-                → assets/js/cursos.js fetch('/api/courses') → renderiza (se active=true)
-
-  admin/galeria.html → 4 abas: Eventos | Projetos | Escolas | Cursos
-                     → CRUD completo para cada área
+### 1. Push e CI
+```bash
+git push -u origin feature/fase-4.5-cms
+# Aguardar CI verde em GitHub Actions
 ```
 
----
-
-## Banco de dados — 5 novas tabelas
-
-```sql
--- EVENTOS (agrupadores de fotos)
-CREATE TABLE events (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  title       VARCHAR(200) NOT NULL,
-  category    VARCHAR(100) NOT NULL,
-  description TEXT,
-  event_date  DATE,
-  active      BOOLEAN DEFAULT TRUE,
-  sort_order  INT DEFAULT 0,
-  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- FOTOS DOS EVENTOS (filhos de events, N fotos por evento)
-CREATE TABLE event_photos (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  event_id    INT NOT NULL,
-  image_url   VARCHAR(500) NOT NULL,
-  caption     VARCHAR(300),
-  sort_order  INT DEFAULT 0,
-  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
-);
-
--- PROJETOS (cards flip com frente e verso)
-CREATE TABLE projects (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  title       VARCHAR(200) NOT NULL,
-  category    VARCHAR(100) NOT NULL,
-  short_desc  VARCHAR(300),
-  full_desc   TEXT,
-  image_url   VARCHAR(500),
-  tags        VARCHAR(500),
-  active      BOOLEAN DEFAULT TRUE,
-  sort_order  INT DEFAULT 0,
-  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- ESCOLAS
-CREATE TABLE schools (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
-  name         VARCHAR(200) NOT NULL,
-  location     VARCHAR(200),
-  description  TEXT,
-  image_url    VARCHAR(500),
-  year_since   VARCHAR(20),
-  levels       VARCHAR(300),
-  icon_variant ENUM('default','purple') DEFAULT 'default',
-  active       BOOLEAN DEFAULT TRUE,
-  sort_order   INT DEFAULT 0,
-  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- CURSOS
-CREATE TABLE courses (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
-  title        VARCHAR(200) NOT NULL,
-  category     ENUM('alunos','professores','escola') NOT NULL,
-  level        ENUM('iniciante','intermediario','avancado') DEFAULT 'iniciante',
-  duration     VARCHAR(50),
-  description  TEXT,
-  topics       TEXT,
-  image_url    VARCHAR(500),
-  price        DECIMAL(10,2) DEFAULT NULL,
-  price_active BOOLEAN DEFAULT FALSE,
-  active       BOOLEAN DEFAULT TRUE,
-  sort_order   INT DEFAULT 0,
-  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+### 2. Aplicar schema no servidor via SSH
+```bash
+# SSH: 82.112.247.253:65002 / user: u562242543
+# O schema-v2.sql foi deployado via FTP pelo CI. Aplicar:
+mysql -u u562242543_amd_user -p'Amd@2018#2020' u562242543_amd_db < ~/alunomakerdigital.com.br/server/db/schema-v2.sql
 ```
 
-### Regra de exibição dos cursos
+### 3. Reiniciar Node.js
+```bash
+env -i HOME=/home/u562242543 PATH=/home/u562242543/.nvm/versions/node/v20.18.1/bin:/usr/bin:/bin \
+  pm2 restart amd-api
 ```
-active = FALSE                          → não aparece na página
-active = TRUE  + price_active = FALSE   → aparece com badge "Em breve" (sem preço)
-active = TRUE  + price_active = TRUE    → aparece com preço (Fase 6)
+
+### 4. Verificar endpoints
+```bash
+curl https://alunomakerdigital.com.br/api/events   | python3 -m json.tool | head -20
+curl https://alunomakerdigital.com.br/api/projects | python3 -m json.tool | head -20
+```
+
+### 5. Smoke manual
+- projetos.html: cards carregam dinamicamente
+- eventos.html: seções de eventos aparecem
+- escolas.html: cards de escolas aparecem
+- admin/galeria.html: CRUD funcional com dados do banco
+
+### 6. Merge + tag
+```bash
+gh api --method DELETE repos/francenylson1/amd-site-2026/branches/main/protection/enforce_admins
+gh pr merge --admin --merge
+gh api --method POST repos/francenylson1/amd-site-2026/branches/main/protection/enforce_admins
+git tag v2.5.0 && git push origin v2.5.0
 ```
 
 ---
 
-## Novos endpoints da API
+## O que foi implementado na Fase 4.5
 
-### Públicos (sem auth)
-| Método | Rota | Retorna |
-|---|---|---|
-| GET | `/api/events` | Eventos ativos + fotos agrupadas |
-| GET | `/api/projects` | Projetos ativos |
-| GET | `/api/schools` | Escolas ativas |
-| GET | `/api/courses` | Cursos ativos |
+### Backend (server/)
+- `db/schema-v2.sql` — 5 tabelas: events, event_photos, projects, schools, courses + seed completo com 9 projetos, 6 eventos (19 fotos), 12 escolas
+- `controllers/event|project|school|courseController.js` — CRUD completo
+- `routes/content.js` — rotas públicas (GET /api/events|projects|schools|courses)
+- `routes/admin.js` — expandido com 20 rotas admin (Bearer JWT)
+- `index.js` — monta content routes + PUT/DELETE no CORS
 
-### Admin (Bearer JWT)
-| Método | Rota | Ação |
-|---|---|---|
-| GET/POST | `/api/admin/events` | Listar / Criar evento |
-| PUT/DELETE | `/api/admin/events/:id` | Editar / Excluir evento |
-| POST | `/api/admin/events/:id/photos` | Adicionar foto ao evento |
-| PUT/DELETE | `/api/admin/events/:id/photos/:photoId` | Editar / Excluir foto |
-| GET/POST | `/api/admin/projects` | Listar / Criar projeto |
-| PUT/DELETE | `/api/admin/projects/:id` | Editar / Excluir projeto |
-| GET/POST | `/api/admin/schools` | Listar / Criar escola |
-| PUT/DELETE | `/api/admin/schools/:id` | Editar / Excluir escola |
-| GET/POST | `/api/admin/courses` | Listar / Criar curso |
-| PUT/DELETE | `/api/admin/courses/:id` | Editar / Excluir curso |
+### Frontend (assets/js/)
+- `projetos.js`, `eventos.js`, `escolas.js`, `cursos.js` — fetch + render
+- `animations.js` — expõe `window.AMD.observeReveal()`
+- `gallery.js` — event delegation nos filtros (suporta conteúdo dinâmico)
 
----
-
-## Novos arquivos a criar
-
-### Backend
-```
-server/controllers/eventController.js
-server/controllers/projectController.js
-server/controllers/schoolController.js
-server/controllers/courseController.js
-server/routes/content.js          ← rotas públicas (/api/events, /api/projects, etc.)
-server/routes/admin.js            ← adicionar rotas admin de conteúdo (já existe, expandir)
-```
-
-### Frontend (JS de renderização)
-```
-assets/js/projetos.js             ← fetch + render dos project-cards (flip)
-assets/js/eventos.js              ← fetch + render por grupo de evento + GLightbox
-assets/js/escolas.js              ← fetch + render dos school-cards
-assets/js/cursos.js               ← fetch + render dos course-cards
-```
+### Páginas convertidas
+- projetos.html, eventos.html, escolas.html, cursos.html → `<div id="xxx-grid">` + JS
 
 ### Admin
-```
-admin/galeria.html                ← 4 abas: Eventos | Projetos | Escolas | Cursos
-admin/assets/js/galeria.js        ← lógica CRUD das 4 abas
-admin/assets/css/galeria.css      ← estilos do gerenciador (já importa admin.css base)
-```
+- `admin/galeria.html` — 4 abas CRUD (Eventos + Fotos | Projetos | Escolas | Cursos)
+- `admin/assets/js/galeria.js`, `css/galeria.css`
 
-### Banco
-```
-server/db/schema-v2.sql           ← as 5 novas tabelas + seed com dados atuais
-```
+### Testes (106/106 Chromium)
+- `server/tests/api/content.test.js` — 6 testes, 27/27 total Vitest
+- `tests/e2e/gallery.spec.js` — mocks API + waitForSelector dinâmico
+- `tests/a11y/axe.spec.js` — mocks API para páginas dinâmicas
 
----
-
-## Dados atuais para seed (migrar do HTML para o banco)
-
-### Projetos existentes (7 cards no HTML atual)
-1. Robô Garçom — categoria: robotica — img: `assets/images/projetos/robo_garcon/versao_2_5.webp`
-2. Humanoide 17 DOF — categoria: robotica — img: `assets/images/projetos/espaco_maker/espaco_maker_20.webp`
-3. Braço Robótico com IA — categoria: ia — img: **ERRADA** (usa espaco_maker_5 que não é braço robótico → corrigir no seed)
-4. Lixeira Inteligente — categoria: iot
-5. Impressora 3D — categoria: impressao3d
-6. Drone educacional — categoria: robotica
-7. Sistema de Irrigação Inteligente — categoria: iot
-
-> **ATENÇÃO:** Verificar e corrigir imagens erradas/invertidas durante o seed.
-> O Professor Fran deve informar quais paths corretos para cada projeto antes do seed.
-
-### Eventos existentes (seções no HTML atual)
-1. Campus Party Brasília — 6 fotos — `assets/images/eventos/campus_party/`
-2. Instituto Federal Campus Gama — fotos — `assets/images/eventos/IFB_gama_2024/`
-3. (verificar demais seções em eventos.html)
-
-### Escolas existentes (12 no HTML)
-CEF 101, CEF 113, CEF 206, CEF 308, CEF 405, CEM 804, EC 203, EC 401,
-Colégio Militar, Pinheirinho Roxo (Ed. Infantil), CeD 104, CEF 306 (surdos/mudos)
-
-> Imagens da Pinheirinho Roxo: `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos —
-> otimizar com `npm run images:optimize` antes de referenciar no banco)
+### Correções de acessibilidade
+- `.btn--whatsapp` corrigido de `#25d366` para `#0f7832` (contraste 5.6:1 ≥ 4.5:1)
+- `.content-error` de `#dc2626` para `#f87171` (contraste 8.3:1 no fundo escuro)
 
 ---
 
-## Convenção de paths de imagem no banco
+## Pendências para o Prof. Fran revisar após deploy
+
+1. **Braço Robótico com IA** (projeto #3): imagem atual pode estar errada. Corrigir via `admin/galeria.html`.
+2. **Imagens Pinheirinho Roxo**: em `assets/images/escolas/pinheirinho_roxo/` como JPGs brutos. Rodar `npm run images:optimize` → associar à escola via admin.
+
+---
+
+## Fase 5 — Gerador com Claude API (referência futura)
+
+**Objetivo:** No painel admin, o Prof. Fran seleciona um projeto/evento e recebe copy gerada por Claude para publicar nas redes sociais.
+
+**Arquivos a criar:**
 ```
-assets/images/projetos/[slug]/foto.webp
-assets/images/eventos/[slug_evento]/foto01.webp
-assets/images/escolas/[slug_escola]/foto.webp
-assets/images/cursos/[slug_curso]/capa.webp
-```
-
-Fluxo: Professor envia fotos → Claude otimiza para WebP → commit → deploy automático.
-No admin, campo "Caminho da imagem" aceita o path relativo.
-
----
-
-## Ordem de implementação recomendada
-
-1. Criar as 5 tabelas no MySQL do servidor (via SSH + schema-v2.sql)
-2. Implementar controllers e rotas backend (público + admin)
-3. Escrever testes Vitest para os novos endpoints
-4. Fazer seed com dados atuais (migrar HTML → banco)
-5. Converter projetos.html → rendering dinâmico (projetos.js)
-6. Converter eventos.html → rendering dinâmico (eventos.js) — mais complexo (grupos + lightbox)
-7. Converter escolas.html → rendering dinâmico (escolas.js)
-8. Converter cursos.html → rendering dinâmico (cursos.js)
-9. Construir admin/galeria.html com as 4 abas
-10. Testes E2E para as páginas dinâmicas
-11. Smoke manual + corrigir imagens erradas
-12. Merge PR → tag v2.0.5
-
----
-
-## O que NÃO muda para o visitante
-
-- Visual idêntico nas 4 páginas (mesmos CSS classes, mesmos componentes)
-- GLightbox continua funcionando (inicializado após render do JS)
-- Filtros por categoria continuam funcionando (gallery.js já lida com isso)
-- Acessibilidade mantida (aria-label, roles, etc. gerados pelo JS)
-
----
-
-## Painel admin atual (referência)
-- URL: `https://alunomakerdigital.com.br/admin/login.html`
-- Email: `francenylson@gmail.com` | Senha: `Amd@2026!Admin`
-
----
-
-## Infraestrutura do servidor (referência rápida)
-
-```bash
-# Reiniciar Node.js via Python+paramiko se necessário:
-# /c/Users/User/AppData/Local/Programs/Python/Python311/python.exe
-# SSH: 82.112.247.253:65002  user: u562242543
-# PM2: env -i HOME=... PATH=.../bin pm2 start start.sh --name amd-api --interpreter bash
-
-# Aplicar schema no MySQL:
-# mysql -u u562242543_amd_user -p'Amd@2018#2020' u562242543_amd_db < schema-v2.sql
+server/controllers/generatorController.js
+admin/gerador.html
+admin/assets/js/gerador.js
 ```
 
----
+**Dependência:** `npm install @anthropic-ai/sdk` no server/
 
-## Lembretes técnicos
-- Vanilla JS — sem React, Vue, Angular
-- Commits e copy em pt-BR
-- `server/` usa ESM — `import`/`export` sempre, `require()` proibido
-- PM2 via `start.sh` bash wrapper
-- `API_BASE = '/api'` (relativo) em todos os JS
-- `npm run test:unit` e `npm run test:api` antes de commitar server/
-- `npm run test:ci` antes de commitar front
-- `npm run build:css` após qualquer mudança de CSS
-- Fase 5 (Gerador Claude API) só começa após esta fase estar 100% deployada
+**Modelo:** claude-sonnet-4-6 (atual Sonnet 4.6) com prompt caching para o contexto do projeto.
+
+**Lembretes técnicos Fase 5:**
+- Usar `claude-api` skill no Claude Code para implementação
+- Incluir prompt caching (`cache_control: { type: "ephemeral" }`) no system prompt
+- Chave API em `ANTHROPIC_API_KEY` no `.env` do servidor
+- Rate limiting específico para a rota `/api/admin/generate`

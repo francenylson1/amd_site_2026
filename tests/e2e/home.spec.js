@@ -107,43 +107,27 @@ test.describe('Home — Quiz interativo', () => {
   });
 });
 
-test.describe('Home — Formulário de agendamento', () => {
+// Fase 4.5: seção #agendamento virou WhatsApp CTA (PR #13, 2026-05-20)
+test.describe('Home — CTA de agendamento (WhatsApp)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.locator('#agendamento').scrollIntoViewIfNeeded();
   });
 
-  test('formulário de agendamento presente', async ({ page }) => {
-    await expect(page.locator('#form-agendamento')).toBeVisible();
+  test('seção de agendamento está presente', async ({ page }) => {
+    await expect(page.locator('#agendamento')).toBeVisible();
   });
 
-  test('submit sem campos mostra erros de validação', async ({ page }) => {
-    await page.locator('[type="submit"]').click();
-    const errors = page.locator('.form-group--error');
-    await expect(errors.first()).toBeVisible();
+  test('botão WhatsApp de agendamento presente com link correto', async ({ page }) => {
+    const btn = page.locator('#agendamento .btn--whatsapp');
+    await expect(btn).toBeVisible();
+    const href = await btn.getAttribute('href');
+    expect(href).toMatch(/wa\.me\/5561981333875/);
   });
 
-  test('e-mail inválido mostra erro', async ({ page }) => {
-    await page.fill('#nome',  'Teste Silva');
-    await page.fill('#email', 'nao-e-email');
-    await page.locator('#email').blur();
-    await expect(page.locator('#email').locator('..').locator('.form-group__error-msg')).toBeVisible();
-  });
-
-  test('formulário válido redireciona para obrigado.html', async ({ page }) => {
-    const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + 7);
-    const dateStr = futureDate.toISOString().split('T')[0];
-
-    await page.fill('#nome',  'Teste Aluno');
-    await page.fill('#email', 'teste@teste.com');
-    await page.selectOption('#perfil', 'aluno');
-    await page.fill('#data',  dateStr);
-
-    await page.locator('[type="submit"]').click();
-    // serve remove a extensão .html automaticamente (→ /obrigado)
-    await page.waitForURL(/obrigado/, { timeout: 5000 });
-    await expect(page).toHaveURL(/obrigado/);
+  test('texto de agendamento via WhatsApp visível', async ({ page }) => {
+    const section = page.locator('#agendamento');
+    await expect(section.locator('h2')).toBeVisible();
   });
 });
 

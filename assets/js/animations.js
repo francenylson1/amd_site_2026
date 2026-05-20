@@ -17,6 +17,10 @@
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
   }
 
+  // Expõe para páginas com conteúdo renderizado dinamicamente
+  window.AMD = window.AMD || {};
+  window.AMD.observeReveal = init;
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
