@@ -28,6 +28,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy no domínio principal, PM2 + start.sh, MySQL via socket |
+| 4.5 — Gerenciador de Conteúdo | ⏳ Próxima | — | admin/galeria.html — CRUD de eventos, projetos, escolas, cursos |
 | 5 — Gerador com Claude API | ⏳ | — | — |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
@@ -72,7 +73,9 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **serve strip .html:** o servidor local remove extensão `.html` das URLs — specs E2E usam regex sem `.html` (ex: `/obrigado/` não `/obrigado\.html/`).
 - **Logo navbar:** texto tricolor com fundo branco — `.logo-aluno` (verde `#00843f`), `.logo-maker` (vermelho `#d32f2f`), `.logo-digital` (azul `#0066ff`). Fonte Orbitron. Cores atendem WCAG AA 4.5:1 em fundo branco.
 - **Mapa:** iframe Google Maps está em `contato.html` (endereço: Quadra 203 Lote 32, Recanto das Emas, CEP 72610-300). Removido de `escolas.html`.
-- **cursos.html:** seções com preços ocultas via `hidden` — só quiz CTA + banner "em construção". Reativar quando plataforma de pagamento estiver pronta (Fase 6).
+- **cursos.html:** seções com preços ocultas via `hidden` — só quiz CTA + banner "em construção". A partir da Fase 4.5, cursos são gerenciados via DB. `price_active=FALSE` mantém badge "Em breve" sem exibir preço. Link do navbar vai para cursos.html (página "em construção" já exibida).
+- **Gerenciador de conteúdo (Fase 4.5):** admin/galeria.html com 4 abas — Eventos, Projetos, Escolas, Cursos. Páginas públicas (projetos.html, eventos.html, escolas.html, cursos.html) passam a renderizar via JS buscando /api/events, /api/projects, /api/schools, /api/courses. Imagens ficam no repo (assets/images/), DB armazena o path relativo.
+- **Tabelas DB Fase 4.5:** events, event_photos, projects, schools, courses — ver schema completo em NEXT_SESSION.md.
 - **school-card__icon--purple:** variante roxa para escolas de inclusão (ex: CEF 306).
 - **Escolas cadastradas:** CEF 101, CEF 113, CEF 206, CEF 308, CEF 405, CEM 804, EC 203, EC 401, Colégio Militar, Pinheirinho Roxo (Ed. Infantil), CeD 104, CEF 306 (surdos/mudos).
 - **Imagens Pinheirinho Roxo:** em `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos, aguardando otimização para WebP antes de referenciar no HTML).
