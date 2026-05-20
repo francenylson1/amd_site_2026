@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel — Aluno Maker Digital</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/css/admin.css" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Navegação do painel">
+      <a href="index.html" class="admin-sidebar__logo">AMD Admin</a>
+
+      <nav class="admin-sidebar__nav" aria-label="Menu principal">
+        <a href="index.html" class="admin-sidebar__link admin-sidebar__link--active" aria-current="page">
+          Dashboard
+        </a>
+      </nav>
+
+      <div class="admin-sidebar__footer">
+        <button id="btn-logout" class="admin-sidebar__logout" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <div class="admin-main">
+      <header class="admin-header">
+        <h1 class="admin-header__title">Dashboard</h1>
+        <span id="admin-user" class="admin-header__user"></span>
+      </header>
+
+      <main class="admin-content" id="admin-content">
+
+        <!-- Métricas -->
+        <section class="admin-metrics" aria-label="Métricas gerais">
+          <div class="metric-card">
+            <p class="metric-card__label">Total de contatos</p>
+            <p class="metric-card__value" id="metric-contacts">—</p>
+          </div>
+          <div class="metric-card">
+            <p class="metric-card__label">Total de agendamentos</p>
+            <p class="metric-card__value" id="metric-visits">—</p>
+          </div>
+          <div class="metric-card">
+            <p class="metric-card__label">Agendamentos pendentes</p>
+            <p class="metric-card__value" id="metric-pending">—</p>
+          </div>
+        </section>
+
+        <!-- Tabela de contatos -->
+        <section class="admin-section" aria-labelledby="section-contacts-title">
+          <div class="admin-section__header">
+            <h2 class="admin-section__title" id="section-contacts-title">Contatos recentes</h2>
+            <button id="btn-refresh-contacts" type="button" class="login-form__btn" style="width:auto;padding:.4rem .9rem;font-size:.85rem;">
+              Atualizar
+            </button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" aria-label="Lista de contatos">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Assunto</th>
+                  <th scope="col">Data</th>
+                </tr>
+              </thead>
+              <tbody id="table-contacts">
+                <tr><td colspan="5" class="admin-empty">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tabela de agendamentos -->
+        <section class="admin-section" aria-labelledby="section-visits-title">
+          <div class="admin-section__header">
+            <h2 class="admin-section__title" id="section-visits-title">Agendamentos de visita</h2>
+            <button id="btn-refresh-visits" type="button" class="login-form__btn" style="width:auto;padding:.4rem .9rem;font-size:.85rem;">
+              Atualizar
+            </button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" aria-label="Lista de agendamentos">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Data da visita</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Cadastrado em</th>
+                </tr>
+              </thead>
+              <tbody id="table-visits">
+                <tr><td colspan="6" class="admin-empty">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- /.admin-main -->
+  </div><!-- /.admin-layout -->
+
+  <script src="assets/js/admin-auth.js" defer></script>
+  <script src="assets/js/admin-dashboard.js" defer></script>
+</body>
+</html>

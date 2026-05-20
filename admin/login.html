@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Aluno Maker Digital</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/css/admin.css" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <p class="login-card__logo">Aluno Maker Digital — Admin</p>
+
+      <form id="form-login" class="login-form" novalidate>
+        <div class="login-form__group">
+          <label for="email" class="login-form__label">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="login-form__input"
+            autocomplete="username"
+            required
+            aria-required="true"
+          />
+        </div>
+
+        <div class="login-form__group">
+          <label for="password" class="login-form__label">Senha</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="login-form__input"
+            autocomplete="current-password"
+            required
+            aria-required="true"
+          />
+        </div>
+
+        <button type="submit" id="btn-login" class="login-form__btn">Entrar</button>
+
+        <div id="login-error" class="login-form__error" role="alert" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/admin-auth.js" defer></script>
+</body>
+</html>
