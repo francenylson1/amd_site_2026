@@ -7,7 +7,7 @@ const API_BASE = '/api';
 const loginForm = document.getElementById('form-login');
 if (loginForm) {
   // Se já tem token válido, redireciona direto para o dashboard
-  if (getToken()) window.location.replace('index.html');
+  if (getToken()) window.location.replace('galeria.html');
 
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ if (loginForm) {
       }
 
       sessionStorage.setItem('amd_admin_token', data.token);
-      window.location.replace('index.html');
+      window.location.replace('galeria.html');
     } catch {
       showError(errEl, 'Falha de conexão com o servidor.');
     } finally {
