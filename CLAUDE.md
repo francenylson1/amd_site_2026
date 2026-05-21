@@ -86,7 +86,7 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **server/:** ESM (`"type": "module"`). Todos os arquivos usam `import`/`export`; `require()` proibido.
 - **Vitest API tests:** mocks CJS/ESM com `{ ...pool, default: pool }` para que `require()` e `import default` compartilhem a mesma instância de vi.fn().
 - **admin/login.html:** standalone (sem navbar), token JWT em `sessionStorage.amd_admin_token`.
-- **admin/index.html:** GET /api/admin/contacts + /api/admin/visits com Bearer token; redireciona para login se 401.
+- **admin/index.html:** redireciona automaticamente para galeria.html via meta refresh (entrada principal agora é login.html → galeria.html).
 - **admin/galeria.html:** gerenciador de conteúdo com 4 abas — Eventos, Projetos, Escolas, Cursos. CRUD completo com JWT.
 - **forms.js fallback:** tenta POST /api/* com AbortSignal.timeout(8000); em caso de falha → localStorage + indicador amarelo `.form-status`.
 - **robots.txt:** já bloqueia `/admin/` desde a Fase 0.
@@ -104,6 +104,11 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Conteúdo dinâmico:** projetos/eventos/escolas/cursos rendem via `fetch('/api/...')` em JS. DB armazena paths relativos de imagem (`assets/images/...`).
 - **schema-v2.sql:** 5 novas tabelas (events, event_photos, projects, schools, courses) + seed dos dados hardcoded. Aplicar via SSH + MySQL.
 - **Regra de exibição de cursos:** `active=FALSE` → oculto; `active=TRUE + price_active=FALSE` → badge "Em breve"; `active=TRUE + price_active=TRUE` → com preço (Fase 6).
+- **Upload de imagem:** `POST /api/admin/upload` via Multer (15MB, image/*) + Sharp → WebP qualidade 82. Salva em `public_html/assets/images/{folder}/{timestamp}-{random}.webp`. Pasta controlada pelo campo `folder` (eventos/projetos/escolas/cursos). `IMAGES_DIR` env var para sobrescrever destino.
+- **Proxy PHP multipart:** `api/index.php` usa `CURLFile` para reencaminhar uploads ao Node.js (php://input fica vazio para multipart/form-data).
+- **home-projetos.js:** busca `/api/projects` e renderiza os 3 primeiros (por sort_order) na seção "Projetos em Destaque" da home. Controle via admin → Projetos → campo Ordem.
+- **PM2 restart no Hostinger:** `pm2 restart` falha silenciosamente (EADDRINUSE). Sequência correta: `pkill -f "node index.js"` + `pkill -f "start.sh"` + `pm2 delete all` + `pm2 start start.sh --name amd-api --interpreter bash`. Node.js path: `/home/u562242543/.nvm/versions/node/v20.20.2/bin/`.
+- **Admin fluxo:** `login.html` → após login → `galeria.html` (direto). `index.html` redireciona para `galeria.html` via meta refresh.
 
 ## Paths críticos
 
@@ -139,6 +144,9 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `assets/js/eventos.js` — fetch + render por grupo de evento + GLightbox.
 - `assets/js/escolas.js` — fetch + render dos school-cards.
 - `assets/js/cursos.js` — fetch + render dos course-cards.
+- `assets/js/home-projetos.js` — busca /api/projects, renderiza 3 primeiros na home.
+- `server/controllers/uploadController.js` — upload Multer + Sharp WebP, escreve em public_html/assets/images/.
+- `admin/assets/js/admin-auth.js` — login/logout + redirect para galeria.html após autenticação.
 - `server/tests/unit/validators.test.js` — 13 testes Vitest (validadores).
 - `server/tests/api/*.test.js` — 27 testes Supertest (contratos de endpoint, inclui content.test.js).
 - `tests/e2e/backend.spec.js` — 4 testes E2E Playwright (fallback + admin).
