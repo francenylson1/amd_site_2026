@@ -212,110 +212,9 @@
         <p class="section__desc">Passe o mouse sobre os cards para ver detalhes de cada projeto.</p>
       </div>
 
-      <div class="projects__grid">
-
-        <!-- Card 1: Robô Garçom -->
-        <article class="project-card reveal" data-delay="100" tabindex="0" aria-label="Projeto: Robô Garçom">
-          <div class="project-card__inner">
-            <div class="project-card__front">
-              <img
-                src="assets/images/projetos/robo_garcon/versao_2_5.webp"
-                alt="Robô Garçom versão 2.5"
-                loading="lazy"
-                width="400" height="250"
-              >
-              <div class="project-card__front-info">
-                <h3>Robô Garçom</h3>
-                <p>Robô autônomo de serviço construído do zero</p>
-              </div>
-              <div class="project-card__flip-hint" aria-hidden="true">
-                <i class="fa-solid fa-rotate"></i> ver mais
-              </div>
-            </div>
-            <div class="project-card__back">
-              <h3>Robô Garçom</h3>
-              <p>
-                Robô autônomo capaz de navegar pelo ambiente, detectar obstáculos e servir
-                itens de forma independente. Desenvolvido por alunos do ensino médio público.
-              </p>
-              <div class="project-card__tags">
-                <span class="tag">Arduino</span>
-                <span class="tag">Sensores Ultrassônicos</span>
-                <span class="tag">Motores DC</span>
-                <span class="tag">C++</span>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2: Humanoide -->
-        <article class="project-card reveal" data-delay="200" tabindex="0" aria-label="Projeto: Robô Humanoide">
-          <div class="project-card__inner">
-            <div class="project-card__front">
-              <img
-                src="assets/images/sobre/espaco_maker_20.webp"
-                alt="Robô Humanoide desenvolvido pelos alunos"
-                loading="lazy"
-                width="400" height="250"
-              >
-              <div class="project-card__front-info">
-                <h3>Robô Humanoide</h3>
-                <p>Estrutura humanóide com servos e controle de gestos</p>
-              </div>
-              <div class="project-card__flip-hint" aria-hidden="true">
-                <i class="fa-solid fa-rotate"></i> ver mais
-              </div>
-            </div>
-            <div class="project-card__back">
-              <h3>Robô Humanoide</h3>
-              <p>
-                Estrutura com 17 graus de liberdade, capaz de andar, dançar e realizar gestos.
-                Projeto que integra mecânica, eletrônica e programação avançada.
-              </p>
-              <div class="project-card__tags">
-                <span class="tag">Servo Motores</span>
-                <span class="tag">Raspberry Pi</span>
-                <span class="tag">Python</span>
-                <span class="tag">Impressão 3D</span>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 3: Braço Robótico -->
-        <article class="project-card reveal" data-delay="300" tabindex="0" aria-label="Projeto: Braço Robótico">
-          <div class="project-card__inner">
-            <div class="project-card__front">
-              <img
-                src="assets/images/projetos/espaco_maker/espaco_maker_5.webp"
-                alt="Braço robótico de 5 eixos"
-                loading="lazy"
-                width="400" height="250"
-              >
-              <div class="project-card__front-info">
-                <h3>Braço Robótico</h3>
-                <p>Braço articulado de 5 eixos com controle preciso</p>
-              </div>
-              <div class="project-card__flip-hint" aria-hidden="true">
-                <i class="fa-solid fa-rotate"></i> ver mais
-              </div>
-            </div>
-            <div class="project-card__back">
-              <h3>Braço Robótico</h3>
-              <p>
-                Braço industrial em miniatura com 5 eixos de movimento, capaz de pegar,
-                mover e posicionar objetos com precisão milimétrica usando encoder.
-              </p>
-              <div class="project-card__tags">
-                <span class="tag">Arduino</span>
-                <span class="tag">Servo Motores</span>
-                <span class="tag">Impressão 3D</span>
-                <span class="tag">Encoder</span>
-              </div>
-            </div>
-          </div>
-        </article>
-
+      <!-- Projetos em destaque — os 3 primeiros por sort_order via API -->
+      <div class="projects__grid" id="home-projects-grid">
+        <!-- Preenchido por home-projetos.js -->
       </div>
 
       <div class="projects__cta reveal">
@@ -611,12 +510,13 @@
   </footer>
 
   <!-- JS — defer para não bloquear renderização -->
-  <script src="assets/js/animations.js"  defer></script>
-  <script src="assets/js/counter.js"     defer></script>
-  <script src="assets/js/navbar.js"      defer></script>
-  <script src="assets/js/quiz.js"        defer></script>
-  <script src="assets/js/forms.js"       defer></script>
-  <script src="assets/js/main.js"        defer></script>
+  <script src="assets/js/animations.js"     defer></script>
+  <script src="assets/js/counter.js"        defer></script>
+  <script src="assets/js/navbar.js"         defer></script>
+  <script src="assets/js/quiz.js"           defer></script>
+  <script src="assets/js/forms.js"          defer></script>
+  <script src="assets/js/home-projetos.js"  defer></script>
+  <script src="assets/js/main.js"           defer></script>
 
 </body>
 </html>

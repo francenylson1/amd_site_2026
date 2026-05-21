@@ -20,6 +20,9 @@ const MOCK_SCHOOLS = [
 const MOCK_COURSES = [];
 
 const API_MOCKS = {
+  '/': [
+    { pattern: '**/api/projects', body: MOCK_PROJECTS },
+  ],
   '/projetos.html': [
     { pattern: '**/api/projects', body: MOCK_PROJECTS },
   ],

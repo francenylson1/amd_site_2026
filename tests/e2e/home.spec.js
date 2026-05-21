@@ -48,15 +48,29 @@ test.describe('Home — Contadores de impacto', () => {
   });
 });
 
+const MOCK_HOME_PROJECTS = [
+  { id: 1, title: 'Robô Garçom',   category: 'roborica', short_desc: 'Robô de serviço', full_desc: 'Descrição completa', image_url: 'assets/images/projetos/robo_garcon/versao_2_5.webp', tags: 'Arduino,C++', active: true, sort_order: 10 },
+  { id: 2, title: 'Humanoide 17',  category: 'roborica', short_desc: '17 DOF',           full_desc: 'Descrição completa', image_url: null, tags: 'Python', active: true, sort_order: 20 },
+  { id: 3, title: 'Braço com IA',  category: 'ia',       short_desc: 'Visão computacional', full_desc: 'Descrição completa', image_url: null, tags: 'OpenCV', active: true, sort_order: 30 },
+];
+
 test.describe('Home — Projetos em destaque', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/api/projects', r =>
+      r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MOCK_HOME_PROJECTS) })
+    );
+  });
+
   test('três cards de projeto existem', async ({ page }) => {
     await page.goto('/');
+    await page.waitForSelector('.project-card', { timeout: 8000 });
     const cards = page.locator('.project-card');
     await expect(cards).toHaveCount(3);
   });
 
-  test('card revela verso ao hover (Robô Garçom)', async ({ page }) => {
+  test('card revela verso ao hover (primeiro projeto)', async ({ page }) => {
     await page.goto('/');
+    await page.waitForSelector('.project-card', { timeout: 8000 });
     const card = page.locator('.project-card').first();
     await card.scrollIntoViewIfNeeded();
     await card.hover();
