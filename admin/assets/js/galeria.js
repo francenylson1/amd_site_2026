@@ -519,8 +519,15 @@ const SECTION_LABEL = { professor: 'Foto do Professor', espaco: 'Espaço Maker' 
 
 async function loadSobre() {
   const lista = document.getElementById('lista-sobre');
-  const res = await apiFetch('/about-photos');
-  sobreData = await res.json();
+  lista.innerHTML = '<p class="cms-loading">Carregando fotos…</p>';
+  try {
+    const res = await apiFetch('/about-photos');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    sobreData = await res.json();
+  } catch (err) {
+    lista.innerHTML = `<p class="cms-loading cms-loading--error">Erro ao carregar fotos (${err.message}). Verifique se o servidor está atualizado.</p>`;
+    return;
+  }
   if (!sobreData.length) { lista.innerHTML = '<p class="cms-loading">Nenhuma foto cadastrada.</p>'; return; }
   lista.innerHTML = sobreData.map(p => `
     <div class="cms-item" data-id="${p.id}">
@@ -585,6 +592,44 @@ async function deleteSobre(id) {
   loadSobre();
 }
 
+// ── CONFIGURAÇÕES ─────────────────────────────────────────────────────────────
+const CONFIG_KEYS = [
+  'whatsapp_num', 'whatsapp_display', 'email_contato',
+  'instagram_handle', 'instagram_display', 'youtube_handle',
+  'endereco_rua', 'endereco_display', 'atendimento_horario',
+];
+
+async function loadConfig() {
+  try {
+    const res = await apiFetch('/config');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const rows = await res.json();
+    rows.forEach(row => {
+      const el = document.getElementById(`cfg-${row.config_key}`);
+      if (el) el.value = row.config_value ?? '';
+    });
+  } catch (err) {
+    setStatus('config-status', `Erro ao carregar configurações (${err.message}).`, 'error');
+  }
+}
+
+async function saveConfig() {
+  const body = {};
+  CONFIG_KEYS.forEach(key => {
+    const el = document.getElementById(`cfg-${key}`);
+    if (el) body[key] = el.value.trim();
+  });
+  try {
+    const res = await apiFetch('/config', { method: 'PUT', body: JSON.stringify(body) });
+    if (!res.ok) { setStatus('config-status', 'Erro ao salvar.', 'error'); return; }
+    setStatus('config-status', 'Configurações salvas! As páginas serão atualizadas na próxima visita.');
+    // Limpa cache do site-config.js para forçar atualização
+    try { sessionStorage.removeItem('amd_site_config'); } catch (e) { /* ignora */ }
+  } catch (err) {
+    setStatus('config-status', 'Erro ao salvar.', 'error');
+  }
+}
+
 // ── Inicialização ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
@@ -596,6 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-nova-escola')  ?.addEventListener('click', () => openFormEscola());
   document.getElementById('btn-novo-curso')   ?.addEventListener('click', () => openFormCurso());
   document.getElementById('btn-nova-sobre')   ?.addEventListener('click', () => openFormSobre());
+  document.getElementById('btn-salvar-config')?.addEventListener('click', saveConfig);
 
   // Salvar
   document.getElementById('btn-salvar-evento')  ?.addEventListener('click', saveEvento);
@@ -636,6 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadEscolas();
   loadCursos();
   loadSobre();
+  loadConfig();
 
   // Recarrega lista ao mudar de aba
   document.querySelectorAll('.cms-tab').forEach(btn => {
@@ -646,6 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tab === 'escolas')  loadEscolas();
       if (tab === 'cursos')   loadCursos();
       if (tab === 'sobre')    loadSobre();
+      if (tab === 'config')   loadConfig();
     });
   });
 });

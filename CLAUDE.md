@@ -28,7 +28,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
-| 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0 | CMS completo — 9 projetos, 6 eventos, 12 escolas no banco. admin/galeria.html funcional |
+| 4.5 — Gerenciador de Conteúdo | ⚠️ Pendente deploy | v2.5.0+ | CMS + aba Configurações (site_config). Código no repo OK. Aguarda deploy SSH ao servidor |
 | 5 — Gerador com Claude API | ⏳ | — | Só após 4.5 deployed |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
@@ -87,7 +87,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Vitest API tests:** mocks CJS/ESM com `{ ...pool, default: pool }` para que `require()` e `import default` compartilhem a mesma instância de vi.fn().
 - **admin/login.html:** standalone (sem navbar), token JWT em `sessionStorage.amd_admin_token`.
 - **admin/index.html:** redireciona automaticamente para galeria.html via meta refresh (entrada principal agora é login.html → galeria.html).
-- **admin/galeria.html:** gerenciador de conteúdo com 4 abas — Eventos, Projetos, Escolas, Cursos. CRUD completo com JWT.
+- **admin/galeria.html:** gerenciador de conteúdo com 5 abas — Eventos, Projetos, Escolas, Cursos, Sobre. CRUD completo com JWT.
+- **Aba Sobre (pendente no servidor):** código no repo OK. Tabela `about_photos` no banco com seed. `loadSobre()` tem try-catch — mostra erro claro se controller não está no servidor. Aguarda deploy SSH.
+- **Aba Configurações:** nova aba no CMS para editar WhatsApp, e-mail, Instagram, YouTube, endereço e horário. Tabela `site_config` (schema-v4.sql), `configController.js`, rotas GET+PUT /api/admin/config e GET /api/content/config. Aguarda deploy SSH.
+- **site-config.js:** script em `assets/js/site-config.js` que busca `/api/content/config`, usa cache sessionStorage 5 min, e atualiza elementos `[data-config]` (textContent) e `[data-config-href]` (href). Adicionado a TODAS as páginas públicas. Botão WhatsApp flutuante atualizado via setTimeout(0).
+- **CI/CD NÃO copia server/:** o pipeline FTP só sobe arquivos estáticos (public_html). Arquivos Node.js em `server/` precisam ser copiados manualmente ao servidor via SSH. NUNCA usar heredoc (`<< 'EOF'`) no terminal SSH — o marcador fica literalmente dentro do arquivo. Usar `echo "linha" >> arquivo` linha a linha.
+- **Sharp .rotate():** adicionado ao uploadController para auto-corrigir EXIF (fotos de cabeça para baixo). Pasta `sobre` adicionada aos ALLOWED_FOLDERS.
 - **forms.js fallback:** tenta POST /api/* com AbortSignal.timeout(8000); em caso de falha → localStorage + indicador amarelo `.form-status`.
 - **robots.txt:** já bloqueia `/admin/` desde a Fase 0.
 - **MySQL via socket:** `DB_SOCKET=/var/lib/mysql/mysql.sock` — Hostinger só permite conexão localhost via socket Unix. `db/connection.js` usa `socketPath` quando `DB_SOCKET` está setado.
@@ -128,6 +133,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `server/index.js` — entry point ESM; `npm run server:start` ou `npm run server:dev`.
 - `server/db/schema.sql` — DDL MySQL: visits, contacts, admin_users, feature_flags.
 - `server/db/schema-v2.sql` — Fase 4.5: 5 novas tabelas + seed com dados migrados do HTML.
+- `server/db/schema-v3.sql` — Fase 5 prep: tabela `about_photos` + seed das 7 fotos da sobre.html. Já aplicado no banco de produção.
+- `server/db/schema-v4.sql` — tabela `site_config` + seed dos 9 campos editáveis. Aplicar no servidor via SSH.
+- `server/controllers/configController.js` — CRUD site_config (GET público, GET admin com labels, PUT bulk).
+- `assets/js/site-config.js` — carrega config da API, cache sessionStorage 5 min, atualiza [data-config] e [data-config-href] em todas as páginas.
+- `server/controllers/aboutController.js` — CRUD about_photos. Existe no repo mas AINDA NÃO está no servidor de produção.
+- `assets/js/sobre.js` — carrega fotos do banco dinamicamente na sobre.html.
 - `server/middleware/validate.js` — validadores isValidEmail, isValidPhone, isValidDate, isFutureOrToday.
 - `server/services/emailService.js` — Nodemailer + Brevo SMTP.
 - `server/routes/content.js` — rotas públicas: GET /api/events|projects|schools|courses.

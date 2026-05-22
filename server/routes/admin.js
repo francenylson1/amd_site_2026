@@ -22,6 +22,7 @@ import {
 import {
   adminListAboutPhotos, createAboutPhoto, updateAboutPhoto, deleteAboutPhoto,
 } from '../controllers/aboutController.js';
+import { listConfig, updateConfig } from '../controllers/configController.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -72,5 +73,9 @@ router.get('/about-photos',     requireAuth, adminListAboutPhotos);
 router.post('/about-photos',    requireAuth, createAboutPhoto);
 router.put('/about-photos/:id', requireAuth, updateAboutPhoto);
 router.delete('/about-photos/:id', requireAuth, deleteAboutPhoto);
+
+// Configurações do site
+router.get('/config', requireAuth, listConfig);
+router.put('/config', requireAuth, updateConfig);
 
 export default router;

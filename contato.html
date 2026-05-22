@@ -172,8 +172,8 @@
             <div>
               <p class="contact-info__label">WhatsApp</p>
               <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer"
-                 class="contact-info__value">(61) 9 8133-3875</a>
-              <p class="contact-info__note">Atendimento de segunda a sábado, das 8h às 18h</p>
+                 class="contact-info__value" data-config="whatsapp_display" data-config-href="whatsapp_num">(61) 9 8133-3875</a>
+              <p class="contact-info__note">Atendimento <span data-config="atendimento_horario">de segunda a sábado, das 8h às 18h</span></p>
             </div>
           </div>
 
@@ -184,7 +184,7 @@
             <div>
               <p class="contact-info__label">E-mail</p>
               <a href="mailto:contato@alunomakerdigital.com.br"
-                 class="contact-info__value">contato@alunomakerdigital.com.br</a>
+                 class="contact-info__value" data-config="email_contato" data-config-href="email_contato">contato@alunomakerdigital.com.br</a>
               <p class="contact-info__note">Respondemos em até 24 horas úteis</p>
             </div>
           </div>
@@ -207,7 +207,7 @@
             <div>
               <p class="contact-info__label">Instagram</p>
               <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer"
-                 class="contact-info__value">@alunomakerdigital</a>
+                 class="contact-info__value" data-config="instagram_display" data-config-href="instagram_handle">@alunomakerdigital</a>
               <p class="contact-info__note">Siga para ver os projetos em tempo real</p>
             </div>
           </div>
@@ -271,9 +271,9 @@
           <div class="footer__brand-name">Aluno Maker Digital</div>
           <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
           <div class="footer__social" aria-label="Redes sociais">
-            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
-            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram" data-config-href="instagram_handle"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube" data-config-href="youtube_handle"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp" data-config-href="whatsapp_num"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
           </div>
         </div>
         <div>
@@ -293,9 +293,9 @@
         <div>
           <p class="footer__col-title">Contato</p>
           <ul class="footer__links">
-            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
-            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
-            <li>Recanto das Emas, Brasília — DF</li>
+            <li><a href="mailto:contato@alunomakerdigital.com.br" data-config="email_contato" data-config-href="email_contato">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" data-config="whatsapp_display" data-config-href="whatsapp_num">(61) 9 8133-3875</a></li>
+            <li data-config="endereco_display">Recanto das Emas, Brasília — DF</li>
           </ul>
         </div>
       </div>
@@ -309,6 +309,7 @@
   <script src="assets/js/animations.js" defer></script>
   <script src="assets/js/navbar.js"     defer></script>
   <script src="assets/js/forms.js"      defer></script>
+  <script src="assets/js/site-config.js" defer></script>
   <script src="assets/js/main.js"       defer></script>
 
 </body>

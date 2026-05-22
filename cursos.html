@@ -117,7 +117,8 @@
         <a href="https://wa.me/5561981333875?text=Olá! Tenho interesse nos cursos do Aluno Maker Digital. Pode me informar sobre turmas e datas?"
            target="_blank" rel="noopener noreferrer"
            class="btn btn--primary"
-           aria-label="Entrar em contato pelo WhatsApp sobre os cursos">
+           aria-label="Entrar em contato pelo WhatsApp sobre os cursos"
+           data-config-href="whatsapp_num">
           <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
           Falar pelo WhatsApp
         </a>
@@ -146,9 +147,9 @@
           <div class="footer__brand-name">Aluno Maker Digital</div>
           <p class="footer__brand-desc">Tecnologia que transforma vidas. Robótica educacional para escolas públicas do Recanto das Emas desde 2018.</p>
           <div class="footer__social" aria-label="Redes sociais">
-            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
-            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+            <a href="https://instagram.com/alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram" data-config-href="instagram_handle"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+            <a href="https://youtube.com/@alunomakerdigital" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="YouTube" data-config-href="youtube_handle"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+            <a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp" data-config-href="whatsapp_num"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
           </div>
         </div>
         <div>
@@ -168,9 +169,9 @@
         <div>
           <p class="footer__col-title">Contato</p>
           <ul class="footer__links">
-            <li><a href="mailto:contato@alunomakerdigital.com.br">contato@alunomakerdigital.com.br</a></li>
-            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer">(61) 9 8133-3875</a></li>
-            <li>Recanto das Emas, Brasília — DF</li>
+            <li><a href="mailto:contato@alunomakerdigital.com.br" data-config="email_contato" data-config-href="email_contato">contato@alunomakerdigital.com.br</a></li>
+            <li><a href="https://wa.me/5561981333875" target="_blank" rel="noopener noreferrer" data-config="whatsapp_display" data-config-href="whatsapp_num">(61) 9 8133-3875</a></li>
+            <li data-config="endereco_display">Recanto das Emas, Brasília — DF</li>
           </ul>
         </div>
       </div>
@@ -184,6 +185,7 @@
   <script src="assets/js/animations.js" defer></script>
   <script src="assets/js/navbar.js"     defer></script>
   <script src="assets/js/cursos.js"     defer></script>
+  <script src="assets/js/site-config.js" defer></script>
   <script src="assets/js/main.js"       defer></script>
 
 </body>
