@@ -1,5 +1,5 @@
 
-# Próxima sessão — Deploy servidor + Fase 5
+# Próxima sessão — Fase 5: Gerador de Conteúdo com Claude API
 
 ## Prompt para iniciar a sessão
 
@@ -7,92 +7,57 @@
 Continuar o projeto Aluno Maker Digital.
 Leia o CLAUDE.md e este NEXT_SESSION.md inteiros antes de qualquer ação.
 
-TAREFA 1 (obrigatória): Ativar Aba Sobre + Aba Configurações no servidor de produção.
-
-O código local está completo. Falta copiar ao servidor via SSH.
-SSH: 82.112.247.253:65002  user: u562242543  senha: Amd@2018#2020
-
-ATENÇÃO: NUNCA usar heredoc (<< 'EOF') no terminal SSH — o marcador EOF fica
-literalmente dentro do arquivo e derruba o servidor. Usar SOMENTE echo linha a linha
-OU copiar conteúdo via scp se disponível.
-
-Arquivos a copiar/atualizar no servidor:
-  server/controllers/aboutController.js    → ~/domains/api.alunomakerdigital.com.br/server/controllers/
-  server/controllers/configController.js   → ~/domains/api.alunomakerdigital.com.br/server/controllers/
-  server/routes/admin.js                   → ~/domains/api.alunomakerdigital.com.br/server/routes/
-  server/routes/content.js                 → ~/domains/api.alunomakerdigital.com.br/server/routes/
-
-Aplicar schema-v4.sql no banco:
-  mysql -u u562242543_amd_user -p'Amd@2018#2020' -S /var/lib/mysql/mysql.sock u562242543_amd_db < schema-v4.sql
-
-Sequência PM2 restart (única que funciona no Hostinger):
-  pkill -f "node index.js"; pkill -f "start.sh"; pm2 delete all
-  pm2 start ~/domains/api.alunomakerdigital.com.br/server/start.sh --name amd-api --interpreter bash
-
-TAREFA 2: Iniciar Fase 5 — Gerador de Conteúdo com Claude API.
-  - Usar o skill claude-api para implementação
-  - Criar feature/fase-5-gerador a partir de main
-  - Ver especificação completa abaixo
+TAREFA: Implementar a Fase 5 — Gerador de Conteúdo com Claude API.
+Usar o skill claude-api para implementação.
+Criar branch feature/fase-5-gerador a partir de main.
+Ver especificação completa abaixo.
 ```
 
 ---
 
 ## Estado atual (2026-05-22)
 
-| Fase | Status | Tag | Notas |
-|---|---|---|---|
-| 0 a 4.5 | ✅ Concluídas (código) | v2.5.0+ | CMS completo no repo. **Aguarda deploy SSH** |
-| **Aba Sobre** | **⚠️ Código OK, servidor desatualizado** | — | aboutController.js existe localmente, não no servidor |
-| **Aba Configurações** | **⚠️ Código OK, servidor desatualizado** | — | configController.js + schema-v4.sql + todas as páginas HTML atualizadas |
-| **5 — Gerador Claude API** | **⏳ Próxima** | — | Iniciar após servidor atualizado |
-| 6 — Publicador redes + Loja | ⏳ | — | — |
-
----
-
-## O que foi implementado nesta sessão (2026-05-22)
-
-### Backend
-- `server/db/schema-v4.sql` — tabela `site_config` com 9 campos editáveis + seed
-- `server/controllers/configController.js` — getConfigPublic (público), listConfig (admin com labels), updateConfig (bulk PUT)
-- `server/routes/admin.js` — adicionado GET+PUT /api/admin/config
-- `server/routes/content.js` — adicionado GET /api/content/config (público, sem auth)
-
-### Admin CMS
-- `admin/galeria.html` — nova aba "Configurações" com formulário para todos os campos
-- `admin/assets/js/galeria.js` — loadConfig(), saveConfig(), fix try-catch no loadSobre()
-- `admin/assets/css/galeria.css` — estilos para .cms-form--config, .cms-form__section-title, .cms-form__hint, .cms-loading--error
-
-### Frontend público
-- `assets/js/site-config.js` — NOVO: busca /api/content/config, cache sessionStorage 5 min, atualiza [data-config] e [data-config-href] em todos os elementos
-- Todas as 11 páginas públicas atualizadas:
-  - Footer: social links com `data-config-href`, contato com `data-config` + `data-config-href`
-  - CTAs WhatsApp inline com `data-config-href="whatsapp_num"` (preserva ?text= original)
-  - contato.html: WhatsApp, e-mail e Instagram da seção de contato com data attributes
-  - `<script src="assets/js/site-config.js" defer>` adicionado antes do main.js
-
----
-
-## Campos da tabela site_config
-
-| config_key | Valor inicial | Onde é exibido |
+| Fase | Status | Notas |
 |---|---|---|
-| whatsapp_num | 5561981333875 | href de todos os links wa.me |
-| whatsapp_display | (61) 9 8133-3875 | texto no footer e contato.html |
-| email_contato | contato@alunomakerdigital.com.br | footer e contato.html |
-| instagram_handle | alunomakerdigital | href dos links instagram |
-| instagram_display | @alunomakerdigital | texto em contato.html |
-| youtube_handle | @alunomakerdigital | href dos links youtube |
-| endereco_rua | Quadra 203, Lote 32 — Av. Recanto das Emas | (admin apenas, referência) |
-| endereco_display | Recanto das Emas, Brasília — DF | footer de todas as páginas |
-| atendimento_horario | de segunda a sábado, das 8h às 18h | contato.html |
+| 0 a 4 | ✅ Concluídas | — |
+| 4.5 — CMS | ✅ Concluída e em produção | 6 abas: Eventos, Projetos, Escolas, Cursos, Sobre, Configurações |
+| **5 — Gerador Claude API** | **⏳ Próxima** | — |
+| 6 — Publicador redes + Loja | ⏳ | — |
 
 ---
 
-## Pendências do Prof. Fran (não bloqueiam)
+## O que foi entregue na Fase 4.5 (sessão 2026-05-22)
 
-1. **Braço Robótico com IA** (projeto #3): imagem pode estar errada. Corrigir via admin → Projetos → Editar → upload nova foto.
-2. **Escola Pinheirinho Roxo**: imagens JPG em `assets/images/escolas/pinheirinho_roxo/`. Fazer upload via admin → Escolas → Editar.
-3. **Fotos de cabeça para baixo na aba Sobre**: após ativar a aba, editar cada foto problemática via admin → Sobre → Editar → upload da versão corrigida. O Sharp agora auto-corrige EXIF (.rotate()).
+### Aba Sobre
+- `aboutController.js` no servidor (GET público + CRUD admin)
+- Tabela `about_photos` com 7 fotos (schema-v3.sql aplicado)
+- `loadSobre()` com try-catch — mostra erro claro se servidor desatualizado
+
+### Aba Configurações
+- Tabela `site_config` com 9 campos editáveis (schema-v4.sql)
+- `configController.js` — GET público `/api/config` + GET+PUT admin `/api/admin/config`
+- Formulário CMS com campos: WhatsApp, e-mail, Instagram, YouTube, endereço, horário
+
+### site-config.js (todas as páginas públicas)
+- Busca `/api/config`, cache sessionStorage 5 min
+- Atualiza `[data-config]` (textContent) e `[data-config-href]` (href)
+- Cobre footer de todas as 11 páginas + CTAs WhatsApp inline + contato.html
+
+### Credenciais servidor
+```
+SSH: 82.112.247.253:65002  user: u562242543  senha: Amd@2018#2020
+Admin CMS: francenylson@gmail.com / Amd@2018#2020
+MySQL: mysql -u u562242543_amd_user -p'Amd@2018#2020' -S /var/lib/mysql/mysql.sock u562242543_amd_db
+Chave SSH deploy: ~/.ssh/amd_deploy (gerada em 2026-05-22, adicionada ao authorized_keys do servidor)
+```
+
+---
+
+## Pendências do Prof. Fran (não bloqueiam a Fase 5)
+
+1. **Braço Robótico com IA** (projeto #3): imagem pode estar errada → admin → Projetos → Editar → upload
+2. **Escola Pinheirinho Roxo**: imagens JPG em `assets/images/escolas/pinheirinho_roxo/` → admin → Escolas → Editar
+3. **Fotos aba Sobre**: após entrar no admin, verificar se alguma foto está de cabeça para baixo → Editar → upload da versão corrigida (Sharp auto-corrige EXIF)
 
 ---
 
@@ -131,7 +96,7 @@ Response: { content, tokens_in, tokens_out, cached }
 - Modelo: `claude-sonnet-4-6`
 - Prompt caching: system prompt com contexto AMD usa `cache_control: { type: "ephemeral" }`
 - Chave: `ANTHROPIC_API_KEY` no `.env` do servidor
-- Rate limit: 10 req/min por IP
+- Rate limit: 10 req/min por IP (separado do loginLimiter)
 
 ### Instalação
 ```bash
@@ -139,14 +104,17 @@ cd server && npm install @anthropic-ai/sdk
 ```
 
 ### Ordem de implementação
-1. `npm install @anthropic-ai/sdk` no server/ local
-2. Criar `generatorController.js` com prompt caching
-3. Adicionar rota POST + rate limiter em admin.js
-4. Criar `admin/gerador.html` + `gerador.js` + `gerador.css`
-5. Adicionar link "Gerador" na sidebar de `galeria.html`
-6. Copiar arquivos ao servidor via SSH (echo linha a linha)
-7. Adicionar `ANTHROPIC_API_KEY` ao `.env` do servidor
-8. Reiniciar PM2
+1. Criar branch `feature/fase-5-gerador`
+2. `npm install @anthropic-ai/sdk` no server/ local
+3. Criar `generatorController.js` com prompt caching
+4. Adicionar rota POST + rate limiter em admin.js
+5. Criar `admin/gerador.html` + `gerador.js` + `gerador.css`
+6. Adicionar link "Gerador" na sidebar de `galeria.html`
+7. Testar localmente com `npm run server:dev`
+8. Copiar ao servidor via SCP (chave `~/.ssh/amd_deploy` já configurada)
+9. `npm install @anthropic-ai/sdk` no servidor
+10. Adicionar `ANTHROPIC_API_KEY` ao `start.sh` do servidor (linha a linha via echo — NUNCA heredoc)
+11. Reiniciar PM2 com sequência segura (ver CLAUDE.md)
 
 ---
 
@@ -154,8 +122,10 @@ cd server && npm install @anthropic-ai/sdk
 
 ```
 SSH: 82.112.247.253:65002  user: u562242543  senha: Amd@2018#2020
+Chave SSH: ~/.ssh/amd_deploy (já configurada — usar scp/ssh -i ~/.ssh/amd_deploy -p 65002)
 Node.js: /home/u562242543/.nvm/versions/node/v20.20.2/bin/
-start.sh: ~/domains/api.alunomakerdigital.com.br/server/start.sh
+server/: ~/domains/api.alunomakerdigital.com.br/server/
+public_html/: ~/domains/alunomakerdigital.com.br/public_html/
 .env: ~/domains/api.alunomakerdigital.com.br/.env
-MySQL: mysql -u u562242543_amd_user -p'Amd@2018#2020' -S /var/lib/mysql/mysql.sock u562242543_amd_db
+PM2 restart seguro: ps aux | grep -E "node|start.sh" | grep -v grep | awk "{print $2}" | xargs kill -9 && sleep 2 && pm2 delete all && pm2 start ~/domains/api.alunomakerdigital.com.br/server/start.sh --name amd-api --interpreter bash
 ```

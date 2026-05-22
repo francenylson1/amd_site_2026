@@ -28,8 +28,8 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 2 — Demais páginas públicas | ✅ Concluída | v0.3.0 | 8 páginas + quiz.html + gallery.js. 70/70 E2E Chromium + axe 10 páginas verdes |
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
-| 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS completo + aba Configurações (site_config). Servidor atualizado em 2026-05-22 |
-| 5 — Gerador com Claude API | ⏳ | — | Só após 4.5 deployed |
+| 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS 6 abas + site_config. Testado e validado em produção (2026-05-22) |
+| 5 — Gerador com Claude API | ⏳ | — | Próxima fase |
 | 6 — Publicador redes + Loja | ⏳ | — | — |
 
 ## Comandos úteis
@@ -112,7 +112,10 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Upload de imagem:** `POST /api/admin/upload` via Multer (15MB, image/*) + Sharp → WebP qualidade 82. Salva em `public_html/assets/images/{folder}/{timestamp}-{random}.webp`. Pasta controlada pelo campo `folder` (eventos/projetos/escolas/cursos). `IMAGES_DIR` env var para sobrescrever destino.
 - **Proxy PHP multipart:** `api/index.php` usa `CURLFile` para reencaminhar uploads ao Node.js (php://input fica vazio para multipart/form-data).
 - **home-projetos.js:** busca `/api/projects` e renderiza os 3 primeiros (por sort_order) na seção "Projetos em Destaque" da home. Controle via admin → Projetos → campo Ordem.
-- **PM2 restart no Hostinger:** `pm2 restart` falha silenciosamente (EADDRINUSE). Sequência correta: `pkill -f "node index.js"` + `pkill -f "start.sh"` + `pm2 delete all` + `pm2 start start.sh --name amd-api --interpreter bash`. Node.js path: `/home/u562242543/.nvm/versions/node/v20.20.2/bin/`.
+- **PM2 restart no Hostinger:** `pm2 restart` falha silenciosamente (EADDRINUSE). Sequência correta: `ps aux | grep -E "node|start.sh" | grep -v grep | awk "{print \$2}" | xargs kill -9` + `sleep 2` + `pm2 delete all` + `pm2 start start.sh --name amd-api --interpreter bash`. Node.js path: `/home/u562242543/.nvm/versions/node/v20.20.2/bin/`. IMPORTANTE: `pkill` pode matar a sessão SSH — usar `ps aux + kill -9` por PID é mais seguro.
+- **Rate limiter login:** em memória (express-rate-limit) — bloqueio de 5 tentativas/15 min por IP. Para resetar: matar TODOS os processos Node e reiniciar PM2 limpo (`ps aux | grep node | grep -v grep | awk "{print \$2}" | xargs kill -9`).
+- **Senha admin:** `Amd@2018#2020` — bcrypt hash na tabela `admin_users`. Para resetar via Node.js no servidor: `node -e "require('bcrypt').hash('nova',12).then(h => console.log(h))"` e então UPDATE via mysql.
+- **site-config.js:** busca `/api/config` (montado em `app.use('/api', contentRoutes)` — NÃO `/api/content/config`). Cache sessionStorage 5 min. Atualiza `[data-config]` (textContent) e `[data-config-href]` (href) em todas as páginas. Preserva `?text=` dos CTAs WhatsApp.
 - **Admin fluxo:** `login.html` → após login → `galeria.html` (direto). `index.html` redireciona para `galeria.html` via meta refresh.
 
 ## Paths críticos
