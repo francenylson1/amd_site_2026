@@ -69,7 +69,7 @@
     } catch (e) { /* ignora erro de parse ou storage */ }
 
     // Busca da API — falha silenciosa (mantém valores hardcoded)
-    fetch('/api/content/config')
+    fetch('/api/config')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         if (!data) return;
