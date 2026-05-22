@@ -45,6 +45,7 @@ function initUploadFields() {
     ['projeto-file', 'projeto-image', 'projeto-preview', 'projeto-upload-status'],
     ['escola-file',  'escola-image',  'escola-preview',  'escola-upload-status'],
     ['curso-file',   'curso-image',   'curso-preview',   'curso-upload-status'],
+    ['sobre-file',   'sobre-image',   'sobre-preview',   'sobre-upload-status'],
   ];
   for (const [fileId, pathId, previewId, statusId] of pairs) {
     const fi = document.getElementById(fileId);
@@ -511,6 +512,79 @@ async function deleteCurso(id) {
   loadCursos();
 }
 
+// ── SOBRE ─────────────────────────────────────────────────────────────────────
+let sobreData = [];
+
+const SECTION_LABEL = { professor: 'Foto do Professor', espaco: 'Espaço Maker' };
+
+async function loadSobre() {
+  const lista = document.getElementById('lista-sobre');
+  const res = await apiFetch('/about-photos');
+  sobreData = await res.json();
+  if (!sobreData.length) { lista.innerHTML = '<p class="cms-loading">Nenhuma foto cadastrada.</p>'; return; }
+  lista.innerHTML = sobreData.map(p => `
+    <div class="cms-item" data-id="${p.id}">
+      <img class="cms-item__thumb" src="/${p.image_url}" alt="${p.alt_text || ''}" loading="lazy">
+      <div class="cms-item__info">
+        <div class="cms-item__title">${p.alt_text || p.image_url.split('/').pop()}</div>
+        <div class="cms-item__meta">${SECTION_LABEL[p.section] ?? p.section} · ${badge(p.active)}</div>
+      </div>
+      <div class="cms-item__actions">
+        <button class="btn-cms btn-cms--ghost btn-cms--sm" data-action="editar-sb" data-id="${p.id}">Editar</button>
+        <button class="btn-cms btn-cms--danger btn-cms--sm" data-action="del-sb"    data-id="${p.id}">Excluir</button>
+      </div>
+    </div>`).join('');
+  lista.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const { action, id } = btn.dataset;
+      if (action === 'editar-sb') openFormSobre(Number(id));
+      if (action === 'del-sb')    deleteSobre(Number(id));
+    });
+  });
+}
+
+function openFormSobre(id = null) {
+  document.getElementById('form-sobre-titulo').textContent = id ? 'Editar foto' : 'Nova foto';
+  document.getElementById('sobre-id').value = id ?? '';
+  const p = id ? sobreData.find(x => x.id === id) : null;
+  document.getElementById('sobre-section').value = p?.section   ?? 'espaco';
+  document.getElementById('sobre-image').value   = p?.image_url ?? '';
+  document.getElementById('sobre-alt').value     = p?.alt_text  ?? '';
+  document.getElementById('sobre-active').checked = p ? Boolean(p.active) : true;
+  document.getElementById('sobre-sort').value    = p?.sort_order ?? 0;
+  const prev = document.getElementById('sobre-preview');
+  prev.src = p?.image_url ? '/' + p.image_url : '';
+  prev.hidden = !p?.image_url;
+  document.getElementById('sobre-upload-status').textContent = '';
+  document.getElementById('form-sobre').removeAttribute('hidden');
+  document.getElementById('form-sobre').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function saveSobre() {
+  const id   = document.getElementById('sobre-id').value;
+  const body = {
+    section:    document.getElementById('sobre-section').value,
+    image_url:  document.getElementById('sobre-image').value.trim(),
+    alt_text:   document.getElementById('sobre-alt').value.trim() || null,
+    active:     document.getElementById('sobre-active').checked,
+    sort_order: Number(document.getElementById('sobre-sort').value),
+  };
+  if (!body.image_url) { setStatus('sobre-status', 'Imagem é obrigatória.', 'error'); return; }
+  const res = id
+    ? await apiFetch(`/about-photos/${id}`, { method: 'PUT', body: JSON.stringify(body) })
+    : await apiFetch('/about-photos', { method: 'POST', body: JSON.stringify(body) });
+  if (!res.ok) { setStatus('sobre-status', 'Erro ao salvar.', 'error'); return; }
+  setStatus('sobre-status', 'Salvo!');
+  document.getElementById('form-sobre').setAttribute('hidden', '');
+  loadSobre();
+}
+
+async function deleteSobre(id) {
+  if (!confirm('Excluir esta foto da página Sobre?')) return;
+  await apiFetch(`/about-photos/${id}`, { method: 'DELETE' });
+  loadSobre();
+}
+
 // ── Inicialização ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
@@ -521,6 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-novo-projeto') ?.addEventListener('click', () => openFormProjeto());
   document.getElementById('btn-nova-escola')  ?.addEventListener('click', () => openFormEscola());
   document.getElementById('btn-novo-curso')   ?.addEventListener('click', () => openFormCurso());
+  document.getElementById('btn-nova-sobre')   ?.addEventListener('click', () => openFormSobre());
 
   // Salvar
   document.getElementById('btn-salvar-evento')  ?.addEventListener('click', saveEvento);
@@ -528,12 +603,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-salvar-escola')  ?.addEventListener('click', saveEscola);
   document.getElementById('btn-salvar-curso')   ?.addEventListener('click', saveCurso);
   document.getElementById('btn-salvar-foto')    ?.addEventListener('click', saveFoto);
+  document.getElementById('btn-salvar-sobre')   ?.addEventListener('click', saveSobre);
 
   // Cancelar
   document.getElementById('btn-cancelar-evento')  ?.addEventListener('click', () => document.getElementById('form-evento').setAttribute('hidden', ''));
   document.getElementById('btn-cancelar-projeto') ?.addEventListener('click', () => document.getElementById('form-projeto').setAttribute('hidden', ''));
   document.getElementById('btn-cancelar-escola')  ?.addEventListener('click', () => document.getElementById('form-escola').setAttribute('hidden', ''));
   document.getElementById('btn-cancelar-curso')   ?.addEventListener('click', () => document.getElementById('form-curso').setAttribute('hidden', ''));
+  document.getElementById('btn-cancelar-sobre')   ?.addEventListener('click', () => document.getElementById('form-sobre').setAttribute('hidden', ''));
   document.getElementById('btn-cancelar-foto')    ?.addEventListener('click', () => {
     document.getElementById('foto-id').value = '';
     document.getElementById('foto-url').value = '';
@@ -558,6 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProjetos();
   loadEscolas();
   loadCursos();
+  loadSobre();
 
   // Recarrega lista ao mudar de aba
   document.querySelectorAll('.cms-tab').forEach(btn => {
@@ -567,6 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tab === 'projetos') loadProjetos();
       if (tab === 'escolas')  loadEscolas();
       if (tab === 'cursos')   loadCursos();
+      if (tab === 'sobre')    loadSobre();
     });
   });
 });

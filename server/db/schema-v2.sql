@@ -201,7 +201,7 @@ INSERT IGNORE INTO schools (id, name, location, description, image_url, year_sin
 (10, 'CeD 104',          'Recanto das Emas', 'Centro Educacional 104 — escola parceira do AMD com turmas do Ensino Médio que participam das oficinas de robótica e programação.',
      NULL, NULL, 'Ensino Médio', 'default', 100),
 
-(11, 'CEF 306',          'Recanto das Emas', 'Centro de Ensino Fundamental 306 — o AMD atende a turma de inclusão de alunos surdos e mudos com metodologia adaptada, comunicação visual e projetos que ampliam a autonomia de cada aluno.',
+(11, 'CEF 106',          'Recanto das Emas', 'Centro de Ensino Fundamental 106 — o AMD atende a turma de inclusão de alunos surdos e mudos com metodologia adaptada, comunicação visual e projetos que ampliam a autonomia de cada aluno.',
      NULL, NULL, 'Anos Finais', 'purple', 110),
 
 (12, 'Colégio Militar',  'Brasília, DF',     'O AMD levou seus projetos ao Colégio Militar de Brasília em evento especial, demonstrando o alcance e a qualidade técnica dos projetos construídos por alunos de escolas públicas do Recanto das Emas.',

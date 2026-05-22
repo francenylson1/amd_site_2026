@@ -19,6 +19,9 @@ import {
 import {
   adminListCourses, createCourse, updateCourse, deleteCourse,
 } from '../controllers/courseController.js';
+import {
+  adminListAboutPhotos, createAboutPhoto, updateAboutPhoto, deleteAboutPhoto,
+} from '../controllers/aboutController.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -63,5 +66,11 @@ router.get('/courses',     requireAuth, adminListCourses);
 router.post('/courses',    requireAuth, createCourse);
 router.put('/courses/:id', requireAuth, updateCourse);
 router.delete('/courses/:id', requireAuth, deleteCourse);
+
+// Sobre
+router.get('/about-photos',     requireAuth, adminListAboutPhotos);
+router.post('/about-photos',    requireAuth, createAboutPhoto);
+router.put('/about-photos/:id', requireAuth, updateAboutPhoto);
+router.delete('/about-photos/:id', requireAuth, deleteAboutPhoto);
 
 export default router;

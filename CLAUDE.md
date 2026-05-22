@@ -74,8 +74,8 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Logo navbar:** texto tricolor com fundo branco — `.logo-aluno` (verde `#00843f`), `.logo-maker` (vermelho `#d32f2f`), `.logo-digital` (azul `#0066ff`). Fonte Orbitron. Cores atendem WCAG AA 4.5:1 em fundo branco.
 - **Mapa:** iframe Google Maps está em `contato.html` (endereço: Quadra 203 Lote 32, Recanto das Emas, CEP 72610-300). Removido de `escolas.html`.
 - **cursos.html:** seção `#cursos-dinamicos` oculta via `hidden` — cursos.js a exibe automaticamente quando API retornar cursos com `active=TRUE`.
-- **school-card__icon--purple:** variante roxa para escolas de inclusão (ex: CEF 306).
-- **Escolas cadastradas:** CEF 101, CEF 113, CEF 206, CEF 308, CEF 405, CEM 804, EC 203, EC 401, Colégio Militar, Pinheirinho Roxo (Ed. Infantil), CeD 104, CEF 306 (surdos/mudos).
+- **school-card__icon--purple:** variante roxa para escolas de inclusão (ex: CEF 106).
+- **Escolas cadastradas:** CEF 101, CEF 113, CEF 206, CEF 308, CEF 405, CEM 804, EC 203, EC 401, Colégio Militar, Pinheirinho Roxo (Ed. Infantil), CeD 104, CEF 106 (surdos/mudos).
 - **Imagens Pinheirinho Roxo:** em `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos, aguardando otimização para WebP antes de referenciar no banco).
 - **Branch protection main:** requer 1 review de terceiros — dono do repo não pode aprovar o próprio PR. Workaround: desabilitar `enforce_admins` via API temporariamente (`gh api --method DELETE repos/.../branches/main/protection/enforce_admins`), fazer merge com `--admin`, reativar com `--method POST`.
 - **gpio.css:** incluído no bundle; ordem no `build:css`: `variables → main → animations → components → gpio → responsive`.

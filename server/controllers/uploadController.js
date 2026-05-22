@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const IMAGES_DIR = process.env.IMAGES_DIR ||
   path.join(os.homedir(), 'domains', 'alunomakerdigital.com.br', 'public_html', 'assets', 'images');
 
-const ALLOWED_FOLDERS = new Set(['eventos', 'projetos', 'escolas', 'cursos']);
+const ALLOWED_FOLDERS = new Set(['eventos', 'projetos', 'escolas', 'cursos', 'sobre']);
 
 export async function uploadImage(req, res) {
   if (!req.file) {
@@ -33,6 +33,7 @@ export async function uploadImage(req, res) {
     // Importação dinâmica para tolerar ambientes sem sharp instalado
     const { default: sharp } = await import('sharp');
     await sharp(req.file.buffer)
+      .rotate()             // auto-corrige orientação EXIF (evita fotos de cabeça para baixo)
       .webp({ quality: 82 })
       .toFile(destPath);
   } catch {
