@@ -58,6 +58,17 @@ jobs:
             snapshots/**
             api-proxy/**
 
+      - name: Garantir .htaccess do proxy PHP via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            printf 'Options -Indexes\nRewriteEngine On\nRewriteCond %%{REQUEST_FILENAME} !-f\nRewriteRule ^ index.php [L,QSA]\n' \
+              > ~/domains/alunomakerdigital.com.br/public_html/api/.htaccess
+
       - name: Deploy proxy PHP para subdomínio api.*
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
