@@ -87,7 +87,7 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Vitest API tests:** mocks CJS/ESM com `{ ...pool, default: pool }` para que `require()` e `import default` compartilhem a mesma instância de vi.fn().
 - **admin/login.html:** standalone (sem navbar), token JWT em `sessionStorage.amd_admin_token`.
 - **admin/index.html:** redireciona automaticamente para galeria.html via meta refresh (entrada principal agora é login.html → galeria.html).
-- **admin/galeria.html:** gerenciador de conteúdo com 5 abas — Eventos, Projetos, Escolas, Cursos, Sobre. CRUD completo com JWT.
+- **admin/galeria.html:** gerenciador de conteúdo com 6 abas — Eventos, Projetos, Escolas, Cursos, Sobre, Configurações. CRUD completo com JWT.
 - **Aba Sobre:** ativa em produção. Tabela `about_photos` com 7 fotos (seed schema-v3.sql). `aboutController.js` no servidor. `loadSobre()` tem try-catch.
 - **Aba Configurações:** ativa em produção. Tabela `site_config` com 9 campos (schema-v4.sql). `configController.js` no servidor. Rota pública `GET /api/config` e admin `GET+PUT /api/admin/config`.
 - **site-config.js:** script em `assets/js/site-config.js` que busca `/api/config` (rota correta — montada em `/api`, não `/api/content`), usa cache sessionStorage 5 min, e atualiza `[data-config]` (textContent) e `[data-config-href]` (href). Adicionado a TODAS as páginas públicas. Botão WhatsApp flutuante atualizado via setTimeout(0).
@@ -137,10 +137,10 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `server/db/schema.sql` — DDL MySQL: visits, contacts, admin_users, feature_flags.
 - `server/db/schema-v2.sql` — Fase 4.5: 5 novas tabelas + seed com dados migrados do HTML.
 - `server/db/schema-v3.sql` — tabela `about_photos` + seed das 7 fotos da sobre.html. Aplicado no banco de produção em 2026-05-22.
-- `server/db/schema-v4.sql` — tabela `site_config` + seed dos 9 campos editáveis. Aplicar no servidor via SSH.
-- `server/controllers/configController.js` — CRUD site_config (GET público, GET admin com labels, PUT bulk).
-- `assets/js/site-config.js` — carrega config da API, cache sessionStorage 5 min, atualiza [data-config] e [data-config-href] em todas as páginas.
-- `server/controllers/aboutController.js` — CRUD about_photos. Existe no repo mas AINDA NÃO está no servidor de produção.
+- `server/db/schema-v4.sql` — tabela `site_config` + seed dos 9 campos editáveis. Já aplicado em produção (2026-05-22).
+- `server/controllers/configController.js` — CRUD site_config (GET público `/api/config`, GET+PUT admin `/api/admin/config`).
+- `assets/js/site-config.js` — carrega `/api/config`, cache sessionStorage 5 min, atualiza [data-config] e [data-config-href] em todas as páginas públicas.
+- `server/controllers/aboutController.js` — CRUD about_photos. No repo e no servidor de produção.
 - `assets/js/sobre.js` — carrega fotos do banco dinamicamente na sobre.html.
 - `server/middleware/validate.js` — validadores isValidEmail, isValidPhone, isValidDate, isFutureOrToday.
 - `server/services/emailService.js` — Nodemailer + Brevo SMTP.
@@ -151,7 +151,7 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `server/controllers/courseController.js` — CRUD cursos.
 - `admin/login.html` — página de login admin (standalone).
 - `admin/index.html` — dashboard admin (contatos + agendamentos).
-- `admin/galeria.html` — gerenciador de conteúdo: 4 abas CRUD.
+- `admin/galeria.html` — gerenciador de conteúdo: 6 abas CRUD (Eventos, Projetos, Escolas, Cursos, Sobre, Configurações).
 - `admin/assets/js/galeria.js` — lógica do gerenciador.
 - `admin/assets/css/galeria.css` — estilos do gerenciador.
 - `assets/js/projetos.js` — fetch + render dos project-cards (flip).
