@@ -595,7 +595,7 @@ async function deleteSobre(id) {
 // ── CONFIGURAÇÕES ─────────────────────────────────────────────────────────────
 const CONFIG_KEYS = [
   'whatsapp_num', 'whatsapp_display', 'email_contato',
-  'instagram_handle', 'instagram_display', 'youtube_handle',
+  'instagram_handle', 'instagram_display', 'youtube_handle', 'tiktok_handle', 'x_handle',
   'endereco_rua', 'endereco_display', 'atendimento_horario',
 ];
 
