@@ -1,7 +1,7 @@
 # Especificação Técnica — Aluno Maker Digital
 
-**Versão:** 2.0
-**Data:** 2026-05-15
+**Versão:** 2.1
+**Data:** 2026-05-23 (atualizado — §11.4 infraestrutura Hostinger)
 **Repositório de trabalho:** `C:\Users\User\Desktop\amd_site_2026`
 **Documento companheiro:** `PRD_AlunoMakerDigital.md` v2.0, `WORKFLOW_AlunoMakerDigital.md` v1.0
 **Status:** Proposta para validação
@@ -774,7 +774,83 @@ Tag v* em main:
 4. Smoke automatizado + 1 smoke manual em Chrome desktop.
 5. Em caso de falha: rollback restaura o snapshot anterior.
 
-### 11.4 Feature flags simples
+### 11.4 Infraestrutura Hostinger — Paths e Convenções (atualizado 2026-05-23)
+
+#### Paths reais no servidor
+
+| Recurso | Caminho |
+|---|---|
+| Site principal (public_html) | `~/domains/alunomakerdigital.com.br/public_html/` |
+| Backend Node.js (server/) | `~/domains/api.alunomakerdigital.com.br/server/` |
+| Staging | `~/domains/staging.alunomakerdigital.com.br/public_html/` |
+| Proxy PHP subdomain api.* | `~/domains/api.alunomakerdigital.com.br/public_html/api/` |
+
+> **Atenção:** NÃO existe `~/public_html/` no Hostinger Business com múltiplos domínios. Sempre usar o caminho completo via `~/domains/`.
+
+#### FTP-Deploy-Action e dotfiles
+
+O `SamKirkland/FTP-Deploy-Action` **não faz upload confiável de dotfiles** (arquivos iniciados com `.`) em subdiretórios. Isso afeta criticamente o `api/.htaccess`, sem o qual o Apache não roteia `/api/*` para o `index.php` do proxy PHP — resultando em 404 e CORS no login e nas rotas admin.
+
+**Solução implementada:** passo `appleboy/ssh-action` no `deploy.yml` que regrava o `api/.htaccess` após cada deploy em produção:
+
+```yaml
+- name: Garantir .htaccess do proxy PHP via SSH
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{ secrets.SSH_HOST }}
+    username: ${{ secrets.SSH_USER }}
+    key: ${{ secrets.SSH_PRIVATE_KEY }}
+    port: ${{ secrets.SSH_PORT }}
+    script: |
+      printf 'Options -Indexes\nRewriteEngine On\nRewriteCond %%{REQUEST_FILENAME} !-f\nRewriteRule ^ index.php [L,QSA]\n' \
+        > ~/domains/alunomakerdigital.com.br/public_html/api/.htaccess
+```
+
+#### Secrets no GitHub Actions
+
+| Secret | Valor | Finalidade |
+|---|---|---|
+| `FTP_HOST` | hostinger FTP host | Deploy FTP |
+| `FTP_USER` | usuário FTP | Deploy FTP |
+| `FTP_PASS` | senha FTP | Deploy FTP |
+| `FTP_DIR_PROD` | path public_html produção | Deploy FTP |
+| `FTP_DIR_STAGING` | path public_html staging | Deploy FTP |
+| `FTP_DIR_API` | path api.* public_html | Deploy proxy PHP subdomínio |
+| `SSH_HOST` | `82.112.247.253` | Passo SSH pós-deploy |
+| `SSH_USER` | `u562242543` | Passo SSH pós-deploy |
+| `SSH_PORT` | `65002` | Passo SSH pós-deploy |
+| `SSH_PRIVATE_KEY` | conteúdo de `~/.ssh/amd_deploy` | Passo SSH pós-deploy |
+
+#### Deploy de server/ (Node.js backend)
+
+O pipeline FTP **não copia `server/`** — apenas arquivos estáticos vão para `public_html`. Após cada alteração em `server/`, copiar manualmente via SCP:
+
+```bash
+scp -P 65002 -i ~/.ssh/amd_deploy -r server/controllers/ \
+  u562242543@82.112.247.253:~/domains/api.alunomakerdigital.com.br/server/controllers/
+```
+
+Em seguida reiniciar o PM2 com a sequência segura (ver CLAUDE.md — nunca usar `pkill`, pode matar a sessão SSH):
+
+```bash
+ps aux | grep -E "node|start.sh" | grep -v grep | awk '{print $2}' | xargs kill -9 2>/dev/null
+sleep 2 && pm2 delete all
+pm2 start ~/domains/api.alunomakerdigital.com.br/server/start.sh --name amd-api --interpreter bash
+```
+
+#### Proxy PHP (domínio principal)
+
+Dois arquivos no repo deployados via FTP para o domínio principal:
+- `api/index.php` — proxy cURL para `http://127.0.0.1:3000` (sem CORS, mesma origem)
+- `api/.htaccess` — roteamento Apache (regravado via SSH a cada deploy, por limitação do FTP)
+
+#### Regras SSH no terminal do servidor
+
+- **NUNCA usar heredoc** (`<< 'EOF'`) para escrever arquivos — o terminal SSH inclui o marcador literalmente no arquivo.
+- Usar `echo "linha" >> arquivo` linha a linha, ou `printf` com `>` (sobrescrita).
+- **NUNCA usar `pkill`** para matar processos Node — pode encerrar a sessão SSH. Usar `ps aux | grep | awk | xargs kill -9`.
+
+### 11.5 Feature flags simples
 
 Para evitar que código de fases futuras quebre fases já em produção:
 - Atributo `data-feature="gpio"` no elemento; CSS oculta com `[data-feature][data-enabled="false"] { display: none }`.

@@ -15,13 +15,20 @@ Seguir a análise de ajustes e a especificação completa abaixo.
 
 ---
 
-## Estado atual (2026-05-22)
+## Estado atual (2026-05-23)
 
 | Fase | Status | Notas |
 |---|---|---|
 | 0 a 4.5 | ✅ Concluídas e em produção | CMS 6 abas validado em produção |
 | **5 — Gerador Claude API** | **⏳ Próxima** | — |
 | 6 — Publicador redes + Loja | ⏳ | — |
+
+### O que foi feito na sessão 2026-05-23
+
+- **TikTok e X:** campos `tiktok_handle` e `x_handle` adicionados ao `site_config` (DB + admin aba Configurações + `contato.html` seção de contato + rodapé). SQL aplicado em produção via `schema-v4-patch1.sql`.
+- **Fix crítico — CORS/404 no login:** `api/.htaccess` não estava no servidor (FTP não sobe dotfiles em subpastas). Arquivo copiado manualmente via SCP. `deploy.yml` corrigido com passo `appleboy/ssh-action` que regrava o `.htaccess` após cada deploy.
+- **Secrets SSH no GitHub Actions:** `SSH_HOST`, `SSH_USER`, `SSH_PORT`, `SSH_PRIVATE_KEY` adicionados — o passo SSH do `deploy.yml` agora funciona automaticamente.
+- **Login do admin funciona** em `alunomakerdigital.com.br/admin/login.html`.
 
 ---
 

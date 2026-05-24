@@ -89,9 +89,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **admin/index.html:** redireciona automaticamente para galeria.html via meta refresh (entrada principal agora é login.html → galeria.html).
 - **admin/galeria.html:** gerenciador de conteúdo com 6 abas — Eventos, Projetos, Escolas, Cursos, Sobre, Configurações. CRUD completo com JWT.
 - **Aba Sobre:** ativa em produção. Tabela `about_photos` com 7 fotos (seed schema-v3.sql). `aboutController.js` no servidor. `loadSobre()` tem try-catch.
-- **Aba Configurações:** ativa em produção. Tabela `site_config` com 9 campos (schema-v4.sql). `configController.js` no servidor. Rota pública `GET /api/config` e admin `GET+PUT /api/admin/config`.
+- **Aba Configurações:** ativa em produção. Tabela `site_config` com 11 campos (schema-v4.sql + schema-v4-patch1.sql). `configController.js` no servidor. Rota pública `GET /api/config` e admin `GET+PUT /api/admin/config`.
 - **site-config.js:** script em `assets/js/site-config.js` que busca `/api/config` (rota correta — montada em `/api`, não `/api/content`), usa cache sessionStorage 5 min, e atualiza `[data-config]` (textContent) e `[data-config-href]` (href). Adicionado a TODAS as páginas públicas. Botão WhatsApp flutuante atualizado via setTimeout(0).
+- **TikTok e X (Twitter):** campos `tiktok_handle` e `x_handle` adicionados ao `site_config` via `schema-v4-patch1.sql` (aplicado em 2026-05-23). Aba Configurações do admin exibe e salva esses campos. `contato.html` exibe TikTok e X na seção de contato e no rodapé do footer.
 - **CI/CD NÃO copia server/:** o pipeline FTP só sobe arquivos estáticos (public_html). Arquivos Node.js em `server/` precisam ser copiados manualmente ao servidor via SSH. NUNCA usar heredoc (`<< 'EOF'`) no terminal SSH — o marcador fica literalmente dentro do arquivo. Usar `echo "linha" >> arquivo` linha a linha.
+- **FTP dotfiles:** FTP-Deploy-Action não sobe dotfiles (ex: `.htaccess`) em subpastas de forma confiável. Solução: `deploy.yml` tem passo `appleboy/ssh-action` que regrava `api/.htaccess` após cada deploy em produção. Secrets SSH já configurados no GitHub Actions: `SSH_HOST`, `SSH_USER`, `SSH_PORT`, `SSH_PRIVATE_KEY`.
+- **Hostinger paths:** site principal em `~/domains/alunomakerdigital.com.br/public_html/` (NÃO `~/public_html/`). Backend Node.js em `~/domains/api.alunomakerdigital.com.br/server/`.
 - **Sharp .rotate():** adicionado ao uploadController para auto-corrigir EXIF (fotos de cabeça para baixo). Pasta `sobre` adicionada aos ALLOWED_FOLDERS.
 - **forms.js fallback:** tenta POST /api/* com AbortSignal.timeout(8000); em caso de falha → localStorage + indicador amarelo `.form-status`.
 - **robots.txt:** já bloqueia `/admin/` desde a Fase 0.
