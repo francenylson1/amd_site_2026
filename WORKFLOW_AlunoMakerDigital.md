@@ -1,10 +1,10 @@
 # Workflow de Execução — Aluno Maker Digital
 
-**Versão:** 1.0
-**Data:** 2026-05-15
+**Versão:** 1.1
+**Data:** 2026-05-26 (atualizado — Fase 4.5 documentada, Fase 5 reconciliada, nova Fase 5.5 Blog)
 **Responsável:** Professor Francenylson
-**Documentos companheiros:** `PRD_AlunoMakerDigital.md` v2.0, `SPEC_TECNICA_AlunoMakerDigital.md` v2.0
-**Status:** Proposta para validação
+**Documentos companheiros:** `PRD_AlunoMakerDigital.md` v2.1, `SPEC_TECNICA_AlunoMakerDigital.md` v2.2
+**Status:** Em vigor
 
 ---
 
@@ -65,7 +65,7 @@ Este workflow opera sob 5 regras inegociáveis:
 
 | Etapa | Atividade | Aplicação no projeto |
 |---|---|---|
-| 1. Descoberta e Estratégia | Briefing + PRD | Já concluído (`BRIEFING_COMPLETO_V2`, `PRD v2.0`) |
+| 1. Descoberta e Estratégia | Briefing + PRD | Já concluído (`BRIEFING_COMPLETO_V2`, `PRD`) |
 | 2. Planejamento UX | Mapa do site + user flows + wireframes Lo-Fi | Fase 0 / pré-Fase 1 |
 | 3. Especificação Técnica | Stack, modelagem, API, infra | Concluído (`SPEC v2.0`) |
 | 4. Design de Interface (UI) | Style guide + protótipo Hi-Fi | Style guide já no SPEC §7; protótipos por página entram no início de cada fase |
@@ -101,11 +101,11 @@ Cada fase abaixo segue o mesmo template:
 - Acesso ao domínio `alunomakerdigital.com.br`.
 
 **Tarefas:**
-1. Aprovar PRD v2.0, SPEC v2.0 e este WORKFLOW v1.0.
+1. Aprovar PRD, SPEC e este WORKFLOW.
 2. Criar repositório Git local em `C:\Users\User\Desktop\amd_site_2026` e remoto (GitHub privado).
 3. Instalar Node.js 20 LTS, VS Code com extensões recomendadas (Live Server, ESLint, Prettier, Stylelint).
 4. Inicializar `package.json` apenas com devDependencies de testes (Playwright, Lighthouse CI, axe-core, ESLint, Prettier, Stylelint).
-5. Configurar `.gitignore`, `.env.example`, `.prettierrc`, `.eslintrc.json`, `playwright.config.js`, `lighthouserc.json`.
+5. Configurar `.gitignore`, `.env.example`, `.prettierrc`, `eslint.config.mjs` (flat config), `playwright.config.js`, `lighthouserc.json`.
 6. Criar estrutura de pastas conforme SPEC §3 (incluindo `/tests/`).
 7. Configurar GitHub Actions com workflows `ci.yml` e `deploy.yml`.
 8. Configurar Hostinger: subdomínio `staging.alunomakerdigital.com.br` apontando para diretório separado, e-mails profissionais, Git Deploy ou FTP automatizado.
@@ -316,45 +316,128 @@ Cada fase abaixo segue o mesmo template:
 
 ---
 
-### FASE 5 — Gerador de Conteúdo com Claude API
+### FASE 4.5 — Gerenciador de Conteúdo (CMS)
 
-**Objetivo:** Adicionar ao admin a ferramenta de geração de conteúdo para redes sociais e blog usando Claude API.
+**Objetivo:** Dar autonomia ao Prof. Fran para editar todo o conteúdo dinâmico do site (eventos, projetos, escolas, cursos, fotos da página "Sobre" e configurações globais) sem depender de deploy.
 
 **Entradas:** Fase 4 deployada e estável.
 
-**Tarefas:**
-1. Implementar `admin/gerador.html` com formulário de tema + tipo de conteúdo.
-2. Implementar endpoint `POST /api/admin/generate` que chama Anthropic SDK.
-3. Implementar lógica de geração das 5 versões (blog longo, roteiro TikTok 30–60s, legenda Instagram + 30 hashtags, thread X com 5 tweets, mensagem WhatsApp).
-4. Persistir cada geração na tabela `generations` com custo estimado em USD.
-5. Implementar visualização do histórico com filtro por tema/data.
-6. Adicionar botão "copiar" para cada versão e badge de custo acumulado no mês.
-7. Implementar rate limiting específico (ex.: 30 gerações/dia) para controle de custo.
-8. Mocks de API + testes unitários da função de geração.
-9. Implementar fallback: se a Claude API falhar, exibir mensagem clara ao usuário, sem quebrar o painel.
+**Tarefas (executadas):**
+1. Implementar `admin/galeria.html` — gerenciador com 6 abas: Eventos, Projetos, Escolas, Cursos, Sobre, Configurações.
+2. Implementar CRUD completo por aba (`galeria.js`, `galeria.css`) com JWT.
+3. Criar tabela `about_photos` (`schema-v3.sql`) + `aboutController.js`; `sobre.html` carrega fotos dinamicamente.
+4. Criar tabela `site_config` (`schema-v4.sql` + `schema-v4-patch1.sql`) + `configController.js`; rota pública `GET /api/config` e admin `GET+PUT /api/admin/config`.
+5. Implementar `assets/js/site-config.js` — atualiza `[data-config]` e `[data-config-href]` em todas as páginas públicas (cache sessionStorage 5 min).
+6. Upload de imagem via Multer + Sharp → WebP (com `.rotate()` para corrigir EXIF).
+7. Adicionar TikTok e X (Twitter) ao `site_config`, à aba Configurações e à `contato.html`.
 
 **Critérios de Aceite:**
-- Tema digitado retorna 5 versões em até 30s.
-- Cada versão é exibida em card separado com botão de copiar.
-- Custo do mês visível no dashboard do admin.
-- Falha na API mostra mensagem sem quebrar a página.
-- Acesso ao gerador exige login válido.
-
-**Testes obrigatórios:**
-- API tests com mocks da Anthropic.
-- E2E: fluxo de geração + cópia + visualização no histórico.
-- Smoke manual.
+- Cada aba lista, cria, edita e remove seus registros, refletindo no site público.
+- Upload converte para WebP e grava o path relativo no banco.
+- Configurações globais (WhatsApp, redes, textos) atualizam o site sem deploy.
 
 **Definition of Done:**
-- [ ] Gerador funcional em produção.
-- [ ] Histórico armazenado e consultável.
-- [ ] Monitor de custo ativo (alerta quando ultrapassa US$ 5/mês).
-- [ ] Fallback testado.
+- [x] 6 abas funcionais e validadas em produção (2026-05-22).
+- [x] `CLAUDE.md` atualizado com paths e convenções.
+
+**Estado funcional ao final:** Site institucional + admin + CMS completo. Conteúdo gerenciável pelo PO sem deploy.
+
+**Deploy 4.5:** Tag `v2.5.0`.
+
+---
+
+### FASE 5 — Gerador de Conteúdo com Claude API
+
+**Objetivo:** Adicionar ao admin uma ferramenta que **gera texto** (rascunho) para redes sociais e blog usando a Claude API. A Fase 5 **não publica** em lugar nenhum — apenas gera, exibe e persiste; a publicação automática nas redes é a Fase 6.
+
+**Entradas:** Fase 4.5 deployada e estável.
+
+> **Especificação única (autoritativa):** esta seção, a SPEC (subseção do Gerador) e o NEXT_SESSION descrevem a MESMA feature. Em conflito, vencem PRD/SPEC/WORKFLOW.
+
+**Decisões travadas:**
+- **Entrada híbrida:** o usuário escolhe a cada uso — selecionar um item do banco (projeto/evento/curso) **ou** digitar um tema livre.
+- **5 formatos selecionáveis:** Instagram (legenda + hashtags), TikTok (roteiro/legenda), X/Twitter (thread), WhatsApp (mensagem curta), Blog (post longo).
+- **Seletor de fotos:** anexar fotos do banco existente ou enviar novas (Sharp → WebP). **Sem vídeo no site** (vídeos vão para as redes na Fase 6).
+- **Persistência + custo:** cada geração é salva na tabela `generations` (`schema-v5.sql`) com `cost_usd`; badge de custo do mês + alerta > US$5/mês.
+- **Rate limit:** 10 gerações/hora **e** 30/dia por IP (limiter separado do `loginLimiter`).
+- **Modelo:** `claude-sonnet-4-6` via `@anthropic-ai/sdk`, com prompt caching (`cache_control: ephemeral`) no system prompt (contexto AMD fixo).
+- **Segurança:** `ANTHROPIC_API_KEY` apenas no `start.sh` do servidor (nunca no repo).
+
+**Tarefas:**
+1. `cd server && npm install @anthropic-ai/sdk`.
+2. Criar tabela `generations` (`server/db/schema-v5.sql`) e aplicar no MySQL.
+3. Implementar `server/controllers/generatorController.js`:
+   - System prompt fixo com contexto AMD (missão, público, tom de voz) + diretrizes do PRD §3, com prompt caching.
+   - Entrada híbrida: buscar item do banco (quando `type`+`item_id`) ou usar `theme` livre.
+   - Instruções por formato (5 formatos).
+   - Persistir cada geração com `cost_usd`, `tokens_in`, `tokens_out`.
+4. Atualizar `server/routes/admin.js`: `POST /api/admin/generate` + `GET /api/admin/generations` + novo rate limiter (10/h e 30/dia).
+5. Implementar `admin/gerador.html` + `gerador.js` + `gerador.css`: seletor item/tema, checkboxes de formato, seletor de fotos, spinner durante chamada, exibição de tokens/cache, botão copiar por formato, histórico com filtro, badge de custo do mês.
+6. Adicionar link "Gerador" na sidebar de `galeria.html`.
+7. Testes: unit (função de geração com mock Anthropic), API (Supertest dos endpoints), E2E (gerar → copiar → histórico).
+8. Fallback: falha da Claude API exibe mensagem clara, sem quebrar o painel.
+9. Deploy do `server/` via SCP + reiniciar PM2; adicionar `ANTHROPIC_API_KEY` ao `start.sh` via echo linha a linha.
+
+**Critérios de Aceite (do PRD §7.12):**
+- Item OU tema retorna os formatos selecionados em até 30s.
+- Cada formato em card separado com botão de copiar.
+- Geração salva no histórico com custo; custo do mês visível e alerta > US$5/mês.
+- Rate limit ativo (10/h e 30/dia); falha da API mostra mensagem sem quebrar a página.
+- Acesso exige login válido.
+
+**Testes obrigatórios:**
+- Unit + API (mocks Anthropic) + E2E (geração → cópia → histórico).
+- Smoke manual incluindo cenário de falha da API.
+
+**Definition of Done:**
+- [ ] Gerador funcional em produção (entrada híbrida, 5 formatos, seletor de fotos).
+- [ ] Histórico armazenado e consultável; monitor de custo ativo (alerta > US$5/mês).
+- [ ] Rate limit (10/h e 30/dia) e fallback testados.
+- [ ] Testes verdes; smoke assinado.
 - [ ] `CLAUDE.md` atualizado com paths, convenções e estado ao final desta fase.
 
-**Estado funcional ao final:** Painel admin com IA generativa. Site público inalterado.
+**Estado funcional ao final:** Painel admin com IA generativa de texto. Site público inalterado.
 
-**Deploy 5:** Tag `v2.1.0`.
+**Deploy 5:** Tag `v2.6.0`.
+
+---
+
+### FASE 5.5 — Blog do Site
+
+**Objetivo:** Criar a seção de blog pública — destino do formato "blog longo" gerado na Fase 5 — alimentada pelo CMS, melhorando SEO e tráfego.
+
+**Entradas:** Fase 5 deployada e estável.
+
+**Decisões travadas:**
+- Página pública dinâmica (vanilla JS + `fetch`, mesmo padrão de projetos/eventos).
+- **Vídeo no blog só via embed do YouTube (click-to-load)** — miniatura que só carrega o player ao clique; **nunca self-hosted** (protege o gate Lighthouse: total ≤ 1 MB, Perf ≥ 85).
+- O Gerador (Fase 5) salva o "blog longo" como **rascunho** (`status='draft'`) direto na tabela.
+
+**Tarefas:**
+1. Criar tabela `blog_posts` (`server/db/schema-v6.sql`): `id, title, slug, excerpt, body, cover_image, video_embed_url (opcional), status('draft'|'published'), published_at, created_at`.
+2. `server/controllers/blogController.js` — CRUD admin + rotas públicas `GET /api/posts` (publicados) e `GET /api/posts/:slug`.
+3. `blog.html` (listagem) + página de post; renderização via `fetch`; `assets/js/blog.js`.
+4. Admin: nova aba/página de CRUD de posts em `galeria.html` (rascunho ↔ publicado, capa, embed de vídeo).
+5. Integração do Gerador: botão "Salvar como rascunho de blog" cria registro `draft`.
+6. Atualizar navbar (link Blog) e `sitemap.xml`.
+7. Testes: E2E (listagem + post + rascunho não aparece no público); Lighthouse + axe na página nova.
+
+**Critérios de Aceite (do PRD §7.13):**
+- Posts publicados aparecem na listagem; rascunhos não aparecem no site público.
+- Página de post abre por slug; vídeo (se houver) carrega só ao clique.
+- "Blog longo" do Gerador vira rascunho editável no admin.
+
+**Testes obrigatórios:**
+- E2E + Lighthouse (gate) + axe na `blog.html` e na página de post.
+
+**Definition of Done:**
+- [ ] Blog público no ar; CRUD funcional; rascunho do Gerador integrado.
+- [ ] Lighthouse e axe verdes na página nova.
+- [ ] `CLAUDE.md` atualizado com paths, convenções e estado ao final desta fase.
+
+**Estado funcional ao final:** Site + CMS + Gerador + Blog. Conteúdo gerado tem onde ser publicado.
+
+**Deploy 5.5:** Tag `v2.7.0`.
 
 ---
 
@@ -409,11 +492,16 @@ Cada fase abaixo segue o mesmo template:
 
 ## 5. Procedimentos de Deploy e Rollback
 
+> **Automação real (ver SPEC §11.4):** o deploy é via **GitHub Actions**.
+> O `deploy.yml` usa `FTP-Deploy-Action` para os estáticos e um passo `appleboy/ssh-action`
+> que regrava `api/.htaccess` após cada deploy (o FTP não sobe dotfiles em subpastas).
+> **O FTP NÃO copia `server/`** — alterações no backend Node.js vão por **SCP manual** (chave `~/.ssh/amd_deploy`) + restart do PM2 (sequência segura no CLAUDE.md). Secrets: `FTP_*`, `SSH_*`.
+
 ### 5.1 Deploy para Staging
 
 1. Merge da PR em `develop`.
 2. CI executa suíte completa.
-3. Em caso de sucesso, FTP automatizado sincroniza para `staging.alunomakerdigital.com.br`.
+3. Em caso de sucesso, GitHub Actions (FTP-Deploy-Action) sincroniza para `staging.alunomakerdigital.com.br`.
 4. Health-check automatizado: 5 URLs-chave retornam 200 OK e conteúdo esperado.
 5. Notificação no canal interno.
 
@@ -424,7 +512,7 @@ Cada fase abaixo segue o mesmo template:
    - Download via Hostinger File Manager dos arquivos atuais para `snapshots/AAAA-MM-DD-vN/`.
    - Dump do MySQL (Fase 4+): `mysqldump > snapshots/AAAA-MM-DD-vN/db.sql`.
 3. Tag `vN.M.P` em `main` → push.
-4. CI executa deploy via FTP/Git Deploy.
+4. GitHub Actions executa o deploy (FTP estáticos + passo SSH que regrava `.htaccess`). Backend `server/` por SCP manual quando houver mudança.
 5. Health-check pós-deploy.
 6. Smoke manual rápido em produção (Chrome desktop + Chrome mobile).
 7. Em caso de falha → executar rollback (§5.3).
@@ -564,7 +652,11 @@ FASE 3 (módulo GPIO)        → ferramenta + site │   e veem
    ↓                                            │   evolução
 FASE 4 (backend + admin)    → leads em MySQL    │   sem
    ↓                                            │   quebra
-FASE 5 (Claude API)         → conteúdo com IA   │
+FASE 4.5 (CMS 6 abas)       → conteúdo editável │
+   ↓                                            │
+FASE 5 (Claude API)         → gerador de texto  │
+   ↓                                            │
+FASE 5.5 (blog)             → blog público      │
    ↓                                            │
 FASE 6 (redes + loja)       → plataforma final ─┘
 ```
@@ -573,6 +665,6 @@ A cada seta, o sistema continua funcionando; nada quebra.
 
 ---
 
-*Workflow v1.0 — Aluno Maker Digital*
+*Workflow v1.1 — Aluno Maker Digital*
 *Desenvolvido com suporte de Claude AI (Anthropic) — Opus 4.7*
 *© 2018–2026 — Todos os direitos reservados*

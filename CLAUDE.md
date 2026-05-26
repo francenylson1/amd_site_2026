@@ -6,9 +6,9 @@
 
 Os três documentos abaixo, na raiz, são autoritativos. Em conflito, eles vencem.
 
-1. **`PRD_AlunoMakerDigital.md`** (v2.0) — o que o produto é, para quem, critérios de aceite Gherkin por feature, métricas.
-2. **`SPEC_TECNICA_AlunoMakerDigital.md`** (v2.0) — como implementar: stack, estrutura, módulo GPIO, estratégia de testes, CI/CD, segurança.
-3. **`WORKFLOW_AlunoMakerDigital.md`** (v1.0) — em que ordem: 7 fases (0 a 6), DoD por fase, procedimentos de deploy/rollback.
+1. **`PRD_AlunoMakerDigital.md`** (v2.1) — o que o produto é, para quem, critérios de aceite Gherkin por feature, métricas.
+2. **`SPEC_TECNICA_AlunoMakerDigital.md`** (v2.2) — como implementar: stack, estrutura, módulo GPIO, estratégia de testes, CI/CD, segurança.
+3. **`WORKFLOW_AlunoMakerDigital.md`** (v1.1) — em que ordem: fases 0 a 6 (inclui 4.5 CMS e 5.5 Blog), DoD por fase, procedimentos de deploy/rollback.
 
 Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, não fonte de verdade.
 
@@ -29,8 +29,9 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
 | 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS 6 abas + site_config. Testado e validado em produção (2026-05-22) |
-| 5 — Gerador com Claude API | ⏳ | — | Próxima fase |
-| 6 — Publicador redes + Loja | ⏳ | — | — |
+| 5 — Gerador com Claude API | ⏳ Em andamento | v2.6.0 | Branch feature/fase-5-gerador. Backend + UI + testes prontos (116/116). Pendente: deploy SSH (schema-v5, server/, ANTHROPIC_API_KEY), PR para main. |
+| 5.5 — Blog do site | ⏳ | v2.7.0 | Destino do "blog longo". blog_posts (schema-v6), vídeo só via embed YouTube. PRD §7.13 + SPEC §14.4 |
+| 6 — Publicador redes + Loja | ⏳ | v3.0.0 | Publicação automática nas redes + e-commerce |
 
 ## Comandos úteis
 
@@ -120,6 +121,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Senha admin:** `Amd@2018#2020` — bcrypt hash na tabela `admin_users`. Para resetar via Node.js no servidor: `node -e "require('bcrypt').hash('nova',12).then(h => console.log(h))"` e então UPDATE via mysql.
 - **site-config.js:** busca `/api/config` (montado em `app.use('/api', contentRoutes)` — NÃO `/api/content/config`). Cache sessionStorage 5 min. Atualiza `[data-config]` (textContent) e `[data-config-href]` (href) em todas as páginas. Preserva `?text=` dos CTAs WhatsApp.
 - **Admin fluxo:** `login.html` → após login → `galeria.html` (direto). `index.html` redireciona para `galeria.html` via meta refresh.
+- **Escopo global admin (scripts regulares):** `admin-auth.js` e outros scripts admin compartilham o escopo global (`window`). NÃO redeclarar variáveis com `const`/`let` que já existam em outro script (ex: `const API_BASE` estava em ambos e causou SyntaxError). Usar apenas nomes únicos ou aproveitar o que já foi declarado.
+- **admin/gerador.html + gerador.js + gerador.css:** Fase 5 — Gerador de Conteúdo com Claude API. Usa `API_BASE` e `getToken()` herdados de `admin-auth.js` (sem redeclarar). Inicialização via IIFE síncrona (scripts no fim do body — DOMContentLoaded desnecessário).
+- **generatorController.js:** model `claude-sonnet-4-6`, prompt caching no system prompt, 5 formatos, custo USD calculado e salvo na tabela `generations`. Rate limits: 10/h + 30/dia por IP (separado do loginLimiter).
+- **ANTHROPIC_API_KEY:** NUNCA no repo. Adicionar ao `start.sh` no servidor com `echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> start.sh`.
+- **schema-v5.sql:** tabela `generations` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
+- **Gerador — deploy manual:** SCP `server/controllers/generatorController.js` + `server/db/schema-v5.sql` → servidor; aplicar schema; adicionar ANTHROPIC_API_KEY ao start.sh; reiniciar PM2 com sequência segura.
 
 ## Paths críticos
 
@@ -165,7 +172,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `server/controllers/uploadController.js` — upload Multer + Sharp WebP, escreve em public_html/assets/images/.
 - `admin/assets/js/admin-auth.js` — login/logout + redirect para galeria.html após autenticação.
 - `server/tests/unit/validators.test.js` — 13 testes Vitest (validadores).
-- `server/tests/api/*.test.js` — 27 testes Supertest (contratos de endpoint, inclui content.test.js).
+- `server/tests/unit/generator.test.js` — 7 testes Vitest (generatorController: validações + chamada Claude).
+- `server/tests/api/*.test.js` — 33 testes Supertest (contratos de endpoint, inclui generator.test.js).
+- `server/controllers/generatorController.js` — gera conteúdo via Claude API, persiste na tabela generations.
+- `server/db/schema-v5.sql` — tabela `generations` (Fase 5). Aplicar em produção antes do deploy do server/.
+- `admin/gerador.html` + `admin/assets/js/gerador.js` + `admin/assets/css/gerador.css` — Fase 5: UI do gerador.
+- `tests/e2e/gerador.spec.js` — 10 testes E2E com mock de rede para /api/admin/generate e /api/admin/generations.
 - `tests/e2e/backend.spec.js` — 4 testes E2E Playwright (fallback + admin).
 - `eslint.config.mjs` — configuração ESLint v10 (flat config).
 - `.github/workflows/ci.yml` — pipeline: lint + E2E + Lighthouse.

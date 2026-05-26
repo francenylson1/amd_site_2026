@@ -1,11 +1,11 @@
 # PRD — Product Requirements Document
 # Aluno Maker Digital
 
-**Versão:** 2.0
-**Data:** 2026-05-15
+**Versão:** 2.1
+**Data:** 2026-05-26 (atualizado — Fase 4.5 no roadmap, §7.12 Gerador, §7.13 Blog)
 **Responsável:** Professor Francenylson
 **E-mail:** francenylson@gmail.com
-**Status:** Proposta para validação
+**Status:** Em vigor
 
 ---
 
@@ -244,8 +244,8 @@ Cada feature abaixo é acompanhada de **Critérios de Aceite** no formato Gherki
 > Dado que estou na galeria, quando clico em uma categoria, então apenas cards dessa categoria permanecem visíveis em até 300ms, sem recarregar a página.
 
 ### 7.4 `escolas.html`
-- Mapa interativo (Google Maps API) com os 7 pontos de escola.
-- Cards: CEF 101, CEF 113, CEF 405, CEM 804, Colégio Militar, EC 401, Ed. Infantil.
+- Cards de escolas **renderizados dinamicamente** via `fetch('/api/schools')` — a lista é gerenciada no CMS (aba Escolas), não fixa no HTML. Hoje há 12 escolas cadastradas (CEF 101, 113, 206, 308, 405, CEM 804, EC 203, EC 401, Colégio Militar, Pinheirinho Roxo, CeD 104, CEF 106).
+- O mapa Google Maps fica em `contato.html` (não em escolas.html).
 
 ### 7.5 `eventos.html`
 - Galeria de eventos com lightbox.
@@ -287,8 +287,50 @@ Cada feature abaixo é acompanhada de **Critérios de Aceite** no formato Gherki
 ### 7.10 `animacoes.html` — Módulo GPIO (ver §8)
 
 ### 7.11 `/admin/` — Painel Administrativo (Fase 4+)
-- Login JWT.
-- Dashboard, gerador de conteúdo (Claude API), publicador (Instagram/TikTok), gerenciador de galeria, agendamentos, produtos.
+- Login JWT (`login.html` → `galeria.html`).
+- **CMS (Fase 4.5, ✅):** `galeria.html` com 6 abas — Eventos, Projetos, Escolas, Cursos, Sobre, Configurações (CRUD + upload WebP).
+- **Gerador (Fase 5):** `gerador.html` (ver §7.12).
+- **Blog (Fase 5.5):** CRUD de posts em aba do `galeria.html` (ver §7.13).
+- **Fase 6 (planejado):** publicador (Instagram/TikTok), produtos.
+
+### 7.12 `admin/gerador.html` — Gerador de Conteúdo (Fase 5)
+
+Ferramenta que **gera texto** (rascunho) com a Claude API para redes sociais e blog. **Não publica** — publicação automática é a Fase 6.
+
+- **Entrada híbrida:** selecionar um item do banco (projeto/evento/curso) **ou** digitar um tema livre.
+- **5 formatos selecionáveis:** Instagram (legenda + hashtags), TikTok (roteiro/legenda), X/Twitter (thread), WhatsApp (mensagem), Blog (post longo).
+- **Seletor de fotos:** anexar fotos do banco ou enviar novas. Sem vídeo no site.
+- **Histórico + custo:** cada geração é salva; badge de custo do mês + alerta > US$5/mês.
+- Diretriz crítica: todo texto respeita o §3 (esperança, protagonismo, nunca conotação negativa ao público).
+
+**CA-GER-01 — Geração:**
+> Dado que selecionei um item (ou digitei um tema) e marquei um ou mais formatos, quando clico em "Gerar", então recebo o texto de cada formato em card separado em até 30s, com botão de copiar.
+
+**CA-GER-02 — Histórico e custo:**
+> Dado que gerei conteúdo, quando abro o histórico, então vejo as gerações anteriores com data e custo, e o custo acumulado do mês fica visível (com alerta acima de US$5).
+
+**CA-GER-03 — Limite e falha:**
+> Dado que excedi 10 gerações na hora (ou 30 no dia), quando tento gerar, então sou bloqueado com mensagem clara; e se a API falhar, vejo mensagem de erro sem que o painel quebre.
+
+**CA-GER-04 — Acesso:**
+> Dado que não estou autenticado, quando tento acessar o gerador ou o endpoint, então sou impedido (401/redirect ao login).
+
+### 7.13 `blog.html` — Blog do Site (Fase 5.5)
+
+Seção de blog pública, destino do formato "blog longo" do Gerador, alimentada pelo CMS.
+
+- Listagem de posts publicados + página de post individual (por slug).
+- Status `rascunho`/`publicado` controlado no admin; rascunho não aparece no site público.
+- **Vídeo:** apenas embed do YouTube com click-to-load (nunca self-hosted — protege o Lighthouse).
+
+**CA-BLOG-01 — Listagem:**
+> Dado que existem posts publicados, quando acesso `blog.html`, então vejo a lista dos publicados (rascunhos não aparecem) com título, resumo e capa.
+
+**CA-BLOG-02 — Post:**
+> Dado que clico em um post, quando a página abre, então vejo o conteúdo completo pelo slug; se houver vídeo, ele carrega apenas ao clicar na miniatura.
+
+**CA-BLOG-03 — Rascunho do Gerador:**
+> Dado que gerei um "blog longo", quando salvo como rascunho, então ele aparece editável no admin com status `rascunho`, pronto para revisão e publicação.
 
 ---
 
@@ -484,7 +526,9 @@ Resumo executivo — detalhamento por fase no `WORKFLOW_AlunoMakerDigital.md`.
 | **Fase 2** | 8 páginas públicas restantes | Site institucional completo (sem backend) |
 | **Fase 3** | Módulo GPIO (Animações) | Ferramenta de animação no ar |
 | **Fase 4** | Backend + Admin mínimo + Auth | Formulários gravam em MySQL, admin funcional |
-| **Fase 5** | Gerador de Conteúdo com Claude API | Painel com IA generativa |
+| **Fase 4.5** | Gerenciador de Conteúdo (CMS 6 abas) | Conteúdo dinâmico editável sem deploy (✅ em produção) |
+| **Fase 5** | Gerador de Conteúdo com Claude API | Painel gera texto (rascunho) para redes e blog |
+| **Fase 5.5** | Blog do site | Seção de blog pública, alimentada pelo CMS/Gerador |
 | **Fase 6** | Publicador redes sociais + Loja | Plataforma completa com pagamentos |
 
 **Garantia incremental:** ao final de cada fase, o sistema das fases anteriores continua 100% funcional em produção.
@@ -526,6 +570,6 @@ Resumo executivo — detalhamento por fase no `WORKFLOW_AlunoMakerDigital.md`.
 
 ---
 
-*PRD v2.0 — Aluno Maker Digital*
+*PRD v2.1 — Aluno Maker Digital*
 *Desenvolvido com suporte de Claude AI (Anthropic) — Opus 4.7*
 *© 2018–2026 — Todos os direitos reservados*

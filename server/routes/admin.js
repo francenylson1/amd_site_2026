@@ -1,6 +1,6 @@
 import express from 'express';
 import multer  from 'multer';
-import { loginLimiter } from '../middleware/rateLimiter.js';
+import { loginLimiter, generateHourLimiter, generateDayLimiter } from '../middleware/rateLimiter.js';
 import { requireAuth }  from '../middleware/auth.js';
 import { login }        from '../controllers/adminController.js';
 import { uploadImage }  from '../controllers/uploadController.js';
@@ -23,6 +23,7 @@ import {
   adminListAboutPhotos, createAboutPhoto, updateAboutPhoto, deleteAboutPhoto,
 } from '../controllers/aboutController.js';
 import { listConfig, updateConfig } from '../controllers/configController.js';
+import { generate, listGenerations } from '../controllers/generatorController.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -77,5 +78,9 @@ router.delete('/about-photos/:id', requireAuth, deleteAboutPhoto);
 // Configurações do site
 router.get('/config', requireAuth, listConfig);
 router.put('/config', requireAuth, updateConfig);
+
+// Gerador de conteúdo (Fase 5)
+router.post('/generate',    requireAuth, generateHourLimiter, generateDayLimiter, generate);
+router.get('/generations',  requireAuth, listGenerations);
 
 export default router;
