@@ -1,10 +1,10 @@
 # Especificação Técnica — Aluno Maker Digital
 
-**Versão:** 2.1
-**Data:** 2026-05-23 (atualizado — §11.4 infraestrutura Hostinger)
+**Versão:** 2.2
+**Data:** 2026-05-26 (atualizado — alinhamento ao código real + spec do Gerador/Blog)
 **Repositório de trabalho:** `C:\Users\User\Desktop\amd_site_2026`
-**Documento companheiro:** `PRD_AlunoMakerDigital.md` v2.0, `WORKFLOW_AlunoMakerDigital.md` v1.0
-**Status:** Proposta para validação
+**Documento companheiro:** `PRD_AlunoMakerDigital.md` v2.1, `WORKFLOW_AlunoMakerDigital.md` v1.1
+**Status:** Em vigor
 
 ---
 
@@ -97,12 +97,14 @@
 | JWT (jsonwebtoken) | v9 | Autenticação |
 | bcrypt | v5 | Hash de senhas |
 | Multer | v1 | Upload de arquivos |
+| Sharp | v0.33 | Processamento de imagem (upload → WebP, `.rotate()` EXIF) |
 | Nodemailer | v6 | Envio de e-mails via Brevo SMTP |
 | @anthropic-ai/sdk | latest | Geração de conteúdo (Fase 5) |
 | dotenv | v16 | Variáveis de ambiente |
 | express-rate-limit | v7 | Rate limiting |
-| express-validator | v7 | Validação de inputs |
 | helmet | v7 | Headers de segurança |
+
+> **Validação de inputs:** feita por validadores **custom** em `server/middleware/validate.js` (`isValidEmail`, `isValidPhone`, `isValidDate`, `isFutureOrToday`). O projeto **não** usa `express-validator`.
 
 ### 2.3 Ferramentas de Desenvolvimento e Testes (devDependencies)
 
@@ -179,20 +181,23 @@ amd_site_2026/
 │   └── videos/
 │
 ├── admin/                       ← Fase 4+
-│   ├── index.html
-│   ├── login.html
-│   ├── gerador.html
-│   ├── publicador.html
-│   ├── galeria.html
-│   ├── produtos.html
+│   ├── index.html               ← existe (redirect → galeria.html)
+│   ├── login.html               ← existe
+│   ├── galeria.html             ← existe (CMS 6 abas — Fase 4.5)
+│   ├── gerador.html             ← Fase 5 (a criar)
+│   ├── blog (aba em galeria)    ← Fase 5.5 (a criar)
+│   ├── publicador.html          ← Fase 6 (planejado)
+│   ├── produtos.html            ← Fase 6 (planejado)
 │   └── assets/
 │
 ├── server/                      ← Fase 4+
-│   ├── server.js
-│   ├── routes/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── db/
+│   ├── index.js                 ← entry point (ESM)
+│   ├── routes/                  ← api.js, admin.js, content.js
+│   ├── controllers/             ← + generatorController.js (F5), blogController.js (F5.5)
+│   ├── middleware/              ← validate.js, auth.js, rateLimiter.js
+│   ├── db/                      ← schema*.sql (até schema-v6.sql)
+│   ├── services/                ← emailService.js
+│   ├── tests/                   ← unit/ + api/
 │   └── package.json
 │
 ├── tests/                       ← Estratégia de testes
@@ -224,7 +229,7 @@ amd_site_2026/
 ├── .env.example
 ├── .gitignore
 ├── .prettierrc
-├── .eslintrc.json
+├── eslint.config.mjs            ← flat config (ESLint v10; .eslintrc.json não suportado)
 ├── sitemap.xml
 ├── robots.txt
 └── manifest.json
@@ -774,6 +779,8 @@ Tag v* em main:
 4. Smoke automatizado + 1 smoke manual em Chrome desktop.
 5. Em caso de falha: rollback restaura o snapshot anterior.
 
+> **Detalhes reais da automação em §11.4.** O deploy roda via GitHub Actions (FTP-Deploy-Action para estáticos + passo `appleboy/ssh-action` que regrava `api/.htaccess`). O FTP **não** copia `server/` nem dotfiles em subpastas de forma confiável — o backend Node.js vai por **SCP manual** + restart do PM2.
+
 ### 11.4 Infraestrutura Hostinger — Paths e Convenções (atualizado 2026-05-23)
 
 #### Paths reais no servidor
@@ -892,9 +899,9 @@ Para evitar que código de fases futuras quebre fases já em produção:
 **Backend (Fase 4+):**
 - bcrypt com 12 rounds para senhas.
 - JWT com expiração de 8h, renovável.
-- `express-rate-limit`: 5 tentativas / 15min em `/api/admin/login`.
+- `express-rate-limit`: 5 tentativas / 15min em `/api/admin/login`; 10/h e 30/dia no `/api/admin/generate` (Fase 5).
 - `helmet` com headers de segurança padrão.
-- `express-validator` em todos os inputs.
+- Validação de inputs via validadores **custom** em `server/middleware/validate.js` (não `express-validator`).
 - Upload restrito a MIME `image/*` e `video/mp4` via Multer.
 - Segredos exclusivamente via `.env` (nunca no código).
 - `.env` no `.gitignore` (regra inviolável).
@@ -912,8 +919,11 @@ Para evitar que código de fases futuras quebre fases já em produção:
 | POST | /api/admin/login | Autenticação JWT | 4 |
 | GET | /api/admin/contacts | Lista contatos (auth) | 4 |
 | GET | /api/admin/visits | Lista agendamentos (auth) | 4 |
-| POST | /api/admin/generate | Claude API | 5 |
-| GET | /api/admin/generations | Histórico | 5 |
+| POST | /api/admin/generate | Gerador Claude API (entrada híbrida, 5 formatos) | 5 |
+| GET | /api/admin/generations | Histórico de gerações + custo | 5 |
+| GET | /api/posts | Lista posts publicados (público) | 5.5 |
+| GET | /api/posts/:slug | Post por slug (público) | 5.5 |
+| GET/POST/PUT/DELETE | /api/admin/posts | CRUD de posts do blog (auth) | 5.5 |
 | POST | /api/admin/publish | Publica em IG/TikTok | 6 |
 | GET/POST/PUT | /api/admin/products | CRUD de produtos | 6 |
 | POST | /api/payments/checkout | Mercado Pago | 6 |
@@ -961,13 +971,34 @@ CREATE TABLE products (
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Fase 5 — criada via schema-v5.sql
 CREATE TABLE generations (
   id          INT AUTO_INCREMENT PRIMARY KEY,
-  theme       VARCHAR(255),
-  type        VARCHAR(50),
-  output_json JSON,
+  source      ENUM('item','theme') NOT NULL,   -- entrada híbrida
+  item_type   VARCHAR(20) NULL,                 -- 'projeto'|'evento'|'curso' (se source=item)
+  item_id     INT NULL,
+  theme       VARCHAR(255) NULL,                -- tema livre (se source=theme)
+  format      VARCHAR(20) NOT NULL,             -- instagram|tiktok|twitter|whatsapp|blog
+  output      MEDIUMTEXT,
+  tokens_in   INT,
+  tokens_out  INT,
+  cached      BOOLEAN DEFAULT FALSE,
   cost_usd    DECIMAL(8,4),
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Fase 5.5 — criada via schema-v6.sql
+CREATE TABLE blog_posts (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  title           VARCHAR(200) NOT NULL,
+  slug            VARCHAR(220) UNIQUE NOT NULL,
+  excerpt         VARCHAR(300),
+  body            MEDIUMTEXT NOT NULL,
+  cover_image     VARCHAR(500),
+  video_embed_url VARCHAR(500) NULL,            -- YouTube (click-to-load); nunca self-hosted
+  status          ENUM('draft','published') DEFAULT 'draft',
+  published_at    TIMESTAMP NULL,
+  created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE feature_flags (
@@ -977,6 +1008,50 @@ CREATE TABLE feature_flags (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
+
+> **Tabelas já em produção (Fase 4.5), não repetidas acima:** `events`, `event_photos`, `projects`, `schools`, `courses` (schema-v2), `about_photos` (schema-v3), `site_config` (schema-v4 + patch1). Ver `CLAUDE.md` para o mapa completo de schemas.
+
+### 14.3 Gerador de Conteúdo — Spec Detalhada (Fase 5)
+
+Ferramenta no admin que **gera texto** (rascunho) via Claude API. **Não publica** — publicação é Fase 6.
+
+**Endpoint:**
+```
+POST /api/admin/generate    (Bearer JWT)
+Body: {
+  source: "item" | "theme",
+  item_type?: "projeto" | "evento" | "curso",   // se source=item
+  item_id?: number,                              // se source=item
+  theme?: string,                                // se source=theme
+  formats: ("instagram"|"tiktok"|"twitter"|"whatsapp"|"blog")[],
+  photo_ids?: number[],                          // seletor de fotos (referência)
+  extra_notes?: string
+}
+Response: { results: [{ format, content, tokens_in, tokens_out, cached, cost_usd }] }
+
+GET /api/admin/generations   (Bearer JWT)  → histórico + custo do mês
+```
+
+**`generatorController.js` — regras:**
+- **System prompt fixo** com contexto AMD (missão, público-alvo em vulnerabilidade, tom de voz, diretrizes do PRD §3) + `cache_control: { type: "ephemeral" }` para prompt caching.
+- **Entrada híbrida:** `source=item` busca o registro no banco (título, descrição, tags); `source=theme` usa o texto livre.
+- **5 formatos** com instruções próprias: Instagram (legenda + ~30 hashtags), TikTok (roteiro/legenda 30–60s), X/Twitter (thread 3–5 tweets), WhatsApp (mensagem curta), Blog (post longo).
+- **Seletor de fotos:** referencia fotos do banco / upload (Sharp → WebP). **Sem vídeo no site.**
+- Persiste cada geração em `generations` com `cost_usd`, `tokens_in/out`, `cached`.
+- **Modelo:** `claude-sonnet-4-6`. **Rate limit:** 10/h e 30/dia por IP (limiter separado).
+- **Fallback:** falha da API → mensagem clara, sem quebrar o painel.
+
+**Critérios de aceite:** ver PRD §7.12. **Diretriz crítica:** todo texto deve respeitar o PRD §3 (esperança, protagonismo, nunca conotação negativa ao público).
+
+### 14.4 Blog — Spec Detalhada (Fase 5.5)
+
+Destino do formato "blog longo". Página pública dinâmica + CRUD no admin.
+
+- **Tabela:** `blog_posts` (ver §14.2).
+- **Endpoints públicos:** `GET /api/posts` (apenas `published`), `GET /api/posts/:slug`. **Admin:** CRUD em `/api/admin/posts`.
+- **Front:** `blog.html` (listagem) + página de post; renderização via `fetch` (mesmo padrão de projetos/eventos), vanilla JS.
+- **Vídeo:** **somente embed do YouTube com click-to-load** (miniatura → player só ao clique). **Nunca self-hosted** — protege o Performance Budget (§12: total ≤ 1 MB, Lighthouse Perf ≥ 85, que é gate).
+- **Integração com o Gerador:** "blog longo" salvo como `status='draft'`, editável no admin antes de publicar.
 
 ---
 
@@ -1001,9 +1076,9 @@ CREATE TABLE feature_flags (
 - Sem dependências npm em produção front (apenas devDependencies).
 - Imports/Exports ES modules quando possível.
 
-**Configurações sugeridas:**
+**Configurações reais:**
 - `.prettierrc`: `{ "singleQuote": true, "semi": true, "printWidth": 100 }`.
-- `.eslintrc.json`: `{ "extends": ["eslint:recommended"], "env": { "browser": true, "es2022": true } }`.
+- `eslint.config.mjs`: **flat config** (ESLint v10 não suporta `.eslintrc.json`). Stylelint exclui `bundle.min.css` (gerado).
 
 ---
 
@@ -1022,6 +1097,11 @@ DB_PORT=3306
 DB_NAME=alunomakerdigital
 DB_USER=
 DB_PASS=
+# Hostinger: conexão só via socket Unix local. Quando setado, connection.js usa socketPath.
+DB_SOCKET=
+
+# Upload de imagens (sobrescreve o destino padrão public_html/assets/images/)
+IMAGES_DIR=
 
 # JWT
 JWT_SECRET=
@@ -1052,9 +1132,11 @@ MP_PUBLIC_KEY=
 - `.env` real NUNCA versionado.
 - Cada ambiente (dev/staging/produção) tem seu `.env` próprio.
 - Segredos rotacionados a cada 6 meses ou ao detectar exposição.
+- **Produção (Hostinger):** as variáveis são exportadas pelo `start.sh` (wrapper bash do PM2), que fica APENAS no servidor. A `ANTHROPIC_API_KEY` (Fase 5) é adicionada lá via `echo` linha a linha (nunca heredoc, nunca no repo).
+- Valores com `#` precisam de aspas duplas (ex.: `DB_PASS="Amd@2018#2020"`), senão o dotenv trata `#` como comentário.
 
 ---
 
-*Spec Técnica v2.0 — Aluno Maker Digital*
+*Spec Técnica v2.2 — Aluno Maker Digital*
 *Desenvolvido com suporte de Claude AI (Anthropic) — Opus 4.7*
 *© 2018–2026 — Todos os direitos reservados*

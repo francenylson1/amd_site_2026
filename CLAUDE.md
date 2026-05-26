@@ -6,9 +6,9 @@
 
 Os três documentos abaixo, na raiz, são autoritativos. Em conflito, eles vencem.
 
-1. **`PRD_AlunoMakerDigital.md`** (v2.0) — o que o produto é, para quem, critérios de aceite Gherkin por feature, métricas.
-2. **`SPEC_TECNICA_AlunoMakerDigital.md`** (v2.0) — como implementar: stack, estrutura, módulo GPIO, estratégia de testes, CI/CD, segurança.
-3. **`WORKFLOW_AlunoMakerDigital.md`** (v1.0) — em que ordem: 7 fases (0 a 6), DoD por fase, procedimentos de deploy/rollback.
+1. **`PRD_AlunoMakerDigital.md`** (v2.1) — o que o produto é, para quem, critérios de aceite Gherkin por feature, métricas.
+2. **`SPEC_TECNICA_AlunoMakerDigital.md`** (v2.2) — como implementar: stack, estrutura, módulo GPIO, estratégia de testes, CI/CD, segurança.
+3. **`WORKFLOW_AlunoMakerDigital.md`** (v1.1) — em que ordem: fases 0 a 6 (inclui 4.5 CMS e 5.5 Blog), DoD por fase, procedimentos de deploy/rollback.
 
 Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, não fonte de verdade.
 
@@ -29,8 +29,9 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
 | 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS 6 abas + site_config. Testado e validado em produção (2026-05-22) |
-| 5 — Gerador com Claude API | ⏳ | — | Próxima fase |
-| 6 — Publicador redes + Loja | ⏳ | — | — |
+| 5 — Gerador com Claude API | ⏳ Próxima | v2.6.0 | Entrada híbrida (item/tema), 5 formatos, seletor de fotos, generations (schema-v5), rate 10/h+30/dia. Spec única em NEXT_SESSION + PRD §7.12 + SPEC §14.3 |
+| 5.5 — Blog do site | ⏳ | v2.7.0 | Destino do "blog longo". blog_posts (schema-v6), vídeo só via embed YouTube. PRD §7.13 + SPEC §14.4 |
+| 6 — Publicador redes + Loja | ⏳ | v3.0.0 | Publicação automática nas redes + e-commerce |
 
 ## Comandos úteis
 

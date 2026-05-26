@@ -10,111 +10,76 @@ Leia o CLAUDE.md e este NEXT_SESSION.md inteiros antes de qualquer ação.
 TAREFA: Implementar a Fase 5 — Gerador de Conteúdo com Claude API.
 Usar o skill /claude-api para implementação.
 Criar branch feature/fase-5-gerador a partir de main.
-Seguir a análise de ajustes e a especificação completa abaixo.
+A especificação abaixo é única e já reconciliada com PRD §7.12, SPEC §14.3 e WORKFLOW Fase 5.
 ```
 
 ---
 
-## Estado atual (2026-05-23)
+## Estado atual (2026-05-26)
 
 | Fase | Status | Notas |
 |---|---|---|
 | 0 a 4.5 | ✅ Concluídas e em produção | CMS 6 abas validado em produção |
-| **5 — Gerador Claude API** | **⏳ Próxima** | — |
-| 6 — Publicador redes + Loja | ⏳ | — |
+| **5 — Gerador Claude API** | **⏳ Próxima** | Spec reconciliada (este doc) |
+| 5.5 — Blog do site | ⏳ Depois da 5 | Destino do "blog longo" |
+| 6 — Publicador redes + Loja | ⏳ | Publicação automática nas redes |
 
-### O que foi feito na sessão 2026-05-23
+### Revisão documental (sessão 2026-05-26)
 
-- **TikTok e X:** campos `tiktok_handle` e `x_handle` adicionados ao `site_config` (DB + admin aba Configurações + `contato.html` seção de contato + rodapé). SQL aplicado em produção via `schema-v4-patch1.sql`.
-- **Fix crítico — CORS/404 no login:** `api/.htaccess` não estava no servidor (FTP não sobe dotfiles em subpastas). Arquivo copiado manualmente via SCP. `deploy.yml` corrigido com passo `appleboy/ssh-action` que regrava o `.htaccess` após cada deploy.
-- **Secrets SSH no GitHub Actions:** `SSH_HOST`, `SSH_USER`, `SSH_PORT`, `SSH_PRIVATE_KEY` adicionados — o passo SSH do `deploy.yml` agora funciona automaticamente.
-- **Login do admin funciona** em `alunomakerdigital.com.br/admin/login.html`.
+Os 4 documentos canônicos + CLAUDE.md foram **reconciliados** antes da Fase 5, porque divergiam entre si e do código real (causa das features esquecidas nas fases anteriores). Principais correções: Fase 4.5 inserida no PRD/WORKFLOW; versões alinhadas (PRD v2.1, SPEC v2.2, WORKFLOW v1.1); stack real (sharp sim, express-validator não); entry `server/index.js`; deploy via GitHub Actions+SSH; e a **Fase 5 unificada** (este doc bate com PRD/SPEC/WORKFLOW).
 
 ---
 
-## Análise de ajustes antes de iniciar a Fase 5
+## Decisões travadas (confirmadas com o PO)
 
-### Pontos a decidir antes de implementar
-
-**1. Onde o gerador fica no admin?**
-- Opção A: Nova página separada `admin/gerador.html` com link na sidebar do `galeria.html`
-- Opção B: Nova aba dentro de `galeria.html` (consistente com o padrão atual)
-- **Recomendação:** Opção A — o gerador tem UX diferente das abas CRUD e merece página própria.
-
-**2. Quais formatos de conteúdo gerar?**
-- Post Instagram (legenda + sugestão de hashtags)
-- Legenda TikTok (mais curta, tom jovem)
-- Thread X/Twitter (sequência de tweets)
-- **Pode expandir na Fase 6** (publicador direto nas redes)
-
-**3. O prompt base do Claude — o que incluir?**
-- Contexto do projeto AMD (missão, público-alvo, tom de voz)
-- Dados do item selecionado (título, descrição, tags, escola parceira)
-- Instruções por formato
-- **Cache:** o system prompt com contexto AMD é fixo → ideal para prompt caching
-
-**4. Segurança da ANTHROPIC_API_KEY**
-- Chave fica APENAS no `start.sh` do servidor (nunca no repo)
-- Variável já carregada pelo PM2 via `start.sh`
-- Adicionar via SSH com `echo` linha a linha (nunca heredoc)
-
-**5. Rate limiting**
-- Gerar conteúdo é caro em tokens — limitar a 10 req/hora por IP (não por minuto)
-- Separar do `loginLimiter` existente
-
-**6. Feedback ao usuário durante geração**
-- A API Claude pode demorar 5-15s
-- Mostrar spinner/skeleton durante a chamada
-- Exibir tokens usados e se houve cache hit (informação útil para o Prof. Fran controlar custos)
-
-### Decisões técnicas confirmadas (do SPEC)
-- Modelo: `claude-sonnet-4-6`
-- Prompt caching: `cache_control: { type: "ephemeral" }` no system prompt
-- SDK: `@anthropic-ai/sdk` (instalar no server/)
-- Rate limit: 10 req/hora por IP
+- **Entrada híbrida:** o usuário escolhe a cada uso — selecionar item do banco (projeto/evento/curso) **ou** digitar tema livre.
+- **5 formatos selecionáveis:** Instagram (legenda + hashtags), TikTok (roteiro/legenda), X/Twitter (thread), WhatsApp (mensagem), Blog (post longo).
+- **Seletor de fotos:** anexar fotos do banco ou enviar novas (Sharp → WebP). **Sem vídeo no site** (vídeo vai para as redes na Fase 6).
+- **Histórico + custo:** tabela `generations` (`schema-v5.sql`); persistir `cost_usd`, `tokens_in/out`, `cached`; badge de custo do mês + alerta > US$5/mês.
+- **Rate limit:** 10/hora **e** 30/dia por IP (limiter separado do `loginLimiter`).
+- **Modelo:** `claude-sonnet-4-6` via `@anthropic-ai/sdk`, com prompt caching (`cache_control: ephemeral`) no system prompt (contexto AMD fixo).
+- **Segurança:** `ANTHROPIC_API_KEY` apenas no `start.sh` do servidor (nunca no repo).
+- **Posição no admin:** página separada `admin/gerador.html` com link na sidebar do `galeria.html`.
+- **Publicação nas redes:** Fase 6 (a Fase 5 só gera/salva).
 
 ---
 
 ## Fase 5 — Especificação completa
 
 ### Funcionalidade
-No painel admin, nova página **"Gerador"** (`admin/gerador.html`) onde o Prof. Fran:
-1. Seleciona o tipo (Projeto ou Evento) e o item do banco
-2. Seleciona o formato (Post Instagram, Legenda TikTok, Thread X/Twitter)
-3. Opcionalmente adiciona instruções extras ("foque nos alunos do 6º ano", "tom mais formal")
-4. Clica "Gerar" → Claude cria o texto pronto para publicar
-5. Pode copiar com um clique ou regenerar com novas instruções
+Nova página **"Gerador"** (`admin/gerador.html`) onde o Prof. Fran:
+1. Escolhe a **fonte**: item do banco (seleciona tipo + item) **ou** tema livre (digita).
+2. Marca um ou mais **formatos** (Instagram, TikTok, X, WhatsApp, Blog).
+3. Opcionalmente anexa **fotos** (do banco ou upload) e adiciona instruções extras.
+4. Clica "Gerar" → Claude cria o texto de cada formato → exibido em cards, com botão copiar.
+5. Vê tokens usados / cache hit e o custo; consulta o **histórico**.
 
 ### Arquivos a criar
+**Backend:** `server/db/schema-v5.sql` (tabela `generations`), `server/controllers/generatorController.js`
+**Frontend admin:** `admin/gerador.html`, `admin/assets/js/gerador.js`, `admin/assets/css/gerador.css`
 
-**Backend:**
+### Arquivos a modificar
+`server/routes/admin.js` (rotas + novo rate limiter 10/h e 30/dia), `admin/galeria.html` (link "Gerador" na sidebar)
+
+### Endpoints
 ```
-server/controllers/generatorController.js
+POST /api/admin/generate    (Bearer JWT)
+Body: {
+  source: "item" | "theme",
+  item_type?: "projeto"|"evento"|"curso",   // se source=item
+  item_id?: number,                          // se source=item
+  theme?: string,                            // se source=theme
+  formats: ("instagram"|"tiktok"|"twitter"|"whatsapp"|"blog")[],
+  photo_ids?: number[],
+  extra_notes?: string
+}
+Response: { results: [{ format, content, tokens_in, tokens_out, cached, cost_usd }] }
+
+GET /api/admin/generations  (Bearer JWT)  → histórico + custo do mês
 ```
 
-**Modificar:**
-```
-server/routes/admin.js   ← adicionar POST /api/admin/generate + rateLimiter
-```
-
-**Frontend admin:**
-```
-admin/gerador.html
-admin/assets/js/gerador.js
-admin/assets/css/gerador.css
-```
-
-**Modificar:**
-```
-admin/galeria.html   ← adicionar link "Gerador" na sidebar
-```
-
-### Endpoint
-```
-POST /api/admin/generate    (Bearer JWT obrigatório)
-Body:  { type: "projeto"|"evento", item_id: number, format: "instagram"|"tiktok"|"twitter", extra_notes?: string }
-Response: { content: string, tokens_in: number, tokens_out: number, cached: boolean }
-```
+### generations (schema-v5.sql) — ver SPEC §14.2 para o DDL completo
+Colunas: `source`, `item_type`, `item_id`, `theme`, `format`, `output`, `tokens_in`, `tokens_out`, `cached`, `cost_usd`, `created_at`.
 
 ### generatorController.js — estrutura
 ```javascript
@@ -122,41 +87,55 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const SYSTEM_PROMPT = `Você é o assistente de marketing do projeto Aluno Maker Digital...
-[contexto AMD completo aqui]`;
+// System prompt FIXO (contexto AMD + diretrizes do PRD §3) → prompt caching
+const SYSTEM_PROMPT = `Você é o assistente de marketing do Aluno Maker Digital...`;
 
 const FORMAT_INSTRUCTIONS = {
-  instagram: `Crie uma legenda para Instagram...`,
-  tiktok: `Crie uma legenda para TikTok...`,
-  twitter: `Crie uma thread para X/Twitter com 3 a 5 tweets...`,
+  instagram: `Legenda para Instagram + ~30 hashtags...`,
+  tiktok:    `Roteiro/legenda para TikTok 30–60s, tom jovem...`,
+  twitter:   `Thread para X com 3 a 5 tweets...`,
+  whatsapp:  `Mensagem curta de WhatsApp...`,
+  blog:      `Post de blog longo (título + corpo)...`,
 };
 
 export async function generate(req, res) {
-  const { type, item_id, format, extra_notes } = req.body;
-  // 1. Buscar item do banco (projeto ou evento)
-  // 2. Montar user prompt com dados do item
-  // 3. Chamar Claude API com prompt caching no system
-  // 4. Retornar { content, tokens_in, tokens_out, cached }
+  const { source, item_type, item_id, theme, formats, photo_ids, extra_notes } = req.body;
+  // 1. source=item → buscar registro no banco; source=theme → usar theme
+  // 2. Para cada formato: chamar Claude com system cacheado (cache_control: ephemeral)
+  // 3. Calcular cost_usd; persistir em generations
+  // 4. Retornar { results: [...] }
 }
-```
 
-### Instalação local
-```bash
-cd server && npm install @anthropic-ai/sdk
+export async function listGenerations(req, res) { /* histórico + custo do mês */ }
 ```
+**Diretriz crítica:** todo texto deve respeitar o PRD §3 (esperança, protagonismo, nunca conotação negativa ao público em vulnerabilidade).
 
 ### Ordem de implementação
-1. Criar branch `feature/fase-5-gerador` a partir de main
-2. `cd server && npm install @anthropic-ai/sdk`
-3. Criar `generatorController.js` com prompt caching
-4. Atualizar `server/routes/admin.js` (rota + rate limiter 10/hora)
-5. Criar `admin/gerador.html` + `gerador.js` + `gerador.css`
-6. Adicionar link "Gerador" na sidebar de `galeria.html`
-7. Testar localmente (`npm run server:dev` + `ANTHROPIC_API_KEY=sk-ant-... npm run server:dev`)
-8. Commit + PR
-9. Deploy via SCP (chave `~/.ssh/amd_deploy` já configurada)
-10. Adicionar `ANTHROPIC_API_KEY` ao `start.sh` no servidor via echo linha a linha
-11. Reiniciar PM2 com sequência segura (ver CLAUDE.md)
+1. Criar branch `feature/fase-5-gerador` a partir de main.
+2. `cd server && npm install @anthropic-ai/sdk`.
+3. Criar `server/db/schema-v5.sql` e aplicar no MySQL (local e, no deploy, produção).
+4. Criar `generatorController.js` (entrada híbrida, 5 formatos, prompt caching, persistência + custo).
+5. Atualizar `server/routes/admin.js` (POST /generate, GET /generations, rate limiter 10/h e 30/dia).
+6. Criar `admin/gerador.html` + `gerador.js` + `gerador.css` (fonte item/tema, checkboxes de formato, seletor de fotos, spinner, tokens/cache, copiar, histórico, badge de custo).
+7. Adicionar link "Gerador" na sidebar de `galeria.html`.
+8. Testes: unit (mock Anthropic), API (Supertest), E2E (gerar → copiar → histórico).
+9. Testar localmente: `ANTHROPIC_API_KEY=sk-ant-... npm run server:dev`.
+10. Commit + PR.
+11. Deploy `server/` via SCP (chave `~/.ssh/amd_deploy`); aplicar `schema-v5.sql` no MySQL de produção.
+12. Adicionar `ANTHROPIC_API_KEY` ao `start.sh` no servidor via echo linha a linha (nunca heredoc).
+13. Reiniciar PM2 com a sequência segura (ver CLAUDE.md).
+
+---
+
+## Fase 5.5 — Blog do site (depois da Fase 5)
+
+Destino do "blog longo" gerado na Fase 5. Escopo fechado:
+- **Tabela** `blog_posts` (`schema-v6.sql`): título, slug, resumo, corpo, capa, `video_embed_url` (YouTube opcional), status (rascunho/publicado), datas.
+- **Backend:** `blogController.js` — público `GET /api/posts` (publicados) e `GET /api/posts/:slug`; admin CRUD `/api/admin/posts`.
+- **Front:** `blog.html` (listagem) + página de post; `assets/js/blog.js`; renderização via `fetch`.
+- **Admin:** aba de CRUD de posts em `galeria.html`; o Gerador salva "blog longo" como rascunho.
+- **Vídeo:** somente embed YouTube com click-to-load (nunca self-hosted — gate Lighthouse).
+- **Tag:** v2.7.0 (a Fase 5 é v2.6.0).
 
 ---
 
@@ -174,7 +153,7 @@ cd server && npm install @anthropic-ai/sdk
 SSH: ssh -p 65002 -i ~/.ssh/amd_deploy u562242543@82.112.247.253
 Admin CMS: alunomakerdigital.com.br/admin/login.html  →  francenylson@gmail.com / Amd@2018#2020
 MySQL: mysql -u u562242543_amd_user -p'Amd@2018#2020' -S /var/lib/mysql/mysql.sock u562242543_amd_db
-server/: ~/domains/api.alunomakerdigital.com.br/server/
+server/: ~/domains/api.alunomakerdigital.com.br/server/   (entry: index.js, ESM)
 public_html/: ~/domains/alunomakerdigital.com.br/public_html/
 
 PM2 restart seguro:
