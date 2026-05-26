@@ -29,7 +29,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
 | 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS 6 abas + site_config. Testado e validado em produção (2026-05-22) |
-| 5 — Gerador com Claude API | ⏳ Em andamento | v2.6.0 | Branch feature/fase-5-gerador. Backend + UI + testes prontos (116/116). Pendente: deploy SSH (schema-v5, server/, ANTHROPIC_API_KEY), PR para main. |
+| 5 — Gerador com Claude API | ✅ Concluída | v2.6.0 | PR #20 mergeado em main. 116/116 testes. Pendente: deploy SSH (schema-v5, server/, ANTHROPIC_API_KEY). |
 | 5.5 — Blog do site | ⏳ | v2.7.0 | Destino do "blog longo". blog_posts (schema-v6), vídeo só via embed YouTube. PRD §7.13 + SPEC §14.4 |
 | 6 — Publicador redes + Loja | ⏳ | v3.0.0 | Publicação automática nas redes + e-commerce |
 
