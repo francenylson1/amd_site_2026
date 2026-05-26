@@ -25,7 +25,7 @@
         if (window.AMD?.observeReveal) window.AMD.observeReveal(gallery);
       }
     }
-  } catch (_) {
+  } catch {
     // Fallback silencioso: HTML estático permanece visível
   }
 })();

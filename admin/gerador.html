@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de Conteúdo — Aluno Maker Digital</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/webp" href="../assets/images/logo/logo1.webp">
+  <link rel="stylesheet" href="assets/css/admin.css" />
+  <link rel="stylesheet" href="assets/css/gerador.css" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Navegação do painel">
+      <a href="index.html" class="admin-sidebar__logo">AMD Admin</a>
+      <nav class="admin-sidebar__nav" aria-label="Menu principal">
+        <a href="index.html" class="admin-sidebar__link">Dashboard</a>
+        <a href="galeria.html" class="admin-sidebar__link">Gerenciador de Conteúdo</a>
+        <a href="gerador.html" class="admin-sidebar__link admin-sidebar__link--active" aria-current="page">
+          Gerador de Conteúdo
+        </a>
+      </nav>
+      <div class="admin-sidebar__footer">
+        <button id="btn-logout" class="admin-sidebar__logout" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <div class="admin-main">
+      <header class="admin-header">
+        <h1 class="admin-header__title">✨ Gerador de Conteúdo com IA</h1>
+        <span id="admin-user" class="admin-header__user"></span>
+      </header>
+
+      <main class="admin-content">
+
+        <div class="gerador-layout">
+
+          <!-- ═══ Coluna esquerda: formulário ═══ -->
+          <div>
+
+            <!-- Fonte de conteúdo -->
+            <div class="gerador-card" style="margin-bottom:1rem;">
+              <h2 class="gerador-card__title">📌 Fonte de conteúdo</h2>
+
+              <div class="source-tabs" role="tablist">
+                <button class="source-tab source-tab--active" role="tab"
+                        data-source="item" aria-selected="true"
+                        aria-controls="source-item">
+                  🗂️ Item do banco
+                </button>
+                <button class="source-tab" role="tab"
+                        data-source="theme" aria-selected="false"
+                        aria-controls="source-theme">
+                  ✏️ Tema livre
+                </button>
+              </div>
+
+              <!-- Painel: Item do banco -->
+              <div id="source-item" class="source-panel source-panel--active" role="tabpanel">
+                <div class="gen-field">
+                  <label for="item-type">Tipo de conteúdo</label>
+                  <select id="item-type">
+                    <option value="">Selecione o tipo...</option>
+                    <option value="projeto">Projeto</option>
+                    <option value="evento">Evento</option>
+                    <option value="curso">Curso</option>
+                  </select>
+                </div>
+                <div class="gen-field">
+                  <label for="item-id">Item</label>
+                  <select id="item-id" disabled>
+                    <option value="">Selecione o tipo primeiro</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Painel: Tema livre -->
+              <div id="source-theme" class="source-panel" role="tabpanel">
+                <div class="gen-field">
+                  <label for="theme-input">Descreva o tema ou assunto</label>
+                  <textarea id="theme-input" rows="3"
+                    placeholder="Ex.: Inauguração do laboratório de robótica na Escola X, onde 30 alunos aprenderam a programar seu primeiro robô..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formatos -->
+            <div class="gerador-card" style="margin-bottom:1rem;">
+              <h2 class="gerador-card__title">📤 Formatos para gerar</h2>
+              <div class="format-grid" role="group" aria-label="Selecione os formatos">
+                <label class="format-check">
+                  <input type="checkbox" value="instagram">
+                  <span class="format-check__icon">📸</span> Instagram
+                </label>
+                <label class="format-check">
+                  <input type="checkbox" value="tiktok">
+                  <span class="format-check__icon">🎵</span> TikTok
+                </label>
+                <label class="format-check">
+                  <input type="checkbox" value="twitter">
+                  <span class="format-check__icon">🐦</span> X / Twitter
+                </label>
+                <label class="format-check">
+                  <input type="checkbox" value="whatsapp">
+                  <span class="format-check__icon">💬</span> WhatsApp
+                </label>
+                <label class="format-check">
+                  <input type="checkbox" value="blog">
+                  <span class="format-check__icon">📝</span> Blog
+                </label>
+              </div>
+            </div>
+
+            <!-- Instruções extras -->
+            <div class="gerador-card">
+              <h2 class="gerador-card__title">💡 Instruções extras (opcional)</h2>
+              <div class="gen-field">
+                <label for="extra-notes">Contexto adicional ou pedidos especiais</label>
+                <textarea id="extra-notes" rows="2"
+                  placeholder="Ex.: Mencionar que as inscrições estão abertas. Tom mais formal para o blog."></textarea>
+              </div>
+
+              <button class="btn-gerar" id="btn-gerar" type="button">
+                <span class="spinner" hidden></span>
+                <span class="btn-label">✨ Gerar conteúdo</span>
+              </button>
+              <div id="gen-alert" class="gen-alert gen-alert--error" hidden></div>
+            </div>
+
+          </div>
+
+          <!-- ═══ Coluna direita: resultados ═══ -->
+          <div>
+
+            <!-- Resultados gerados -->
+            <div class="gerador-card" style="margin-bottom:1rem;">
+              <div class="results-header">
+                <h2 class="gerador-card__title" style="margin:0;border:none;padding:0;">📋 Resultados</h2>
+                <span id="cost-badge" class="cost-badge">💰 Custo do mês: US$ 0.0000</span>
+              </div>
+
+              <div id="results-area" class="results-area">
+                <div class="results-empty">
+                  <span class="results-empty__icon">🤖</span>
+                  <span>Preencha o formulário e clique em "Gerar conteúdo".</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Histórico -->
+            <div class="gerador-card">
+              <h2 class="gerador-card__title">🕓 Histórico recente</h2>
+              <div id="history-list" class="history-list">
+                <p class="history-empty">Carregando...</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/admin-auth.js"></script>
+  <script src="assets/js/gerador.js"></script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var CACHE_KEY = 'amd_site_config';
-  var CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+  const CACHE_KEY = 'amd_site_config';
+  const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
 
   function buildHref(key, value) {
     if (key === 'instagram_handle') return 'https://instagram.com/' + value;
@@ -14,7 +14,7 @@
   function applyConfig(config) {
     // Atualiza textContent de elementos com data-config
     document.querySelectorAll('[data-config]').forEach(function (el) {
-      var key = el.dataset.config;
+      const key = el.dataset.config;
       if (config[key] !== undefined && config[key] !== null) {
         el.textContent = config[key];
       }
@@ -22,14 +22,14 @@
 
     // Atualiza href de elementos com data-config-href
     document.querySelectorAll('[data-config-href]').forEach(function (el) {
-      var key = el.dataset.configHref;
-      var value = config[key];
+      const key = el.dataset.configHref;
+      const value = config[key];
       if (!value) return;
 
       if (key === 'whatsapp_num') {
         // Preserva o ?text= original ao trocar só o número
-        var existing = el.getAttribute('href') || '';
-        var textMatch = existing.match(/(\?text=[^&]*)/);
+        const existing = el.getAttribute('href') || '';
+        const textMatch = existing.match(/(\?text=[^&]*)/);
         el.href = 'https://wa.me/' + value + (textMatch ? textMatch[1] : '');
       } else if (key === 'email_contato') {
         el.href = 'mailto:' + value;
@@ -43,9 +43,9 @@
     // Atualiza o botão WhatsApp flutuante criado por main.js (via setTimeout para garantir que já existe no DOM)
     if (config.whatsapp_num) {
       setTimeout(function () {
-        var floatBtn = document.querySelector('.whatsapp-float');
+        const floatBtn = document.querySelector('.whatsapp-float');
         if (floatBtn) {
-          var existing = floatBtn.getAttribute('href') || '';
+          const existing = floatBtn.getAttribute('href') || '';
           floatBtn.href = existing.replace(
             /https:\/\/wa\.me\/\d+/,
             'https://wa.me/' + config.whatsapp_num
@@ -58,15 +58,15 @@
   function loadConfig() {
     // Verifica cache no sessionStorage
     try {
-      var cached = sessionStorage.getItem(CACHE_KEY);
+      const cached = sessionStorage.getItem(CACHE_KEY);
       if (cached) {
-        var parsed = JSON.parse(cached);
+        const parsed = JSON.parse(cached);
         if (Date.now() - parsed.ts < CACHE_TTL) {
           applyConfig(parsed.data);
           return;
         }
       }
-    } catch (e) { /* ignora erro de parse ou storage */ }
+    } catch { /* ignora erro de parse ou storage */ }
 
     // Busca da API — falha silenciosa (mantém valores hardcoded)
     fetch('/api/config')
@@ -75,7 +75,7 @@
         if (!data) return;
         try {
           sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data }));
-        } catch (e) { /* storage cheio */ }
+        } catch { /* storage cheio */ }
         applyConfig(data);
       })
       .catch(function () { /* silencioso */ });
