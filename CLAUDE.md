@@ -29,8 +29,8 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 3 — Módulo GPIO (animações) | ✅ Concluída | v0.4.0 | animacoes.html + animations-gpio.js. 104/104 E2E + axe 11 páginas verdes |
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
 | 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS 6 abas + site_config. Testado e validado em produção (2026-05-22) |
-| 5 — Gerador com Claude API | ✅ Concluída | v2.6.0 | PR #20 mergeado em main. 116/116 testes. Pendente: deploy SSH (schema-v5, server/, ANTHROPIC_API_KEY). |
-| 5.5 — Blog do site | ✅ Concluída | v2.7.0 | blog.html + blog-post.html + 7ª aba admin. 197 testes. Pendente: deploy SSH (schema-v6, server/ + sanitize-html). |
+| 5 — Gerador com Claude API | ✅ Concluída | v2.6.0 | PR #20 mergeado. 116/116 testes. Deploy em produção (2026-05-27). |
+| 5.5 — Blog do site | ✅ Concluída | v2.7.0 | PR #21 mergeado. 197 testes. Deploy em produção (2026-05-27). schema-v6 aplicado. |
 | 6 — Publicador redes + Loja | ⏳ | v3.0.0 | Publicação automática nas redes + e-commerce |
 
 ## Comandos úteis
@@ -128,7 +128,7 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **schema-v5.sql:** tabela `generations` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
 - **Gerador — deploy manual:** SCP `server/controllers/generatorController.js` + `server/db/schema-v5.sql` → servidor; aplicar schema; adicionar ANTHROPIC_API_KEY ao start.sh; reiniciar PM2 com sequência segura.
 - **schema-v6.sql:** tabela `blog_posts` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
-- **Blog — deploy manual:** SCP `server/controllers/blogController.js` + `server/routes/content.js` + `server/routes/admin.js` + `server/package.json` → servidor; `npm install sanitize-html --save` no servidor; aplicar schema-v6; reiniciar PM2.
+- **Blog — deploy concluído (2026-05-27):** schema-v6 aplicado em produção, sanitize-html instalado no servidor, blogController.js + rotas deployados via SCP, PM2 reiniciado.
 - **sanitize-html:** dependência npm do server/ para sanitização de conteúdo HTML dos posts do blog. Instalar no servidor antes de reiniciar.
 - **serve strip .html (dev) + query string:** serve redireciona /blog-post.html?slug=X → /blog-post (sem query). Testes E2E usam /blog-post?slug=X (sem .html). Links no app usam blog-post.html?slug=X (produção sem rewriting). Blog posts em produção acessados via blog-post.html?slug=... funcionam normalmente.
 
