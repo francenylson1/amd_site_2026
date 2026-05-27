@@ -60,6 +60,10 @@
                   aria-selected="false" aria-controls="tab-sobre" id="btn-tab-sobre">
             <span>Sobre</span>
           </button>
+          <button class="cms-tab" role="tab" data-tab="blog"
+                  aria-selected="false" aria-controls="tab-blog" id="btn-tab-blog">
+            <span>Blog</span>
+          </button>
           <button class="cms-tab" role="tab" data-tab="config"
                   aria-selected="false" aria-controls="tab-config" id="btn-tab-config">
             <span>Configurações</span>
@@ -410,6 +414,68 @@
 
           <div id="lista-sobre" class="cms-list" aria-live="polite">
             <p class="cms-loading">Carregando fotos…</p>
+          </div>
+        </div>
+
+        <!-- Painel — Blog -->
+        <div id="tab-blog" class="cms-panel" role="tabpanel" aria-labelledby="btn-tab-blog" hidden>
+          <div class="cms-panel__toolbar">
+            <h2>Blog</h2>
+            <button class="btn-cms btn-cms--primary" id="btn-novo-post">+ Novo post</button>
+          </div>
+
+          <div id="form-post" class="cms-form" hidden>
+            <h3 id="form-post-titulo">Novo post</h3>
+            <input type="hidden" id="post-id" />
+            <div class="cms-form__row">
+              <label for="post-title">Título *</label>
+              <input type="text" id="post-title" required />
+            </div>
+            <div class="cms-form__row">
+              <label for="post-slug">Slug (URL)</label>
+              <input type="text" id="post-slug" placeholder="gerado-automaticamente-do-titulo" />
+            </div>
+            <div class="cms-form__row">
+              <label for="post-excerpt">Resumo</label>
+              <textarea id="post-excerpt" rows="2" maxlength="500" placeholder="Breve descrição exibida na listagem (máx. 500 caracteres)"></textarea>
+            </div>
+            <div class="cms-form__row">
+              <label for="post-content">Conteúdo * <span style="font-size:0.8rem;color:var(--text-muted)">(HTML permitido)</span></label>
+              <textarea id="post-content" rows="12" required placeholder="<p>Escreva o conteúdo do post aqui…</p>"></textarea>
+            </div>
+            <div class="cms-form__row">
+              <label>Imagem de capa</label>
+              <div class="cms-upload-group">
+                <label class="btn-cms btn-cms--ghost btn-cms--sm cms-file-label">
+                  📎 Escolher arquivo
+                  <input type="file" accept="image/*" id="post-cover-file" class="cms-file-hidden" data-folder="blog">
+                </label>
+                <input type="text" id="post-cover-image" placeholder="assets/images/blog/capa.webp" />
+                <img id="post-cover-preview" class="cms-img-preview" hidden alt="Preview da capa">
+                <span id="post-cover-upload-status" class="cms-status"></span>
+              </div>
+            </div>
+            <div class="cms-form__row">
+              <label for="post-youtube-id">ID do vídeo YouTube</label>
+              <input type="text" id="post-youtube-id" placeholder="dQw4w9WgXcQ (somente o ID, não a URL completa)" />
+            </div>
+            <div class="cms-form__row cms-form__row--inline">
+              <label>Status
+                <select id="post-status">
+                  <option value="draft">Rascunho</option>
+                  <option value="published">Publicado</option>
+                </select>
+              </label>
+            </div>
+            <div class="cms-form__actions">
+              <button class="btn-cms btn-cms--primary" id="btn-salvar-post">Salvar</button>
+              <button class="btn-cms btn-cms--ghost" id="btn-cancelar-post">Cancelar</button>
+              <span id="post-status-msg" class="cms-status"></span>
+            </div>
+          </div>
+
+          <div id="lista-posts" class="cms-list" aria-live="polite">
+            <p class="cms-loading">Carregando posts…</p>
           </div>
         </div>
 
