@@ -30,7 +30,7 @@ Documentos antigos vivem em `docs_rascunhos_old/` — referência histórica, n�
 | 4 — Backend + Admin mínimo | ✅ Concluída | v2.0.0 | API pública via PHP proxy, PM2 + start.sh, MySQL via socket |
 | 4.5 — Gerenciador de Conteúdo | ✅ Concluída | v2.5.0+ | CMS 6 abas + site_config. Testado e validado em produção (2026-05-22) |
 | 5 — Gerador com Claude API | ✅ Concluída | v2.6.0 | PR #20 mergeado em main. 116/116 testes. Pendente: deploy SSH (schema-v5, server/, ANTHROPIC_API_KEY). |
-| 5.5 — Blog do site | ⏳ | v2.7.0 | Destino do "blog longo". blog_posts (schema-v6), vídeo só via embed YouTube. PRD §7.13 + SPEC §14.4 |
+| 5.5 — Blog do site | ✅ Concluída | v2.7.0 | blog.html + blog-post.html + 7ª aba admin. 197 testes. Pendente: deploy SSH (schema-v6, server/ + sanitize-html). |
 | 6 — Publicador redes + Loja | ⏳ | v3.0.0 | Publicação automática nas redes + e-commerce |
 
 ## Comandos úteis
@@ -127,6 +127,10 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **ANTHROPIC_API_KEY:** NUNCA no repo. Adicionar ao `start.sh` no servidor com `echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> start.sh`.
 - **schema-v5.sql:** tabela `generations` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
 - **Gerador — deploy manual:** SCP `server/controllers/generatorController.js` + `server/db/schema-v5.sql` → servidor; aplicar schema; adicionar ANTHROPIC_API_KEY ao start.sh; reiniciar PM2 com sequência segura.
+- **schema-v6.sql:** tabela `blog_posts` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
+- **Blog — deploy manual:** SCP `server/controllers/blogController.js` + `server/routes/content.js` + `server/routes/admin.js` + `server/package.json` → servidor; `npm install sanitize-html --save` no servidor; aplicar schema-v6; reiniciar PM2.
+- **sanitize-html:** dependência npm do server/ para sanitização de conteúdo HTML dos posts do blog. Instalar no servidor antes de reiniciar.
+- **serve strip .html (dev) + query string:** serve redireciona /blog-post.html?slug=X → /blog-post (sem query). Testes E2E usam /blog-post?slug=X (sem .html). Links no app usam blog-post.html?slug=X (produção sem rewriting). Blog posts em produção acessados via blog-post.html?slug=... funcionam normalmente.
 
 ## Paths críticos
 
@@ -178,6 +182,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `server/db/schema-v5.sql` — tabela `generations` (Fase 5). Aplicar em produção antes do deploy do server/.
 - `admin/gerador.html` + `admin/assets/js/gerador.js` + `admin/assets/css/gerador.css` — Fase 5: UI do gerador.
 - `tests/e2e/gerador.spec.js` — 10 testes E2E com mock de rede para /api/admin/generate e /api/admin/generations.
+- `server/controllers/blogController.js` — CRUD blog_posts com sanitize-html e slugify automático.
+- `server/db/schema-v6.sql` — tabela `blog_posts` (Fase 5.5). Aplicar em produção antes do deploy do server/.
+- `blog.html` + `assets/js/blog.js` — listagem pública de posts paginada.
+- `blog-post.html` + `assets/js/blog-post.js` — post individual com embed YouTube click-to-load.
+- `assets/css/blog.css` — estilos do blog (incluídos no bundle).
+- `tests/e2e/blog.spec.js` — 12 testes E2E (listagem, post individual, admin CRUD).
 - `tests/e2e/backend.spec.js` — 4 testes E2E Playwright (fallback + admin).
 - `eslint.config.mjs` — configuração ESLint v10 (flat config).
 - `.github/workflows/ci.yml` — pipeline: lint + E2E + Lighthouse.

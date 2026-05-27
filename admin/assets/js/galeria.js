@@ -41,11 +41,12 @@ async function uploadFile(fileInput, pathInput, previewEl, statusEl) {
 
 function initUploadFields() {
   const pairs = [
-    ['foto-file',    'foto-url',      'foto-preview',    'foto-upload-status'],
-    ['projeto-file', 'projeto-image', 'projeto-preview', 'projeto-upload-status'],
-    ['escola-file',  'escola-image',  'escola-preview',  'escola-upload-status'],
-    ['curso-file',   'curso-image',   'curso-preview',   'curso-upload-status'],
-    ['sobre-file',   'sobre-image',   'sobre-preview',   'sobre-upload-status'],
+    ['foto-file',        'foto-url',          'foto-preview',           'foto-upload-status'],
+    ['projeto-file',     'projeto-image',     'projeto-preview',        'projeto-upload-status'],
+    ['escola-file',      'escola-image',      'escola-preview',         'escola-upload-status'],
+    ['curso-file',       'curso-image',       'curso-preview',          'curso-upload-status'],
+    ['sobre-file',       'sobre-image',       'sobre-preview',          'sobre-upload-status'],
+    ['post-cover-file',  'post-cover-image',  'post-cover-preview',     'post-cover-upload-status'],
   ];
   for (const [fileId, pathId, previewId, statusId] of pairs) {
     const fi = document.getElementById(fileId);
@@ -676,6 +677,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializa campos de upload
   initUploadFields();
 
+  document.getElementById('btn-novo-post')   ?.addEventListener('click', () => openFormPost(null));
+  document.getElementById('btn-salvar-post') ?.addEventListener('click', savePost);
+  document.getElementById('btn-cancelar-post')?.addEventListener('click', () => {
+    document.getElementById('form-post').setAttribute('hidden', '');
+    document.getElementById('post-cover-preview').hidden = true;
+    document.getElementById('post-cover-upload-status').textContent = '';
+  });
+
   // Carrega todas as listas ao iniciar
   loadEventos();
   loadProjetos();
@@ -683,6 +692,23 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCursos();
   loadSobre();
   loadConfig();
+  loadBlogPosts();
+
+  // Pré-preencher aba Blog quando vindo do Gerador (?tab=blog&pre_title=...&pre_content=...)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'blog') {
+    const blogTab = document.getElementById('btn-tab-blog');
+    blogTab?.click();
+    const preTitle   = params.get('pre_title')   || '';
+    const preContent = params.get('pre_content') || '';
+    if (preTitle || preContent) {
+      loadBlogPosts().then(() => {
+        openFormPost(null);
+        if (preTitle)   document.getElementById('post-title').value   = preTitle;
+        if (preContent) document.getElementById('post-content').value = preContent;
+      });
+    }
+  }
 
   // Recarrega lista ao mudar de aba
   document.querySelectorAll('.cms-tab').forEach(btn => {
@@ -694,6 +720,129 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tab === 'cursos')   loadCursos();
       if (tab === 'sobre')    loadSobre();
       if (tab === 'config')   loadConfig();
+      if (tab === 'blog')     loadBlogPosts();
     });
   });
 });
+
+// ── BLOG ──────────────────────────────────────────────────────────────────────
+let blogPostsData = [];
+
+function blogStatusBadge(status) {
+  return status === 'published'
+    ? '<span class="cms-badge cms-badge--on">Publicado</span>'
+    : '<span class="cms-badge cms-badge--off">Rascunho</span>';
+}
+
+async function loadBlogPosts() {
+  const lista = document.getElementById('lista-posts');
+  if (!lista) return;
+  const res = await apiFetch('/posts');
+  blogPostsData = await res.json();
+  if (!blogPostsData.length) {
+    lista.innerHTML = '<p class="cms-loading">Nenhum post cadastrado.</p>';
+    return;
+  }
+  lista.innerHTML = blogPostsData.map(p => `
+    <div class="cms-item" data-id="${p.id}">
+      <div class="cms-item__info">
+        <div class="cms-item__title">${p.title}</div>
+        <div class="cms-item__meta">${blogStatusBadge(p.status)} · ${p.slug}</div>
+      </div>
+      <div class="cms-item__actions">
+        <a class="btn-cms btn-cms--ghost btn-cms--sm" href="../blog-post.html?slug=${encodeURIComponent(p.slug)}" target="_blank" rel="noopener">Ver</a>
+        <button class="btn-cms btn-cms--ghost btn-cms--sm" data-action="editar-post" data-id="${p.id}">Editar</button>
+        <button class="btn-cms btn-cms--danger btn-cms--sm" data-action="del-post" data-id="${p.id}">Excluir</button>
+      </div>
+    </div>`).join('');
+
+  lista.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const { action, id } = btn.dataset;
+      if (action === 'editar-post') openFormPost(Number(id));
+      if (action === 'del-post')    deleteBlogPost(Number(id));
+    });
+  });
+}
+
+function slugifyTitle(text) {
+  return text
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function openFormPost(id = null) {
+  const form = document.getElementById('form-post');
+  document.getElementById('form-post-titulo').textContent = id ? 'Editar post' : 'Novo post';
+  document.getElementById('post-id').value = id ?? '';
+  const p = id ? blogPostsData.find(x => x.id === id) : null;
+  document.getElementById('post-title').value      = p?.title       ?? '';
+  document.getElementById('post-slug').value       = p?.slug        ?? '';
+  document.getElementById('post-excerpt').value    = p?.excerpt     ?? '';
+  document.getElementById('post-content').value    = p?.content     ?? '';
+  document.getElementById('post-cover-image').value = p?.cover_image ?? '';
+  document.getElementById('post-youtube-id').value = p?.youtube_id  ?? '';
+  document.getElementById('post-status').value     = p?.status      ?? 'draft';
+  document.getElementById('post-cover-preview').hidden = !p?.cover_image;
+  if (p?.cover_image) document.getElementById('post-cover-preview').src = '/' + p.cover_image;
+  setStatus('post-status-msg', '');
+  form.removeAttribute('hidden');
+  form.scrollIntoView({ behavior: 'smooth' });
+
+  // Auto-gerar slug ao digitar título (apenas em criação)
+  if (!id) {
+    document.getElementById('post-title').oninput = function () {
+      if (!document.getElementById('post-slug').value) {
+        document.getElementById('post-slug').placeholder = slugifyTitle(this.value) || 'gerado-automaticamente-do-titulo';
+      }
+    };
+  } else {
+    document.getElementById('post-title').oninput = null;
+  }
+}
+
+async function savePost() {
+  const id      = document.getElementById('post-id').value;
+  const title   = document.getElementById('post-title').value.trim();
+  const slug    = document.getElementById('post-slug').value.trim();
+  const content = document.getElementById('post-content').value.trim();
+
+  if (!title) { setStatus('post-status-msg', 'Título é obrigatório.', 'error'); return; }
+  if (!content) { setStatus('post-status-msg', 'Conteúdo é obrigatório.', 'error'); return; }
+
+  const body = {
+    title,
+    slug: slug || undefined,
+    excerpt:      document.getElementById('post-excerpt').value.trim()    || undefined,
+    content,
+    cover_image:  document.getElementById('post-cover-image').value.trim() || undefined,
+    youtube_id:   document.getElementById('post-youtube-id').value.trim() || undefined,
+    status:       document.getElementById('post-status').value,
+  };
+
+  setStatus('post-status-msg', 'Salvando…');
+  const res = await apiFetch(id ? `/posts/${id}` : '/posts', {
+    method: id ? 'PUT' : 'POST',
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    setStatus('post-status-msg', err.erro || 'Erro ao salvar.', 'error');
+    return;
+  }
+  setStatus('post-status-msg', 'Salvo com sucesso!');
+  document.getElementById('form-post').setAttribute('hidden', '');
+  loadBlogPosts();
+}
+
+async function deleteBlogPost(id) {
+  if (!confirm('Excluir este post? Esta ação não pode ser desfeita.')) return;
+  const res = await apiFetch(`/posts/${id}`, { method: 'DELETE' });
+  if (!res.ok) { alert('Erro ao excluir.'); return; }
+  loadBlogPosts();
+}

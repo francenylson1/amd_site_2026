@@ -162,6 +162,11 @@ function renderResults(results) {
     const cacheTag = r.cached ? '<span class="cache-hit">cache hit</span>' : '';
     const safeContent = escapeHtml(r.content);
 
+    const currentTitle = document.getElementById('theme-input')?.value.trim() || '';
+    const blogBtn = r.format === 'blog'
+      ? `<button class="btn-publish-blog" data-content="${escapeAttr(r.content)}" data-title="${escapeAttr(currentTitle)}">Publicar no Blog</button>`
+      : '';
+
     return `
       <div class="result-card" data-format="${r.format}">
         <div class="result-card__header">
@@ -170,6 +175,7 @@ function renderResults(results) {
             ${cacheTag}
             <span>${r.tokens_in + r.tokens_out} tokens | ¢${cost}</span>
             <button class="btn-copy" data-content="${escapeAttr(r.content)}">Copiar</button>
+            ${blogBtn}
           </div>
         </div>
         <div class="result-card__body">
@@ -191,6 +197,17 @@ function renderResults(results) {
           btn.classList.remove('btn-copy--copied');
         }, 2000);
       });
+    });
+  });
+
+  // Botão "Publicar no Blog" — pré-preenche o formulário na aba Blog do CMS
+  area.querySelectorAll('.btn-publish-blog').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const params = new URLSearchParams({
+        pre_title:   btn.dataset.title   || '',
+        pre_content: btn.dataset.content || '',
+      });
+      window.location.href = `galeria.html?tab=blog&${params.toString()}`;
     });
   });
 }

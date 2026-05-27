@@ -24,6 +24,9 @@ import {
 } from '../controllers/aboutController.js';
 import { listConfig, updateConfig } from '../controllers/configController.js';
 import { generate, listGenerations } from '../controllers/generatorController.js';
+import {
+  adminListPosts, createPost, updatePost, deletePost,
+} from '../controllers/blogController.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -82,5 +85,11 @@ router.put('/config', requireAuth, updateConfig);
 // Gerador de conteúdo (Fase 5)
 router.post('/generate',    requireAuth, generateHourLimiter, generateDayLimiter, generate);
 router.get('/generations',  requireAuth, listGenerations);
+
+// Blog (Fase 5.5)
+router.get('/posts',        requireAuth, adminListPosts);
+router.post('/posts',       requireAuth, createPost);
+router.put('/posts/:id',    requireAuth, updatePost);
+router.delete('/posts/:id', requireAuth, deletePost);
 
 export default router;
