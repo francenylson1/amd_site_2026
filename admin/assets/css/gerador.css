@@ -151,9 +151,9 @@
 .btn-gerar:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
 .btn-gerar:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
-/* Spinner */
+/* Spinner — oculto por padrão; JS usa style.display para controlar */
 .spinner {
-  display: inline-block;
+  display: none;
   width: 1rem;
   height: 1rem;
   border: 2px solid rgba(255,255,255,.4);

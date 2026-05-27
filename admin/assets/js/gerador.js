@@ -70,7 +70,7 @@ async function loadItems(type) {
     return;
   }
   const data = await res.json();
-  const items = data.projects || data.events || data.courses || [];
+  const items = Array.isArray(data) ? data : [];
 
   if (!items.length) {
     select.innerHTML = '<option value="">Nenhum item cadastrado</option>';
@@ -238,7 +238,7 @@ function setLoading(loading) {
   const spinner = btn.querySelector('.spinner');
   const label   = btn.querySelector('.btn-label');
   btn.disabled = loading;
-  spinner.hidden = !loading;
+  spinner.style.display = loading ? 'inline-block' : 'none';
   label.textContent = loading ? 'Gerando...' : '✨ Gerar conteúdo';
 }
 
