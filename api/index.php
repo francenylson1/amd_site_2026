@@ -8,7 +8,7 @@ curl_setopt_array($ch, [
     CURLOPT_CUSTOMREQUEST  => $method,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HEADER         => true,
-    CURLOPT_TIMEOUT        => 30,
+    CURLOPT_TIMEOUT        => 120,
     CURLOPT_FOLLOWLOCATION => false,
 ]);
 
