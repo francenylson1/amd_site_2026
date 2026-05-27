@@ -99,29 +99,33 @@ async function loadGalleryImages() {
   const grid = document.getElementById('picker-gallery-grid');
   grid.innerHTML = '<div class="picker-loading">Carregando imagens...</div>';
 
-  const res = await apiFetch('/admin/gallery-images');
-  if (!res || !res.ok) {
-    grid.innerHTML = '<div class="picker-loading picker-loading--error">Erro ao carregar galeria.</div>';
-    return;
+  try {
+    const res = await apiFetch('/admin/gallery-images');
+    if (!res || !res.ok) {
+      grid.innerHTML = `<div class="picker-loading picker-loading--error">Erro ${res?.status || '?'} ao carregar galeria.</div>`;
+      return;
+    }
+    const { images } = await res.json();
+    galleryLoaded = true;
+
+    if (!images.length) {
+      grid.innerHTML = '<div class="picker-loading">Nenhuma imagem cadastrada ainda.</div>';
+      return;
+    }
+
+    grid.innerHTML = images.map(img =>
+      `<button type="button" class="picker-thumb${selectedCoverImage === img.url ? ' picker-thumb--selected' : ''}"
+               data-url="${escapeAttr(img.url)}" title="${escapeAttr(img.url)}">
+         <img src="/${img.url}" alt="" loading="lazy" />
+       </button>`
+    ).join('');
+
+    grid.querySelectorAll('.picker-thumb').forEach(btn => {
+      btn.addEventListener('click', () => selectCover(btn.dataset.url));
+    });
+  } catch (err) {
+    grid.innerHTML = `<div class="picker-loading picker-loading--error">Erro ao carregar: ${err.message}</div>`;
   }
-  const { images } = await res.json();
-  galleryLoaded = true;
-
-  if (!images.length) {
-    grid.innerHTML = '<div class="picker-loading">Nenhuma imagem cadastrada ainda.</div>';
-    return;
-  }
-
-  grid.innerHTML = images.map(img =>
-    `<button type="button" class="picker-thumb${selectedCoverImage === img.url ? ' picker-thumb--selected' : ''}"
-             data-url="${escapeAttr(img.url)}" title="${escapeAttr(img.url)}">
-       <img src="/${img.url}" alt="" loading="lazy" />
-     </button>`
-  ).join('');
-
-  grid.querySelectorAll('.picker-thumb').forEach(btn => {
-    btn.addEventListener('click', () => selectCover(btn.dataset.url));
-  });
 }
 
 function selectCover(url) {
