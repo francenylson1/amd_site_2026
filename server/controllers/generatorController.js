@@ -52,9 +52,9 @@ Use markdown. Tom: inspirador, informativo e acessível.`,
 
 async function fetchItemContext(item_type, item_id) {
   const tableMap = {
-    projeto: { table: 'projects', cols: 'title, description' },
+    projeto: { table: 'projects', cols: 'title, CONCAT_WS(" ", short_desc, full_desc) AS description' },
     evento:  { table: 'events',   cols: 'title, description' },
-    curso:   { table: 'courses',  cols: 'name AS title, description' },
+    curso:   { table: 'courses',  cols: 'title, description' },
   };
   const { table, cols } = tableMap[item_type] || {};
   if (!table) return null;

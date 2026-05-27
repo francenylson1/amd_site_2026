@@ -104,6 +104,25 @@ describe('generatorController.generate — chamada Claude e persistência', () =
     );
   });
 
+  it('busca projeto no banco com colunas corretas (short_desc/full_desc)', async () => {
+    db.query
+      .mockResolvedValueOnce([[{ title: 'Robô Arduino', description: 'Projeto de robótica' }]])
+      .mockResolvedValue([{ insertId: 1 }]);
+    Anthropic._createFn.mockResolvedValue({
+      content: [{ type: 'text', text: 'Conteúdo.' }],
+      usage: { input_tokens: 200, output_tokens: 50, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 },
+    });
+
+    const req = makeReq({ source: 'item', item_type: 'projeto', item_id: 1, formats: ['whatsapp'] });
+    const res = makeRes();
+    await generate(req, res);
+
+    const [sql] = db.query.mock.calls[0];
+    expect(sql).toMatch(/CONCAT_WS/);
+    expect(sql).toMatch(/short_desc/);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ results: expect.any(Array) }));
+  });
+
   it('gera múltiplos formatos em sequência', async () => {
     const mockResponse = {
       content: [{ type: 'text', text: 'Conteúdo gerado.' }],
