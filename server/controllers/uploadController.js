@@ -2,6 +2,7 @@ import path from 'path';
 import os from 'os';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
+import db from '../db/connection.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -11,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const IMAGES_DIR = process.env.IMAGES_DIR ||
   path.join(os.homedir(), 'domains', 'alunomakerdigital.com.br', 'public_html', 'assets', 'images');
 
-const ALLOWED_FOLDERS = new Set(['eventos', 'projetos', 'escolas', 'cursos', 'sobre']);
+const ALLOWED_FOLDERS = new Set(['eventos', 'projetos', 'escolas', 'cursos', 'sobre', 'blog']);
 
 export async function uploadImage(req, res) {
   if (!req.file) {
@@ -48,4 +49,26 @@ export async function uploadImage(req, res) {
 
   const relativePath = `assets/images/${folder}/${filename}`;
   res.status(201).json({ path: relativePath, webp: true });
+}
+
+export async function listGalleryImages(_req, res) {
+  try {
+    const [rows] = await db.query(`
+      SELECT image_url AS url FROM event_photos   WHERE image_url   IS NOT NULL AND image_url   != ''
+      UNION ALL
+      SELECT image_url            FROM projects    WHERE image_url   IS NOT NULL AND image_url   != ''
+      UNION ALL
+      SELECT image_url            FROM schools     WHERE image_url   IS NOT NULL AND image_url   != ''
+      UNION ALL
+      SELECT image_url            FROM about_photos WHERE image_url  IS NOT NULL AND image_url   != ''
+      UNION ALL
+      SELECT cover_image          FROM blog_posts  WHERE cover_image IS NOT NULL AND cover_image != ''
+      ORDER BY url
+    `);
+    const seen = new Set();
+    const images = rows.filter(r => r.url && !seen.has(r.url) && seen.add(r.url)).map(r => ({ url: r.url }));
+    res.json({ images });
+  } catch {
+    res.status(500).json({ erro: 'Erro ao listar imagens.' });
+  }
 }

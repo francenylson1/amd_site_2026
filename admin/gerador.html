@@ -114,6 +114,48 @@
               </div>
             </div>
 
+            <!-- Seletor de foto de capa -->
+            <div class="gerador-card" style="margin-bottom:1rem;">
+              <h2 class="gerador-card__title">📷 Foto de capa (opcional)</h2>
+
+              <!-- Preview da foto selecionada -->
+              <div id="selected-cover-preview" class="selected-cover" hidden>
+                <img id="selected-cover-thumb" src="" alt="Foto selecionada" />
+                <div class="selected-cover__info">
+                  <span id="selected-cover-name" class="selected-cover__name"></span>
+                  <button type="button" id="btn-remove-cover" class="selected-cover__remove">✕ Remover</button>
+                </div>
+              </div>
+
+              <!-- Painel do seletor -->
+              <div class="photo-picker-tabs" role="tablist">
+                <button type="button" class="picker-tab picker-tab--active" role="tab"
+                        data-picker-tab="gallery" aria-selected="true">
+                  🖼️ Galeria
+                </button>
+                <button type="button" class="picker-tab" role="tab"
+                        data-picker-tab="upload" aria-selected="false">
+                  ⬆️ Fazer upload
+                </button>
+              </div>
+
+              <!-- Aba: Galeria -->
+              <div id="picker-gallery-panel" class="picker-panel">
+                <div id="picker-gallery-grid" class="picker-grid">
+                  <div class="picker-loading">Carregando imagens...</div>
+                </div>
+              </div>
+
+              <!-- Aba: Upload -->
+              <div id="picker-upload-panel" class="picker-panel" hidden>
+                <label class="picker-upload-label" for="picker-file-input">
+                  Selecione JPG, PNG ou WebP — será salvo como WebP (Sharp)
+                </label>
+                <input type="file" id="picker-file-input" accept="image/*" class="picker-file-input" />
+                <div id="picker-upload-status" class="picker-upload-status" hidden></div>
+              </div>
+            </div>
+
             <!-- Instruções extras -->
             <div class="gerador-card">
               <h2 class="gerador-card__title">💡 Instruções extras (opcional)</h2>

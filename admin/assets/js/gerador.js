@@ -90,6 +90,112 @@ function initItemTypeSelect() {
   });
 }
 
+// ─── Seletor de fotos ──────────────────────────────────────
+let selectedCoverImage = null;
+let galleryLoaded = false;
+
+async function loadGalleryImages() {
+  if (galleryLoaded) return;
+  const grid = document.getElementById('picker-gallery-grid');
+  grid.innerHTML = '<div class="picker-loading">Carregando imagens...</div>';
+
+  const res = await apiFetch('/admin/gallery-images');
+  if (!res || !res.ok) {
+    grid.innerHTML = '<div class="picker-loading picker-loading--error">Erro ao carregar galeria.</div>';
+    return;
+  }
+  const { images } = await res.json();
+  galleryLoaded = true;
+
+  if (!images.length) {
+    grid.innerHTML = '<div class="picker-loading">Nenhuma imagem cadastrada ainda.</div>';
+    return;
+  }
+
+  grid.innerHTML = images.map(img =>
+    `<button type="button" class="picker-thumb${selectedCoverImage === img.url ? ' picker-thumb--selected' : ''}"
+             data-url="${escapeAttr(img.url)}" title="${escapeAttr(img.url)}">
+       <img src="/${img.url}" alt="" loading="lazy" />
+     </button>`
+  ).join('');
+
+  grid.querySelectorAll('.picker-thumb').forEach(btn => {
+    btn.addEventListener('click', () => selectCover(btn.dataset.url));
+  });
+}
+
+function selectCover(url) {
+  selectedCoverImage = url;
+  const name = url.split('/').pop();
+  document.getElementById('selected-cover-thumb').src = `/${url}`;
+  document.getElementById('selected-cover-name').textContent = name;
+  document.getElementById('selected-cover-preview').hidden = false;
+  document.querySelectorAll('.picker-thumb').forEach(btn => {
+    btn.classList.toggle('picker-thumb--selected', btn.dataset.url === url);
+  });
+}
+
+async function handleCoverUpload() {
+  const input = document.getElementById('picker-file-input');
+  const file = input.files[0];
+  if (!file) return;
+
+  const status = document.getElementById('picker-upload-status');
+  status.hidden = false;
+  status.textContent = 'Fazendo upload...';
+  status.className = 'picker-upload-status';
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('folder', 'blog');
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    const data = await res.json();
+    galleryLoaded = false; // recarrega galeria na próxima abertura
+    selectCover(data.path);
+    status.textContent = 'Upload concluído — foto selecionada como capa.';
+    status.className = 'picker-upload-status picker-upload-status--ok';
+    input.value = '';
+  } catch {
+    status.textContent = 'Erro ao fazer upload. Tente novamente.';
+    status.className = 'picker-upload-status picker-upload-status--error';
+  }
+}
+
+function initPhotoPicker() {
+  loadGalleryImages();
+
+  document.querySelectorAll('.picker-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.picker-tab').forEach(t => {
+        t.classList.remove('picker-tab--active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('picker-tab--active');
+      tab.setAttribute('aria-selected', 'true');
+
+      const isGallery = tab.dataset.pickerTab === 'gallery';
+      document.getElementById('picker-gallery-panel').hidden = !isGallery;
+      document.getElementById('picker-upload-panel').hidden  = isGallery;
+      if (isGallery) loadGalleryImages();
+    });
+  });
+
+  document.getElementById('picker-file-input').addEventListener('change', handleCoverUpload);
+
+  document.getElementById('btn-remove-cover').addEventListener('click', () => {
+    selectedCoverImage = null;
+    document.getElementById('selected-cover-preview').hidden = true;
+    document.querySelectorAll('.picker-thumb').forEach(b => b.classList.remove('picker-thumb--selected'));
+  });
+}
+
 // ─── Geração ───────────────────────────────────────────────
 function buildPayload() {
   const activeTab = document.querySelector('.source-tab--active');
@@ -204,10 +310,12 @@ function renderResults(results) {
   area.querySelectorAll('.btn-publish-blog').forEach(btn => {
     btn.addEventListener('click', () => {
       const params = new URLSearchParams({
+        tab:         'blog',
         pre_title:   btn.dataset.title   || '',
         pre_content: btn.dataset.content || '',
       });
-      window.location.href = `galeria.html?tab=blog&${params.toString()}`;
+      if (selectedCoverImage) params.set('pre_cover', selectedCoverImage);
+      window.location.href = `galeria.html?${params.toString()}`;
     });
   });
 }
@@ -308,6 +416,7 @@ function updateCostBadge(costUsd) {
 
   initSourceTabs();
   initItemTypeSelect();
+  initPhotoPicker();
 
   document.getElementById('btn-gerar').addEventListener('click', handleGenerate);
 

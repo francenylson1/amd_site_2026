@@ -3,7 +3,7 @@ import multer  from 'multer';
 import { loginLimiter, generateHourLimiter, generateDayLimiter } from '../middleware/rateLimiter.js';
 import { requireAuth }  from '../middleware/auth.js';
 import { login }        from '../controllers/adminController.js';
-import { uploadImage }  from '../controllers/uploadController.js';
+import { uploadImage, listGalleryImages } from '../controllers/uploadController.js';
 import { listContacts } from '../controllers/contactController.js';
 import { listVisits }   from '../controllers/visitController.js';
 import {
@@ -43,7 +43,8 @@ router.get('/contacts',  requireAuth,  listContacts);
 router.get('/visits',    requireAuth,  listVisits);
 
 // Upload de imagem
-router.post('/upload', requireAuth, upload.single('file'), uploadImage);
+router.post('/upload',         requireAuth, upload.single('file'), uploadImage);
+router.get('/gallery-images',  requireAuth, listGalleryImages);
 
 // Eventos
 router.get('/events',                        requireAuth, adminListEvents);

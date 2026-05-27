@@ -701,11 +701,19 @@ document.addEventListener('DOMContentLoaded', () => {
     blogTab?.click();
     const preTitle   = params.get('pre_title')   || '';
     const preContent = params.get('pre_content') || '';
-    if (preTitle || preContent) {
+    const preCover   = params.get('pre_cover')   || '';
+    if (preTitle || preContent || preCover) {
       loadBlogPosts().then(() => {
         openFormPost(null);
         if (preTitle)   document.getElementById('post-title').value   = preTitle;
         if (preContent) document.getElementById('post-content').value = preContent;
+        if (preCover) {
+          const coverInput   = document.getElementById('post-cover-image');
+          const coverPreview = document.getElementById('post-cover-preview');
+          coverInput.value   = preCover;
+          coverPreview.src   = `/${preCover}`;
+          coverPreview.hidden = false;
+        }
       });
     }
   }

@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken';
 
 vi.mock('../../db/connection.js', () => {
   const execute = vi.fn();
-  const pool = { execute };
+  const query   = vi.fn();
+  const pool = { execute, query };
   return { ...pool, default: pool };
 });
 
@@ -139,6 +140,28 @@ describe('GET /api/feature-flags', () => {
     expect(res.status).toBe(200);
     expect(typeof res.body).toBe('object');
     expect(res.body.gpio).toBe(true);
+  });
+});
+
+describe('GET /api/admin/gallery-images', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it('retorna 401 sem token', async () => {
+    const res = await request(app).get('/api/admin/gallery-images');
+    expect(res.status).toBe(401);
+  });
+
+  it('retorna lista de imagens com token válido', async () => {
+    db.query.mockResolvedValueOnce([[
+      { url: 'assets/images/eventos/foto.webp' },
+      { url: 'assets/images/projetos/proj.webp' },
+    ]]);
+    const res = await request(app)
+      .get('/api/admin/gallery-images')
+      .set('Authorization', `Bearer ${makeToken()}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('images');
+    expect(Array.isArray(res.body.images)).toBe(true);
   });
 });
 

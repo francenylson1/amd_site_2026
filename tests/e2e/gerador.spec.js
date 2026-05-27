@@ -15,6 +15,12 @@ async function injectToken(page) {
   }, MOCK_TOKEN);
 }
 
+const MOCK_IMAGES = [
+  { url: 'assets/images/eventos/foto1.webp' },
+  { url: 'assets/images/projetos/proj1.webp' },
+  { url: 'assets/images/blog/capa1.webp' },
+];
+
 test.describe('Gerador de Conteúdo — UI', () => {
   test.beforeEach(async ({ page }) => {
     // Intercepta chamadas à API para não depender do backend real
@@ -23,6 +29,13 @@ test.describe('Gerador de Conteúdo — UI', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({ generations: [], month_cost: '0.0000' }),
+      });
+    });
+    await page.route('**/api/admin/gallery-images', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ images: MOCK_IMAGES }),
       });
     });
     await page.route('**/api/admin/generate', async route => {
@@ -134,5 +147,33 @@ test.describe('Gerador de Conteúdo — UI', () => {
     const link = page.locator('.admin-sidebar__link[href="gerador.html"]');
     await expect(link).toBeVisible();
     await expect(link).toHaveClass(/active/);
+  });
+
+  test('seletor de fotos exibe galeria com thumbnails', async ({ page }) => {
+    const grid = page.locator('#picker-gallery-grid');
+    await expect(grid).toBeVisible();
+    await expect(page.locator('.picker-thumb')).toHaveCount(3, { timeout: 5000 });
+  });
+
+  test('selecionar foto da galeria exibe preview', async ({ page }) => {
+    await page.locator('.picker-thumb').first().click();
+    const preview = page.locator('#selected-cover-preview');
+    await expect(preview).toBeVisible();
+    await expect(page.locator('#selected-cover-thumb')).toHaveAttribute('src', /foto1\.webp/);
+  });
+
+  test('aba upload mostra input de arquivo', async ({ page }) => {
+    await page.locator('.picker-tab[data-picker-tab="upload"]').click();
+    await expect(page.locator('#picker-upload-panel')).toBeVisible();
+    await expect(page.locator('#picker-file-input')).toBeVisible();
+  });
+
+  test('"Publicar no Blog" exibe botão no resultado de formato blog', async ({ page }) => {
+    await page.click('[data-source="theme"]');
+    await page.fill('#theme-input', 'Semana da robótica');
+    await page.click('label.format-check:has(input[value="blog"])');
+    await page.click('#btn-gerar');
+
+    await expect(page.locator('.btn-publish-blog')).toBeVisible({ timeout: 8000 });
   });
 });
