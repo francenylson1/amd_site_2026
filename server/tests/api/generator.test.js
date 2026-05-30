@@ -94,7 +94,7 @@ describe('GET /api/admin/generations', () => {
   it('retorna lista de gerações com custo', async () => {
     const rows = [
       { id: 1, source: 'theme', theme: 'Robótica', format: 'instagram',
-        output_preview: 'Conteúdo...', tokens_in: 300, tokens_out: 100,
+        output: 'Conteúdo...', tokens_in: 300, tokens_out: 100,
         cached: 0, cost_usd: 0.002, created_at: new Date().toISOString() },
     ];
     db.query

@@ -157,7 +157,7 @@ describe('generatorController.listGenerations', () => {
   it('retorna generations e custo do mês', async () => {
     const rows = [
       { id: 1, source: 'theme', theme: 'Robótica', format: 'instagram',
-        output_preview: 'Conteúdo...', tokens_in: 300, tokens_out: 100,
+        output: 'Conteúdo...', tokens_in: 300, tokens_out: 100,
         cached: 0, cost_usd: 0.002, created_at: new Date().toISOString() },
     ];
     const costRow = [{ month_cost: '0.0020' }];

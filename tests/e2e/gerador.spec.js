@@ -138,6 +138,44 @@ test.describe('Gerador de Conteúdo — UI', () => {
     await expect(historyEl).toContainText(/nenhuma|carregando/i);
   });
 
+  test('histórico com item — expand inline exibe texto completo e botão copiar', async ({ page }) => {
+    // Sobrescreve o mock padrão para retornar uma geração com output completo
+    await page.route('**/api/admin/generations', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          generations: [{
+            id: 1, source: 'theme', theme: 'Robótica', format: 'instagram',
+            output: 'Texto completo da geração para teste de expand inline.',
+            tokens_in: 300, tokens_out: 80, cached: 0,
+            cost_usd: 0.002, created_at: new Date().toISOString(),
+          }],
+          month_cost: '0.0020',
+        }),
+      });
+    });
+
+    await page.goto('/admin/gerador.html');
+
+    // Item do histórico deve estar visível
+    const item = page.locator('.history-item').first();
+    await expect(item).toBeVisible({ timeout: 5000 });
+
+    // Corpo expandido começa oculto
+    await expect(item.locator('.history-item__body')).toBeHidden();
+
+    // Clicar no summary expande
+    await item.locator('.history-item__summary').click();
+    await expect(item.locator('.history-item__body')).toBeVisible();
+    await expect(item.locator('.history-item__output')).toContainText('Texto completo');
+    await expect(item.locator('.btn-copy-history')).toBeVisible();
+
+    // Clicar novamente colapsa
+    await item.locator('.history-item__summary').click();
+    await expect(item.locator('.history-item__body')).toBeHidden();
+  });
+
   test('exibe badge de custo do mês', async ({ page }) => {
     await expect(page.locator('#cost-badge')).toBeVisible();
     await expect(page.locator('#cost-badge')).toContainText('US$');

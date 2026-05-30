@@ -197,7 +197,7 @@ export async function listGenerations(req, res) {
   try {
     const [rows] = await pool.query(
       `SELECT id, source, item_type, item_id, theme, format,
-              LEFT(output, 200) AS output_preview,
+              output,
               tokens_in, tokens_out, cached, cost_usd, created_at
        FROM generations
        ORDER BY created_at DESC

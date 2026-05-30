@@ -394,16 +394,47 @@ function renderHistory(items) {
 
   list.innerHTML = items.map(g => {
     const { icon, label } = FORMAT_LABELS[g.format] || { icon: '📄', label: g.format };
-    const preview = escapeHtml((g.output_preview || '').replace(/\n/g, ' ').substring(0, 80));
+    const preview = escapeHtml((g.output || '').replace(/\n/g, ' ').substring(0, 80));
     const date    = formatDate(g.created_at);
     return `
-      <div class="history-item" title="${preview}">
-        <span class="history-item__format">${icon} ${label}</span>
-        <span class="history-item__preview">${preview}</span>
-        <span class="history-item__date">${date}</span>
+      <div class="history-item">
+        <div class="history-item__summary">
+          <span class="history-item__format">${icon} ${label}</span>
+          <span class="history-item__preview">${preview}</span>
+          <span class="history-item__date">${date}</span>
+          <span class="history-item__chevron" aria-hidden="true">▼</span>
+        </div>
+        <div class="history-item__body" hidden>
+          <pre class="history-item__output">${escapeHtml(g.output || '')}</pre>
+          <button type="button" class="btn-copy-history" data-content="${escapeAttr(g.output || '')}">📋 Copiar</button>
+        </div>
       </div>
     `;
   }).join('');
+
+  list.querySelectorAll('.history-item').forEach(item => {
+    item.querySelector('.history-item__summary').addEventListener('click', () => {
+      const body    = item.querySelector('.history-item__body');
+      const chevron = item.querySelector('.history-item__chevron');
+      const isOpen  = !body.hidden;
+      body.hidden   = isOpen;
+      chevron.textContent = isOpen ? '▼' : '▲';
+      item.classList.toggle('history-item--expanded', !isOpen);
+    });
+
+    item.querySelector('.btn-copy-history').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      navigator.clipboard.writeText(btn.dataset.content).then(() => {
+        btn.textContent = '✓ Copiado!';
+        btn.classList.add('btn-copy-history--copied');
+        setTimeout(() => {
+          btn.textContent = '📋 Copiar';
+          btn.classList.remove('btn-copy-history--copied');
+        }, 2000);
+      });
+    });
+  });
 }
 
 function updateCostBadge(costUsd) {

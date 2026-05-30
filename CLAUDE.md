@@ -77,7 +77,7 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **cursos.html:** seção `#cursos-dinamicos` oculta via `hidden` — cursos.js a exibe automaticamente quando API retornar cursos com `active=TRUE`.
 - **school-card__icon--purple:** variante roxa para escolas de inclusão (ex: CEF 106).
 - **Escolas cadastradas:** CEF 101, CEF 113, CEF 206, CEF 308, CEF 405, CEM 804, EC 203, EC 401, Colégio Militar, Pinheirinho Roxo (Ed. Infantil), CeD 104, CEF 106 (surdos/mudos).
-- **Imagens Pinheirinho Roxo:** em `assets/images/escolas/pinheirinho_roxo/` (JPGs brutos, aguardando otimização para WebP antes de referenciar no banco).
+- **Imagens de escolas:** todas as pastas (`pinheirinho_roxo/`, `altas_habilidades/`, `cef_101/`, `mirian_ervilha/`, `cef_308/`, campus_party etc.) já otimizadas para WebP em 2026-05-29. Prontas para cadastro no CMS.
 - **Branch protection main:** requer 1 review de terceiros — dono do repo não pode aprovar o próprio PR. Workaround: desabilitar `enforce_admins` via API temporariamente (`gh api --method DELETE repos/.../branches/main/protection/enforce_admins`), fazer merge com `--admin`, reativar com `--method POST`.
 - **gpio.css:** incluído no bundle; ordem no `build:css`: `variables → main → animations → components → gpio → responsive`.
 - **JSZip CDN:** `https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js` — carregado apenas em `animacoes.html`.
@@ -123,8 +123,14 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - **Admin fluxo:** `login.html` → após login → `galeria.html` (direto). `index.html` redireciona para `galeria.html` via meta refresh.
 - **Escopo global admin (scripts regulares):** `admin-auth.js` e outros scripts admin compartilham o escopo global (`window`). NÃO redeclarar variáveis com `const`/`let` que já existam em outro script (ex: `const API_BASE` estava em ambos e causou SyntaxError). Usar apenas nomes únicos ou aproveitar o que já foi declarado.
 - **admin/gerador.html + gerador.js + gerador.css:** Fase 5 — Gerador de Conteúdo com Claude API. Usa `API_BASE` e `getToken()` herdados de `admin-auth.js` (sem redeclarar). Inicialização via IIFE síncrona (scripts no fim do body — DOMContentLoaded desnecessário).
-- **generatorController.js:** model `claude-sonnet-4-6`, prompt caching no system prompt, 5 formatos, custo USD calculado e salvo na tabela `generations`. Rate limits: 10/h + 30/dia por IP (separado do loginLimiter).
+- **generatorController.js:** model `claude-sonnet-4-6`, prompt caching no system prompt, 5 formatos, custo USD calculado e salvo na tabela `generations`. Rate limits: 10/h + 30/dia por IP (separado do loginLimiter). `listGenerations` retorna campo `output` completo (não truncado — query usa `output`, não `LEFT(output,200)`).
+- **Histórico do gerador — expand inline:** clicar em `.history-item__summary` abre/fecha `.history-item__body` com o texto completo + botão Copiar. `.history-item__body[hidden] { display: none; }` é regra explícita necessária para não ser sobrescrita pelo `display:flex` do mesmo seletor.
+- **Admin CSS hidden override:** qualquer elemento com `display:flex` ou `display:grid` explícito via CSS precisa de regra `selector[hidden] { display: none; }` para que o atributo HTML `hidden` funcione corretamente no Playwright e no browser.
 - **ANTHROPIC_API_KEY:** NUNCA no repo. Adicionar ao `start.sh` no servidor com `echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> start.sh`.
+- **PHP proxy timeout:** `CURLOPT_TIMEOUT => 120` em `api/index.php` — aumentado de 30 para 120s em 2026-05-27 porque Claude API pode levar >30s especialmente na criação de cache do system prompt.
+- **gallery-images endpoint:** `GET /api/admin/gallery-images` retorna URLs únicas de imagens via UNION ALL em 5 tabelas (event_photos, projects, schools, about_photos, blog_posts). Handler `listGalleryImages` em `uploadController.js`.
+- **Photo picker no gerador:** `admin/gerador.html` tem seletor de foto de capa (abas Galeria + Upload). JS em `gerador.js`: `initPhotoPicker`, `loadGalleryImages`, `selectCover`, `handleCoverUpload`. Foto selecionada é passada como `pre_cover` ao redirecionar para o CMS (galeria.html).
+- **fetchItemContext colunas corretas:** `projects` usa `CONCAT_WS(" ", short_desc, full_desc) AS description` (não há coluna `description`). `courses` usa `title, description` (não `name`). Já corrigido no `generatorController.js`.
 - **schema-v5.sql:** tabela `generations` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
 - **Gerador — deploy manual:** SCP `server/controllers/generatorController.js` + `server/db/schema-v5.sql` → servidor; aplicar schema; adicionar ANTHROPIC_API_KEY ao start.sh; reiniciar PM2 com sequência segura.
 - **schema-v6.sql:** tabela `blog_posts` — aplicar em produção via SSH + MySQL antes de reiniciar o servidor.
@@ -176,12 +182,12 @@ npx lhci autorun --config=tests/lighthouse/lighthouserc.json  # Lighthouse CI lo
 - `server/controllers/uploadController.js` — upload Multer + Sharp WebP, escreve em public_html/assets/images/.
 - `admin/assets/js/admin-auth.js` — login/logout + redirect para galeria.html após autenticação.
 - `server/tests/unit/validators.test.js` — 13 testes Vitest (validadores).
-- `server/tests/unit/generator.test.js` — 7 testes Vitest (generatorController: validações + chamada Claude).
-- `server/tests/api/*.test.js` — 33 testes Supertest (contratos de endpoint, inclui generator.test.js).
+- `server/tests/unit/generator.test.js` — 8 testes Vitest (generatorController: validações + chamada Claude).
+- `server/tests/api/*.test.js` — 44 testes Supertest (contratos de endpoint, inclui generator.test.js e blog.test.js).
 - `server/controllers/generatorController.js` — gera conteúdo via Claude API, persiste na tabela generations.
 - `server/db/schema-v5.sql` — tabela `generations` (Fase 5). Aplicar em produção antes do deploy do server/.
 - `admin/gerador.html` + `admin/assets/js/gerador.js` + `admin/assets/css/gerador.css` — Fase 5: UI do gerador.
-- `tests/e2e/gerador.spec.js` — 10 testes E2E com mock de rede para /api/admin/generate e /api/admin/generations.
+- `tests/e2e/gerador.spec.js` — 15 testes E2E com mock de rede (inclui 4 photo picker + 1 expand inline do histórico).
 - `server/controllers/blogController.js` — CRUD blog_posts com sanitize-html e slugify automático.
 - `server/db/schema-v6.sql` — tabela `blog_posts` (Fase 5.5). Aplicar em produção antes do deploy do server/.
 - `blog.html` + `assets/js/blog.js` — listagem pública de posts paginada.
